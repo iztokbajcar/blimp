@@ -1,2 +1,3 @@
-test:
-	g++ -std=c++11 -o bin/test test/test.cpp -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
+test: test/test.cpp
+	g++ -std=c++11 -o bin/test test/test.cpp -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -lgtest
+
