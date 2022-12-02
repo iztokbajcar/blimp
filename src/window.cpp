@@ -1,10 +1,10 @@
 #include "window.hpp"
 
-GLFWwindow* blimp::createWindow(int width, int height, const char* title) {
+blimp::Window::Window(int width, int height, const char* title) {
     // initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        return nullptr;
+        return;
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -16,7 +16,6 @@ GLFWwindow* blimp::createWindow(int width, int height, const char* title) {
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return nullptr;
     }
 
     glfwMakeContextCurrent(window);
@@ -26,11 +25,33 @@ GLFWwindow* blimp::createWindow(int width, int height, const char* title) {
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
         glfwTerminate();
-        return nullptr;
     }
 
     // set viewport
     glViewport(0, 0, width, height);
 
-    return window;
+    this -> window = window;
+
+    // use the default key callback
+    this -> setKeyCallback(this, &defaultKeyCallback);
+}
+
+void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
+    glfwSetKeyCallback(t -> window, callback);
+}
+
+void blimp::Window::open() {
+    while (!glfwWindowShouldClose(this -> window)) {
+        glfwPollEvents();
+        glfwSwapBuffers(this -> window);
+    }
+
+    glfwTerminate();
+}
+
+void blimp::Window::defaultKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        std::cout << "Closing window" << std::endl;
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
 }
