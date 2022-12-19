@@ -1,7 +1,10 @@
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
 #include "../../src/cuboid.hpp"
+#include "../../src/node.hpp"
+#include "../../src/perspectivecamera.hpp"
 #include "../../src/window.hpp"
 
 //////////////////// Window ////////////////////
@@ -54,6 +57,65 @@ TEST_F(CuboidTest, IsCenteredAtOrigin) {
 
     ASSERT_EQ(sum, 0);
 }
+
+//////////////////// PerspectiveCamera ////////////////////
+
+class PerspectiveCameraTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            perspectiveCamera = new blimp::PerspectiveCamera(45.0f, 1.0f, 0.1f, 100.0f);
+        }
+
+        virtual void TearDown() {
+            delete perspectiveCamera;
+        }
+
+        blimp::PerspectiveCamera *perspectiveCamera;
+};
+
+TEST_F(PerspectiveCameraTest, ViewMatrixIsCorrect) {
+    glm::mat4* viewMatrix = perspectiveCamera -> getViewMatrix();
+
+    ASSERT_EQ(
+        *viewMatrix, 
+        glm::perspective(45.0f, 1.0f, 0.1f, 100.0f)
+    );
+}
+
+//////////////////// Node ////////////////////
+
+class NodeTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            node = new blimp::Node();
+        }
+
+        virtual void TearDown() {
+            delete node;
+        }
+
+        blimp::Node *node;
+};
+
+TEST_F(NodeTest, Translation) {
+    node -> setTranslation(1.0f, 2.0f, 3.0f);
+
+    ASSERT_EQ(
+        node -> getTranslation(),
+        glm::vec3(1.0f, 2.0f, 3.0f)
+    );
+}
+
+TEST_F(NodeTest, Scale) {
+    node -> setScale(7.0f, 8.0f, 9.0f);
+
+    ASSERT_EQ(
+        node -> getScale(),
+        glm::vec3(7.0f, 8.0f, 9.0f)
+    );
+}
+
+//////////////////////////////////////////////
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
