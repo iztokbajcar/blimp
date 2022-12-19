@@ -1,8 +1,8 @@
 #include <glm/glm.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
-#include "../src/cuboid.hpp"
-#include "../src/window.hpp"
+#include "../../src/cuboid.hpp"
+#include "../../src/window.hpp"
 
 //////////////////// Window ////////////////////
 
