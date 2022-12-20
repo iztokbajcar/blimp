@@ -7,13 +7,14 @@
 #include <vector>
 
 #include "geometry.hpp"
+#include "material.hpp"
 
 namespace blimp {
 
     class Node {
         public:
-            Node();
-            blimp::Geometry* geometry = nullptr;
+            Node(Geometry* geometry, Material* material);
+
             glm::mat4 getTransformationMatrix();
             glm::vec3 getTranslation();
             glm::quat getRotation();
@@ -26,9 +27,8 @@ namespace blimp {
             void removeChild(Node* child);
 
         private:
-            // glm::vec3 xAxis;  // TODO try const, maybe declare static
-            // glm::vec3 yAxis;
-            // glm::vec3 zAxis;
+            Geometry* geometry = nullptr;
+            Material* material = nullptr;
 
             glm::vec3 translation;
             glm::quat rotation;

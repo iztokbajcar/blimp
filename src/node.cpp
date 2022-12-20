@@ -2,10 +2,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "node.hpp"
 
-blimp::Node::Node() {
-    // this -> xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-    // this -> yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-    // this -> zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
+    this -> geometry = geometry;
+    this -> material = material;
     this -> translation = glm::vec3(0.0f);
     this -> rotation = glm::vec3(0.0f);
     this -> scale = glm::vec3(1.0f);

@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include "../../src/cuboid.hpp"
+#include "../../src/material.hpp"
 #include "../../src/node.hpp"
 #include "../../src/perspectivecamera.hpp"
 #include "../../src/window.hpp"
@@ -88,7 +89,7 @@ TEST_F(PerspectiveCameraTest, ViewMatrixIsCorrect) {
 class NodeTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
-            node = new blimp::Node();
+            node = new blimp::Node(new blimp::Geometry(), new blimp::Material());
         }
 
         virtual void TearDown() {
@@ -151,9 +152,9 @@ TEST_F(NodeTest, Children) {
         0
     );
 
-    blimp::Node* child1 = new blimp::Node();
-    blimp::Node* child2 = new blimp::Node();
-    blimp::Node* grandchild = new blimp::Node();
+    blimp::Node* child1 = new blimp::Node(new blimp::Geometry(), new blimp::Material());
+    blimp::Node* child2 = new blimp::Node(new blimp::Geometry(), new blimp::Material());
+    blimp::Node* grandchild = new blimp::Node(new blimp::Geometry(), new blimp::Material());
     node -> addChild(child1);
     node -> addChild(child2);
     child1 -> addChild(grandchild);
