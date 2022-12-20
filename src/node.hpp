@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <vector>
 
 #include "geometry.hpp"
@@ -13,19 +14,28 @@ namespace blimp {
         public:
             Node();
             blimp::Geometry* geometry = nullptr;
-            glm::mat4* getTransformationMatrix();
+            glm::mat4 getTransformationMatrix();
             glm::vec3 getTranslation();
-            // glm::vec3 getRotation();  // TODO
+            glm::quat getRotation();
             glm::vec3 getScale();
+            std::vector<Node*>* getChildren();
             void setTranslation(float x, float y, float z);
-            // void setRotation(float x, float y, float z);  // TODO
+            void setRotation(float x, float y, float z);
             void setScale(float x, float y, float z);
             void addChild(Node* child);
             void removeChild(Node* child);
 
         private:
-            std::vector<Node*>* children = nullptr;
-            glm::mat4* transformationMatrix = nullptr;
+            // glm::vec3 xAxis;  // TODO try const, maybe declare static
+            // glm::vec3 yAxis;
+            // glm::vec3 zAxis;
+
+            glm::vec3 translation;
+            glm::quat rotation;
+            glm::vec3 scale;
+
+            std::vector<Node*> children;
+            // glm::mat4* transformationMatrix = nullptr;
     };
 
 }

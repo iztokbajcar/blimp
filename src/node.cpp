@@ -1,54 +1,67 @@
 #include <algorithm>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "node.hpp"
 
 blimp::Node::Node() {
-    this -> transformationMatrix = new glm::mat4(1.0f);
+    // this -> xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+    // this -> yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+    // this -> zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+    this -> translation = glm::vec3(0.0f);
+    this -> rotation = glm::vec3(0.0f);
+    this -> scale = glm::vec3(1.0f);
 }
 
-glm::mat4* blimp::Node::getTransformationMatrix() {
-    return this -> transformationMatrix;
+glm::mat4 blimp::Node::getTransformationMatrix() {
+    glm::mat4 rotationMatrix = glm::toMat4(this -> rotation);
+    glm::mat4 transformationMatrix = glm::mat4(1.0f);  // identity
+
+    transformationMatrix = glm::translate(transformationMatrix, this -> translation);
+    transformationMatrix *= rotationMatrix;
+    transformationMatrix = glm::scale(transformationMatrix, this -> scale);
+
+    return transformationMatrix;
 }
 
 glm::vec3 blimp::Node::getTranslation() {
-    return glm::vec3(
-        (*this -> transformationMatrix)[3][0], 
-        (*this -> transformationMatrix)[3][1], 
-        (*this -> transformationMatrix)[3][2]
-    ); 
+    return this -> translation; 
+}
+
+glm::quat blimp::Node::getRotation() {
+    return this -> rotation;
 }
 
 glm::vec3 blimp::Node::getScale() {
-    return glm::vec3(
-        (*this -> transformationMatrix)[0][0],
-        (*this -> transformationMatrix)[1][1],
-        (*this -> transformationMatrix)[2][2]
-    );
+    return this -> scale;
+}
+
+std::vector<blimp::Node*>* blimp::Node::getChildren() {
+    return (&this -> children);
 }
 
 void blimp::Node::setTranslation(float x, float y, float z) {
-    // translate the identity matrix by the specified vector
-    *(this -> transformationMatrix) = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+    this -> translation = glm::vec3(x, y, z);
+}
+
+void blimp::Node::setRotation(float x, float y, float z) {
+    this -> rotation = glm::quat(glm::vec3(x, y, z));
 }
 
 void blimp::Node::setScale(float x, float y, float z) {
-    // scale the identity matrix by the specified vector
-    *(this -> transformationMatrix) = glm::scale(glm::mat4(1.0f), glm::vec3(x, y, z));
+    this -> scale = glm::vec3(x, y, z);
 }
 
 void blimp::Node::addChild(Node* child) {
-    this -> children -> push_back(child);
+    this -> children.push_back(child);
 }
 
 void blimp::Node::removeChild(Node* child) {
     // remove every pointer to the child
-    this -> children -> erase(
+    this -> children.erase(
         std::remove(
-            this -> children -> begin(), 
-            this -> children -> end(),
+            this -> children.begin(), 
+            this -> children.end(),
             child
         ),
-        this -> children -> end()
+        this -> children.end()
     );
 }

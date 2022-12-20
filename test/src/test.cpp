@@ -1,5 +1,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
 #include "../../src/cuboid.hpp"
@@ -106,6 +107,15 @@ TEST_F(NodeTest, Translation) {
     );
 }
 
+TEST_F(NodeTest, Rotation) {
+    node -> setRotation(4.0f, 5.0f, 6.0f);
+
+    ASSERT_EQ(
+        node -> getRotation(),
+        glm::quat(glm::vec3(4.0f, 5.0f, 6.0f))
+    );
+}
+
 TEST_F(NodeTest, Scale) {
     node -> setScale(7.0f, 8.0f, 9.0f);
 
@@ -113,6 +123,71 @@ TEST_F(NodeTest, Scale) {
         node -> getScale(),
         glm::vec3(7.0f, 8.0f, 9.0f)
     );
+}
+
+TEST_F(NodeTest, TransformationMatrix) {
+    glm::mat4 testMatrix = glm::mat4(1.0f);
+    // scale
+    testMatrix[0][0] = 2.0f;  // [col][row]
+    testMatrix[1][1] = 2.0f;
+    testMatrix[2][2] = 2.0f;
+    // translate
+    testMatrix[3][0] = 1.0f;
+    testMatrix[3][1] = 2.0f;
+    testMatrix[3][2] = 3.0f;
+
+    node -> setTranslation(1.0f, 2.0f, 3.0f);
+    node -> setScale(2.0f, 2.0f, 2.0f);
+
+    ASSERT_EQ(
+        node -> getTransformationMatrix(),
+        testMatrix
+    );
+}
+
+TEST_F(NodeTest, Children) {
+    ASSERT_EQ(
+        node -> getChildren() -> size(),
+        0
+    );
+
+    blimp::Node* child1 = new blimp::Node();
+    blimp::Node* child2 = new blimp::Node();
+    blimp::Node* grandchild = new blimp::Node();
+    node -> addChild(child1);
+    node -> addChild(child2);
+    child1 -> addChild(grandchild);
+
+    ASSERT_EQ(
+        node -> getChildren() -> size(),
+        2
+    );
+
+    ASSERT_EQ(
+        child1 -> getChildren() -> size(),
+        1
+    );
+
+    ASSERT_EQ(
+        child2 -> getChildren() -> size(),
+        0
+    );
+
+    node -> removeChild(child1);
+
+    ASSERT_EQ(
+        child1 -> getChildren() -> size(),
+        1
+    );
+
+    ASSERT_EQ(
+        node -> getChildren() -> size(),
+        1
+    );
+
+    delete child1;
+    delete child2;
+    delete grandchild;
 }
 
 //////////////////////////////////////////////
