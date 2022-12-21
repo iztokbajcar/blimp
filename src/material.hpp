@@ -6,7 +6,13 @@ namespace blimp {
     class Material {
         public:
             Material();
+            Material(char* vertexShader, char* fragmentShader);
+
+        private:
+            char* vertexShader;
+            char* fragmentShader;
     };
+
 
 }
 

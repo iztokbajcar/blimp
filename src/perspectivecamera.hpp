@@ -1,5 +1,5 @@
-#ifndef _blimp_PERSPECTIVECAMERA
-#define _blimp_PERSPECTIVECAMERA
+#ifndef _blimp_PERSPECTIVE_CAMERA
+#define _blimp_PERSPECTIVE_CAMERA
 
 #include "camera.hpp"
 
