@@ -10,9 +10,11 @@ namespace blimp {
         public:
             Geometry();
             GLfloat* getVertices();
+            GLfloat* getColors();
             int getVertexCount();
         protected:
             GLfloat* vertices = nullptr;
+            GLfloat* colors = nullptr;
             GLfloat* normals = nullptr;
             int vertexCount = 0;
     };

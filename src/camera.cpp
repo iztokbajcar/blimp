@@ -2,13 +2,17 @@
 #include "camera.hpp"
 
 blimp::Camera::Camera() {
-    this -> viewMatrix = glm::mat4(1.0f);
+    
 }
 
-glm::mat4* blimp::Camera::getViewMatrix() {
-    return &this -> viewMatrix;
+glm::mat4 blimp::Camera::getViewMatrix() {
+    return glm::mat4(1.0f);
 }
 
-void blimp::Camera::setViewMatrix(glm::mat4 viewMatrix) {
-    this -> viewMatrix = viewMatrix;
+glm::mat4 blimp::Camera::getProjectionMatrix() {
+    return glm::mat4(1.0f);
+}
+
+void blimp::Camera::setFov(float fov) {
+    this -> fov = fov;
 }

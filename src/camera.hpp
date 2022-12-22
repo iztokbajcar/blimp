@@ -3,15 +3,20 @@
 
 #include <glm/glm.hpp>
 
+#include "node.hpp"
+
 namespace blimp {
     
-    class Camera {
+    class Camera : public blimp::Node {
         public:
             Camera();
-            glm::mat4* getViewMatrix();
+            float getFov();
+            virtual glm::mat4 getViewMatrix();
+            virtual glm::mat4 getProjectionMatrix();
+            void setFov(float fov);
             void setViewMatrix(glm::mat4 viewMatrix);
         protected:
-            glm::mat4 viewMatrix;
+            float fov;
     };
 
 }

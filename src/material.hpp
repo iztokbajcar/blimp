@@ -1,16 +1,22 @@
 #ifndef _blimp_MATERIAL
 #define _blimp_MATERIAL
 
+#include <GL/glew.h>
+#include <string>
+
 namespace blimp {
 
     class Material {
         public:
             Material();
-            Material(char* vertexShader, char* fragmentShader);
+            Material(std::string* vertexShader, std::string* fragmentShader);
+            std::string* getVertexShader();
+            std::string* getFragmentShader();
 
         private:
-            char* vertexShader;
-            char* fragmentShader;
+            std::string vertexShader;
+            std::string fragmentShader;
+            GLuint program;
     };
 
 

@@ -13,18 +13,25 @@ namespace blimp {
 
     class Node {
         public:
+            Node();
             Node(Geometry* geometry, Material* material);
+            ~Node();
 
             glm::mat4 getTransformationMatrix();
+            glm::mat4 getGlobalTransformationMatrix();
             glm::vec3 getTranslation();
             glm::quat getRotation();
             glm::vec3 getScale();
             std::vector<Node*>* getChildren();
+            Geometry* getGeometry();
+            Material* getMaterial();
+            void setGlobalTransformationMatrix(glm::mat4 globalTransformationMatrix);
             void setTranslation(float x, float y, float z);
             void setRotation(float x, float y, float z);
             void setScale(float x, float y, float z);
             void addChild(Node* child);
             void removeChild(Node* child);
+            std::vector<Node*> traverseChildren();
 
         private:
             Geometry* geometry = nullptr;
@@ -34,8 +41,8 @@ namespace blimp {
             glm::quat rotation;
             glm::vec3 scale;
 
-            std::vector<Node*> children;
-            // glm::mat4* transformationMatrix = nullptr;
+            std::vector<Node*>* children;
+            glm::mat4 globalTransformationMatrix;
     };
 
 }

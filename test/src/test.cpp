@@ -1,5 +1,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
@@ -14,18 +15,34 @@
 class WindowTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
-            window = new blimp::Window("BlimpTest");
+            // window = new blimp::Window("BlimpTest");
+            scene = new blimp::Node(NULL, NULL);
+            camera = new blimp::PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
+
+            this -> window = new blimp::Window("BlimpTest", 800, 600);
+            this -> window -> setScene(scene);
+            this -> window -> setCamera(camera);
         }
 
         virtual void TearDown() {
             delete window;
+            delete scene;
+            delete camera;
         }
 
         blimp::Window *window;
+        blimp::Node *scene;
+        blimp::PerspectiveCamera *camera;
 };
 
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
+    blimp::Node* cube = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    cube -> setTranslation(0, 0, 5);
+    scene -> addChild(cube);
+    window -> setScene(scene);
+    window -> setCamera(camera);
+    window -> run();
 }
 
 TEST_F(WindowTest, IsNotNullAfterOpen) {
@@ -76,11 +93,11 @@ class PerspectiveCameraTest : public ::testing::Test {
 };
 
 TEST_F(PerspectiveCameraTest, ViewMatrixIsCorrect) {
-    glm::mat4* viewMatrix = perspectiveCamera -> getViewMatrix();
+    glm::mat4 viewMatrix = perspectiveCamera -> getViewMatrix();
 
     ASSERT_EQ(
-        *viewMatrix, 
-        glm::perspective(45.0f, 1.0f, 0.1f, 100.0f)
+        viewMatrix, 
+        glm::inverse(glm::perspective(45.0f, 1.0f, 0.1f, 100.0f))
     );
 }
 
@@ -188,7 +205,6 @@ TEST_F(NodeTest, Children) {
 
     delete child1;
     delete child2;
-    delete grandchild;
 }
 
 //////////////////////////////////////////////
