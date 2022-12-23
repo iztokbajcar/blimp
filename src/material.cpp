@@ -13,8 +13,7 @@ blimp::Material::Material() {
         "out vec4 vColor;\n"
         "void main() {\n"
         "   vColor = aColor;\n"
-        "   vec4 tmpPosition = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
-        "   gl_Position = vec4(tmpPosition.x, tmpPosition.y, 0.0, 1.0);\n"
+        "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}\0";
 
     std::string defaultFragmentShader =

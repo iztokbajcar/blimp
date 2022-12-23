@@ -17,9 +17,9 @@ class WindowTest : public ::testing::Test {
         virtual void SetUp() {
             // window = new blimp::Window("BlimpTest");
             scene = new blimp::Node(NULL, NULL);
-            camera = new blimp::PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
+            camera = new blimp::PerspectiveCamera(80.0f, 800.0f/600.0f, 0.1f, 100.0f);
 
-            this -> window = new blimp::Window("BlimpTest", 800, 600);
+            this -> window = new blimp::Window("Test", 800, 600);
             this -> window -> setScene(scene);
             this -> window -> setCamera(camera);
         }
@@ -38,7 +38,7 @@ class WindowTest : public ::testing::Test {
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
     blimp::Node* cube = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    cube -> setTranslation(0, 0, -1);
+    cube -> setTranslation(3, 0, -5);
     scene -> addChild(cube);
     window -> setScene(scene);
     window -> setCamera(camera);
