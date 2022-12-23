@@ -15,3 +15,7 @@ GLfloat* blimp::Geometry::getColors() {
 int blimp::Geometry::getVertexCount() {
     return this -> vertexCount;
 }
+
+int blimp::Geometry::getColorCount() {
+    return this -> colorCount;
+}

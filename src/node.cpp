@@ -10,7 +10,7 @@ blimp::Node::Node() {
     this -> rotation = glm::vec3(0.0f);
     this -> scale = glm::vec3(1.0f);
     this -> children = new std::vector<blimp::Node*>();
-    this -> globalTransformationMatrix = glm::mat4(1.0f);
+    this -> parentTransformationMatrix = glm::mat4(1.0f);
 }
 
 blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
@@ -20,7 +20,7 @@ blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
     this -> rotation = glm::vec3(0.0f);
     this -> scale = glm::vec3(1.0f);
     this -> children = new std::vector<blimp::Node*>();
-    this -> globalTransformationMatrix = glm::mat4(1.0f);
+    this -> parentTransformationMatrix = glm::mat4(1.0f);
 
 }
 
@@ -39,8 +39,12 @@ glm::mat4 blimp::Node::getTransformationMatrix() {
     return transformationMatrix;
 }
 
+glm::mat4 blimp::Node::getParentTransformationMatrix() {
+    return this -> parentTransformationMatrix;
+}
+
 glm::mat4 blimp::Node::getGlobalTransformationMatrix() {
-    return this -> globalTransformationMatrix;
+    return this -> parentTransformationMatrix * this -> getTransformationMatrix();
 }
 
 glm::vec3 blimp::Node::getTranslation() {
@@ -67,8 +71,8 @@ blimp::Material* blimp::Node::getMaterial() {
     return this -> material;
 }
 
-void blimp::Node::setGlobalTransformationMatrix(glm::mat4 globalTransformationMatrix) {
-    this -> globalTransformationMatrix = globalTransformationMatrix;
+void blimp::Node::setParentTransformationMatrix(glm::mat4 parentTransformationMatrix) {
+    this -> parentTransformationMatrix = parentTransformationMatrix;
 }
 
 void blimp::Node::setTranslation(float x, float y, float z) {
@@ -84,7 +88,7 @@ void blimp::Node::setScale(float x, float y, float z) {
 }
 
 void blimp::Node::addChild(Node* child) {
-    child -> setGlobalTransformationMatrix(this -> globalTransformationMatrix * child -> getTransformationMatrix());
+    child -> setParentTransformationMatrix(this -> getGlobalTransformationMatrix());
     this -> children -> push_back(child);
 }
 

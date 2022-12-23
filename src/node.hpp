@@ -19,13 +19,14 @@ namespace blimp {
 
             glm::mat4 getTransformationMatrix();
             glm::mat4 getGlobalTransformationMatrix();
+            glm::mat4 getParentTransformationMatrix();
             glm::vec3 getTranslation();
             glm::quat getRotation();
             glm::vec3 getScale();
             std::vector<Node*>* getChildren();
             Geometry* getGeometry();
             Material* getMaterial();
-            void setGlobalTransformationMatrix(glm::mat4 globalTransformationMatrix);
+            void setParentTransformationMatrix(glm::mat4 parentTransformationMatrix);
             void setTranslation(float x, float y, float z);
             void setRotation(float x, float y, float z);
             void setScale(float x, float y, float z);
@@ -42,7 +43,7 @@ namespace blimp {
             glm::vec3 scale;
 
             std::vector<Node*>* children;
-            glm::mat4 globalTransformationMatrix;
+            glm::mat4 parentTransformationMatrix;
     };
 
 }

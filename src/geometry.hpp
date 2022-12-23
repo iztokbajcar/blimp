@@ -12,11 +12,13 @@ namespace blimp {
             GLfloat* getVertices();
             GLfloat* getColors();
             int getVertexCount();
+            int getColorCount();
         protected:
             GLfloat* vertices = nullptr;
             GLfloat* colors = nullptr;
             GLfloat* normals = nullptr;
             int vertexCount = 0;
+            int colorCount = 0;
     };
 
 }

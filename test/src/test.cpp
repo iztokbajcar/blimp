@@ -38,7 +38,7 @@ class WindowTest : public ::testing::Test {
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
     blimp::Node* cube = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    cube -> setTranslation(0, 0, 5);
+    cube -> setTranslation(0, 0, -1);
     scene -> addChild(cube);
     window -> setScene(scene);
     window -> setCamera(camera);
@@ -97,7 +97,7 @@ TEST_F(PerspectiveCameraTest, ViewMatrixIsCorrect) {
 
     ASSERT_EQ(
         viewMatrix, 
-        glm::inverse(glm::perspective(45.0f, 1.0f, 0.1f, 100.0f))
+        glm::inverse(glm::mat4(1.0f))
     );
 }
 

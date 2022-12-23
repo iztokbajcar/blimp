@@ -1,3 +1,4 @@
+#include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "window.hpp"
 
@@ -50,7 +51,7 @@ void blimp::Window::run() {
         glfwPollEvents();
 
         // clear the screen
-        glClearColor(0.05f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         this -> render(this -> scene, this -> camera);
 
@@ -176,16 +177,16 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
             // position
             glGenBuffers(1, &VBOPos);
-            glBindBuffer(GL_ARRAY_BUFFER, VBOPos);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
             glEnableVertexAttribArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOPos);
+            glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
             // color
             glGenBuffers(1, &VBOCol);
-            glBindBuffer(GL_ARRAY_BUFFER, VBOCol);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
             glEnableVertexAttribArray(1);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOCol);
+            glBufferData(GL_ARRAY_BUFFER, vertexCount * 4 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
             glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 
             // unbind buffers
