@@ -317,9 +317,15 @@ class WindowTest : public ::testing::Test {
 
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
-    blimp::Node* cube = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    cube -> setTranslation(3, 0, -5);
-    scene -> addChild(cube);
+    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    blimp::Node* cube2 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    blimp::Node* cube3 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    cube1 -> setTranslation(3, 0, -5);
+    cube2 -> setTranslation(-3, 2, -5);
+    cube3 -> setTranslation(3, 4, -5);
+    scene -> addChild(cube1);
+    scene -> addChild(cube2);
+    scene -> addChild(cube3);
     window -> setScene(scene);
     window -> setCamera(camera);
     window -> run();

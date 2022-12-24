@@ -12,6 +12,10 @@ GLfloat* blimp::Geometry::getColors() {
     return this -> colors;
 }
 
+GLfloat* blimp::Geometry::getNormals() {
+    return this -> normals;
+}
+
 int blimp::Geometry::getVertexCount() {
     return this -> vertexCount;
 }

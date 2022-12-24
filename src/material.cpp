@@ -9,10 +9,11 @@ blimp::Material::Material() {
         "uniform mat4 uViewMatrix;\n"
         "uniform mat4 uProjectionMatrix;\n"
         "layout (location = 0) in vec3 aPosition;\n"
-        "layout (location = 1) in vec4 aColor;\n"
+        "layout (location = 2) in vec3 aNormal;\n"
         "out vec4 vColor;\n"
         "void main() {\n"
-        "   vColor = aColor;\n"
+        "   vec4 normal = normalize(vec4(aNormal, 0.0));\n"
+        "   vColor = normal * 0.5f + 0.5f;\n"
         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}\0";
 

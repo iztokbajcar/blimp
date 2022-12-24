@@ -71,63 +71,6 @@ blimp::Cuboid::Cuboid(float a, float b, float c) {
          a/2,  b/2, -c/2,  // front top right
     };
 
-    // TODO custom colors
-    this -> colors = new GLfloat[12*3*4] {
-        // front face
-         1.0f,  0.0f,  0.0f, 1.0f,  // front bottom right
-         1.0f,  0.0f,  0.0f, 1.0f,  // front top left
-         1.0f,  0.0f,  0.0f, 1.0f,  // front bottom left  
-
-         1.0f,  0.0f,  0.0f, 1.0f,  // front bottom right
-         1.0f,  0.0f,  0.0f, 1.0f,  // front top right
-         1.0f,  0.0f,  0.0f, 1.0f,  // front top left
-
-        // rear face
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear bottom left
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear bottom right
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear top left
-
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear bottom right
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear top right
-         1.0f,  0.0f,  0.0f, 1.0f,  // rear top left
-
-        // top face
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear top left
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top left
-
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear top right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear top left
-
-        // bottom face
-         1.0f,  0.0f,  0.0f,  1.0f,  // front bottom left  
-         1.0f,  0.0f,  0.0f,  1.0f,  // front bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom left
-
-         1.0f,  0.0f,  0.0f,  1.0f,  // front bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom left
-
-        // left face
-         1.0f,  0.0f,  0.0f,  1.0f,  // front bottom left  
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom left
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top left
-
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom left
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear top left
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top left
-
-        // right face
-         1.0f,  0.0f,  0.0f,  1.0f,  // front bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top right
-
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear bottom right
-         1.0f,  0.0f,  0.0f,  1.0f,  // rear top right
-         1.0f,  0.0f,  0.0f,  1.0f,  // front top right
-    };
-
     this -> normals = new GLfloat[12*3*3] {
         // front face
          0,  0, -1,  // front bottom left  
@@ -183,6 +126,10 @@ blimp::Cuboid::Cuboid(float a, float b, float c) {
          1,  0,  0,  // rear top right
          1,  0,  0,  // front top right
     };
+
+
+    // TODO custom colors
+    this -> colors = this -> normals;
 
     this -> vertexCount = 12*3;
 }

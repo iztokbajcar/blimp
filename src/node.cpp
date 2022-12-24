@@ -83,6 +83,10 @@ void blimp::Node::setRotation(float x, float y, float z) {
     this -> rotation = glm::quat(glm::vec3(x, y, z));
 }
 
+void blimp::Node::rotate(float x, float y, float z) {
+    this -> rotation = glm::quat(glm::vec3(x, y, z)) * this -> rotation;
+}
+
 void blimp::Node::setScale(float x, float y, float z) {
     this -> scale = glm::vec3(x, y, z);
 }
@@ -121,7 +125,7 @@ std::vector<blimp::Node*> blimp::Node::traverseChildren() {
         nodes.push_back(child);
         std::vector<Node*> childNodes = child -> traverseChildren();
         nodes.insert(nodes.end(), childNodes.begin(), childNodes.end());
-        
+
     }
 
     return nodes;

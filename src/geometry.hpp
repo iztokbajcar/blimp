@@ -11,6 +11,7 @@ namespace blimp {
             Geometry();
             GLfloat* getVertices();
             GLfloat* getColors();
+            GLfloat* getNormals();
             int getVertexCount();
         protected:
             GLfloat* vertices = nullptr;

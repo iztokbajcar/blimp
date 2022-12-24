@@ -35,7 +35,6 @@ void blimp::PerspectiveCamera::setFar(float far) {
 }
 
 glm::mat4 blimp::PerspectiveCamera::getViewMatrix() {
-    // compute view matrix from camera position, target and up vector
     glm::mat4 viewMatrix = glm::inverse(this -> getGlobalTransformationMatrix());
     return viewMatrix;
 }

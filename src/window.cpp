@@ -47,12 +47,15 @@ void blimp::Window::run() {
     // use the default key callback
     this -> setKeyCallback(this, &defaultKeyCallback);
 
+    // enable depth testing
+    glEnable(GL_DEPTH_TEST);
+
     while (!glfwWindowShouldClose(this -> window)) {
         glfwPollEvents();
 
         // clear the screen
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> render(this -> scene, this -> camera);
 
         glfwSwapBuffers(this -> window);
@@ -161,10 +164,14 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 continue;
             }
 
+            // temporary: rotate each node
+            node -> rotate(0.01f, 0.0f, 0.0f);
+
             // get vertices
             Geometry* geometry = node -> getGeometry();
             GLfloat* vertices = geometry -> getVertices();
             GLfloat* colors = geometry -> getColors();
+            GLfloat* normals = geometry -> getNormals();
             int vertexCount = geometry -> getVertexCount();
 
             // create a VAO
@@ -173,7 +180,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glBindVertexArray(VAO);
 
             // send the vertices to the GPU
-            GLuint VBOPos, VBOCol;
+            GLuint VBOPos, VBOCol, VBONorm;
 
             // position
             glGenBuffers(1, &VBOPos);
@@ -188,6 +195,13 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glBindBuffer(GL_ARRAY_BUFFER, VBOCol);
             glBufferData(GL_ARRAY_BUFFER, vertexCount * 4 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
             glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+
+            // normals
+            glGenBuffers(1, &VBONorm);
+            glEnableVertexAttribArray(2);
+            glBindBuffer(GL_ARRAY_BUFFER, VBONorm);
+            glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), normals, GL_STATIC_DRAW);
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
             // unbind buffers
             glBindBuffer(GL_ARRAY_BUFFER, 0);
