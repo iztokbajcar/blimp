@@ -115,12 +115,13 @@ std::vector<blimp::Node*> blimp::Node::traverseChildren() {
     // insert children
     for (Node* child: *(this -> children)) {
         // skip null pointers
-        if (child == nullptr)
-            continue;
+        // if (child == nullptr)
+        //     continue;
 
         nodes.push_back(child);
         std::vector<Node*> childNodes = child -> traverseChildren();
         nodes.insert(nodes.end(), childNodes.begin(), childNodes.end());
+        
     }
 
     return nodes;

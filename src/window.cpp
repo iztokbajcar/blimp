@@ -141,11 +141,11 @@ GLuint blimp::Window::compileMaterial(Material* material) {
 void blimp::Window::render(Node* scene, Camera* camera) {
     // sort the nodes in the scene by material
     // this may speed up the rendering process as it will reduce the number of glUseProgram calls needed
-    std::map<Material*, std::vector<Node*>> nodesByMaterial = this -> sortNodesByMaterial(scene);
-    std::map<Material*, GLuint> programs = std::map<Material*, GLuint>();
+    MatNodeMap nodesByMaterial = this -> sortNodesByMaterial(scene);
+    ProgramMap programs = ProgramMap();
 
     // prepare the scene
-    for (std::pair<Material*, std::vector<Node*>> pair: nodesByMaterial) {
+    for (MatNodePair pair: nodesByMaterial) {
         Material* material = pair.first;
         std::vector<Node*> nodes = pair.second;
 
@@ -213,8 +213,8 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
 }
 
-std::map<blimp::Material*, std::vector<blimp::Node*>> blimp::Window::sortNodesByMaterial(blimp::Node* root) {
-    std::map<Material*, std::vector<Node*>> nodesByMaterial = std::map<Material*, std::vector<Node*>>();
+MatNodeMap blimp::Window::sortNodesByMaterial(blimp::Node* root) {
+    MatNodeMap nodesByMaterial = MatNodeMap();
 
     // get all the nodes in the scene
     std::vector<Node*> nodes = root -> traverseChildren();

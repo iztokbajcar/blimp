@@ -10,8 +10,8 @@ blimp::PerspectiveCamera::PerspectiveCamera(float fov, float aspect, float near,
     this -> far = far;
 }
 
-float blimp::PerspectiveCamera::getFov() {
-    return this -> fov;
+float blimp::PerspectiveCamera::getAspect() {
+    return this -> aspect;
 }
 
 float blimp::PerspectiveCamera::getNear() {
@@ -20,6 +20,18 @@ float blimp::PerspectiveCamera::getNear() {
 
 float blimp::PerspectiveCamera::getFar() {
     return this -> far;
+}
+
+void blimp::PerspectiveCamera::setAspect(float aspect) {
+    this -> aspect = aspect;
+}
+
+void blimp::PerspectiveCamera::setNear(float near) {
+    this -> near = near;
+}
+
+void blimp::PerspectiveCamera::setFar(float far) {
+    this -> far = far;
 }
 
 glm::mat4 blimp::PerspectiveCamera::getViewMatrix() {

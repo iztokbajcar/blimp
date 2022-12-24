@@ -11,6 +11,10 @@
 #include "camera.hpp"
 #include "node.hpp"
 
+typedef std::map<blimp::Material*, GLuint> ProgramMap;
+typedef std::map<blimp::Material*, std::vector<blimp::Node*>> MatNodeMap;
+typedef std::pair<blimp::Material*, std::vector<blimp::Node*>> MatNodePair;
+
 namespace blimp {
 
     class Window {
@@ -31,8 +35,8 @@ namespace blimp {
             GLFWwindow* window = nullptr;
 
             GLuint compileMaterial(Material* material);
-            std::map<Material*, GLuint> programs;  // stores the compiled programs for each material
-            std::map<Material*, std::vector<Node*>> sortNodesByMaterial(Node* root);  // will be used for speeding up the render process by reducing the number of glUseProgram calls
+            ProgramMap programs;  // stores the compiled programs for each material
+            MatNodeMap sortNodesByMaterial(Node* root);  // will be used for speeding up the render process by reducing the number of glUseProgram calls
 
             Node* scene = nullptr;
             Camera* camera = nullptr;

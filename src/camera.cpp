@@ -5,12 +5,8 @@ blimp::Camera::Camera() {
     
 }
 
-glm::mat4 blimp::Camera::getViewMatrix() {
-    return glm::mat4(1.0f);
-}
-
-glm::mat4 blimp::Camera::getProjectionMatrix() {
-    return glm::mat4(1.0f);
+float blimp::Camera::getFov() {
+    return this -> fov;
 }
 
 void blimp::Camera::setFov(float fov) {

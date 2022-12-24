@@ -11,8 +11,8 @@ namespace blimp {
         public:
             Camera();
             float getFov();
-            virtual glm::mat4 getViewMatrix();
-            virtual glm::mat4 getProjectionMatrix();
+            virtual glm::mat4 getViewMatrix() = 0;
+            virtual glm::mat4 getProjectionMatrix() = 0;
             void setFov(float fov);
             void setViewMatrix(glm::mat4 viewMatrix);
         protected:
