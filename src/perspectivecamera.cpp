@@ -41,7 +41,7 @@ glm::mat4 blimp::PerspectiveCamera::getViewMatrix() {
 
 glm::mat4 blimp::PerspectiveCamera::getProjectionMatrix() {
     return glm::perspective(
-        this -> fov,
+        -this -> fov,
         this -> aspect,
         this -> near,
         this -> far
