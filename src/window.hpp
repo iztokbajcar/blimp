@@ -20,14 +20,14 @@ namespace blimp {
     class Window {
         public:
             Window(std::string title = std::string("Blimp"), int width = 800, int height = 600);
-            glm::mat4 getProjectionMatrix();
+            virtual void update();
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
             void setScene(Node* scene);
             void setCamera(Camera* camera);
             void render(Node* scene, Camera* camera);
             void run();
 
-        private:
+        protected:
             int width;
             int height;
             std::string title; 

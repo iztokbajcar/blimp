@@ -299,7 +299,18 @@ class WindowTest : public ::testing::Test {
             scene = new blimp::Node(NULL, NULL);
             camera = new blimp::PerspectiveCamera(80.0f, 800.0f/600.0f, 0.1f, 100.0f);
 
-            this -> window = new blimp::Window("Test", 800, 600);
+            class MyTestWindow : public blimp::Window {
+                public:
+                    MyTestWindow(const char *title, int width, int height) : blimp::Window(title, width, height) {}
+                    void update() {
+                        std::vector<blimp::Node*>* children = this -> scene -> getChildren();
+                        for (blimp::Node* node: *children) {
+                            node -> rotate(0.00f, 0.01f, 0.01f);
+                        }
+                    }
+            };
+
+            this -> window = new MyTestWindow("Test", 800, 600);
             this -> window -> setScene(scene);
             this -> window -> setCamera(camera);
         }

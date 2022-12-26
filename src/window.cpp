@@ -56,6 +56,7 @@ void blimp::Window::run() {
         // clear the screen
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this -> update();
         this -> render(this -> scene, this -> camera);
 
         glfwSwapBuffers(this -> window);
@@ -164,9 +165,6 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 continue;
             }
 
-            // temporary: rotate each node
-            node -> rotate(0.01f, 0.0f, 0.0f);
-
             // get vertices
             Geometry* geometry = node -> getGeometry();
             GLfloat* vertices = geometry -> getVertices();
@@ -253,4 +251,8 @@ void blimp::Window::defaultKeyCallback(GLFWwindow* window, int key, int scancode
         std::cout << "Closing window" << std::endl;
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+}
+
+void blimp::Window::update() {
+    
 }
