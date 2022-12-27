@@ -30,9 +30,10 @@ blimp::Material::Material() {
     this -> fragmentShader = defaultFragmentShader;
 }
 
-blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader) {
+blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader, ColorVector* colors) {
     this -> vertexShader = *vertexShader;
     this -> fragmentShader = *fragmentShader;
+    this -> colors = colors;
 }
 
 std::string* blimp::Material::getVertexShader() {
@@ -41,4 +42,12 @@ std::string* blimp::Material::getVertexShader() {
 
 std::string* blimp::Material::getFragmentShader() {
     return (&this -> fragmentShader);
+}
+
+ColorVector* blimp::Material::getColors() {
+    return this -> colors;
+}
+
+void blimp::Material::setColors(ColorVector* colors) {
+    this -> colors = colors;
 }

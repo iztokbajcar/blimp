@@ -8,7 +8,6 @@ blimp::Window::Window(std::string title, int width, int height) {
     this -> title = title;
 }
 
-
 void blimp::Window::run() {
     // initialize GLFW
     if (!glfwInit()) {
@@ -29,6 +28,7 @@ void blimp::Window::run() {
     }
 
     this -> window = window;
+    // glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
@@ -44,8 +44,9 @@ void blimp::Window::run() {
 
     this -> window = window;
 
-    // use the default key callback
-    this -> setKeyCallback(this, &defaultKeyCallback);
+    // register key callback
+    this -> setKeyCallback(this, &keyCallbackWrapper);
+    std::cout << "Key callback at " << this << std::endl;
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -66,6 +67,7 @@ void blimp::Window::run() {
 }
 
 void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
+    glfwSetWindowUserPointer(t -> window, this);
     glfwSetKeyCallback(t -> window, callback);
 }
 
@@ -246,7 +248,12 @@ MatNodeMap blimp::Window::sortNodesByMaterial(blimp::Node* root) {
     return nodesByMaterial;
 }
 
-void blimp::Window::defaultKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+void blimp::Window::keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode) {
+    blimp::Window* win = (blimp::Window*) glfwGetWindowUserPointer(window); 
+    win -> keyCallback(key, scancode, action, mode);
+}
+
+void blimp::Window::keyCallback(int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         std::cout << "Closing window" << std::endl;
         glfwSetWindowShouldClose(window, GL_TRUE);

@@ -83,6 +83,10 @@ void blimp::Node::setRotation(float x, float y, float z) {
     this -> rotation = glm::quat(glm::vec3(x, y, z));
 }
 
+void blimp::Node::translate(float x, float y, float z) {
+    this -> translation += glm::vec3(x, y, z);
+}
+
 void blimp::Node::rotate(float x, float y, float z) {
     this -> rotation = glm::quat(glm::vec3(x, y, z)) * this -> rotation;
 }

@@ -31,7 +31,8 @@ namespace blimp {
             int width;
             int height;
             std::string title; 
-            static void defaultKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+            static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
+            virtual void keyCallback(int key, int scancode, int action, int mode);
             GLFWwindow* window = nullptr;
 
             GLuint compileMaterial(Material* material);
@@ -40,6 +41,7 @@ namespace blimp {
 
             Node* scene = nullptr;
             Camera* camera = nullptr;
+            void* winUserPointer = nullptr;
     };
 
 }

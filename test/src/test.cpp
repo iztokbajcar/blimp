@@ -7,6 +7,7 @@
 #include "../../src/cuboid.hpp"
 #include "../../src/material.hpp"
 #include "../../src/node.hpp"
+#include "../../src/normalmaterial.hpp"
 #include "../../src/perspectivecamera.hpp"
 #include "../../src/phongmaterial.hpp"
 #include "../../src/window.hpp"
@@ -60,7 +61,8 @@ TEST_F(MaterialTest, ShadersConstructor) {
 
     material = new blimp::Material(
         &vertexShaderSource,
-        &fragmentShaderSource
+        &fragmentShaderSource,
+        nullptr
     );
 
     ASSERT_EQ(
@@ -308,6 +310,17 @@ class WindowTest : public ::testing::Test {
                             node -> rotate(0.00f, 0.01f, 0.01f);
                         }
                     }
+
+                protected:
+                    void keyCallback(int key, int scancode, int action, int mode) {
+                        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                            glfwSetWindowShouldClose(this -> window, GL_TRUE);
+                        }
+                        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+                            this -> camera -> translate(0.0f, 0.0f, 0.1f);
+                            std::cout << glm::to_string(this -> camera -> getTranslation()) << std::endl;
+                        }
+                    }
             };
 
             this -> window = new MyTestWindow("Test", 800, 600);
@@ -328,9 +341,9 @@ class WindowTest : public ::testing::Test {
 
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
-    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    blimp::Node* cube2 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    blimp::Node* cube3 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    blimp::Node* cube2 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    blimp::Node* cube3 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
     cube1 -> setTranslation(3, 0, -5);
     cube2 -> setTranslation(-3, 2, -5);
     cube3 -> setTranslation(3, 4, -5);
