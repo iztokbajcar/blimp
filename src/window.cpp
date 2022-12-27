@@ -46,7 +46,6 @@ void blimp::Window::run() {
 
     // register key callback
     this -> setKeyCallback(this, &keyCallbackWrapper);
-    std::cout << "Key callback at " << this << std::endl;
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);

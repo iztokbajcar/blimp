@@ -317,8 +317,34 @@ class WindowTest : public ::testing::Test {
                             glfwSetWindowShouldClose(this -> window, GL_TRUE);
                         }
                         if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+                            this -> camera -> translate(0.0f, 0.0f, -0.1f);
+                        }
+                        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
                             this -> camera -> translate(0.0f, 0.0f, 0.1f);
-                            std::cout << glm::to_string(this -> camera -> getTranslation()) << std::endl;
+                        }
+                        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+                            this -> camera -> translate(-0.1f, 0.0f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+                            this -> camera -> translate(0.1f, 0.0f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+                            this -> camera -> translate(0.0f, 0.1f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_F && action == GLFW_PRESS) {
+                            this -> camera -> translate(0.0f, -0.1f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+                            this -> camera -> rotate(0.05f, 0.0f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+                            this -> camera -> rotate(-0.05f, 0.0f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+                            this -> camera -> rotate(0.0f, 0.05f, 0.0f);
+                        }
+                        if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+                            this -> camera -> rotate(0.0f, -0.05f, 0.0f);
                         }
                     }
             };
