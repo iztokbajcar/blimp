@@ -2,7 +2,7 @@
 
 #include "cuboid.hpp"
 
-blimp::Cuboid::Cuboid(float a, float b, float c) {
+blimp::Cuboid::Cuboid(float a, float b, float c, ColorVector* colors) {
     /* 
         A cuboid of the specified dimensions, centered at the origin.
 
@@ -15,6 +15,7 @@ blimp::Cuboid::Cuboid(float a, float b, float c) {
                         a
     */
 
+    this -> vertexCount = 12*3;
     this -> vertices = new GLfloat[12*3*3] {
         // front face
         -a/2, -b/2, -c/2,  // front bottom left  
@@ -127,9 +128,13 @@ blimp::Cuboid::Cuboid(float a, float b, float c) {
          1,  0,  0,  // front top right
     };
 
-
-    // TODO custom colors
-    this -> colors = this -> normals;
-
-    this -> vertexCount = 12*3;
+    // if colors are defined (not a null pointer), use the specified colors
+    // otherwise default to red
+    if (colors != nullptr) {
+        this -> setColors(colors);
+    } else {
+        Color red = Color(Color::RED);
+        ColorVector cv = ColorVector {red};
+        this -> setColors(&cv);
+    }
 }

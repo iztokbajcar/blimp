@@ -19,28 +19,35 @@ const float blimp::Color::TEAL[3] = {0.0f, 0.5f, 0.5f};
 const float blimp::Color::AQUA[3] = {0.0f, 1.0f, 1.0f};
 
 blimp::Color::Color(float r, float g, float b) {
-    this -> rgb[0] = r;
-    this -> rgb[1] = g;
-    this -> rgb[2] = b;
+    this -> r = r;
+    this -> g = g;
+    this -> b = b;
 }
 
 blimp::Color::Color(float r, float g, float b, float a) {
-    this -> rgb[0] = r;
-    this -> rgb[1] = g;
-    this -> rgb[2] = b;
+    this -> r = r;
+    this -> g = g;
+    this -> b = b;
     this -> alpha = a;
 }
 
+blimp::Color::Color(const float rgb[3]) {
+    this -> r = rgb[0];
+    this -> g = rgb[1];
+    this -> b = rgb[2];
+    this -> alpha = 1.0f;
+}
+
 float blimp::Color::getR() {
-    return this -> rgb[0];
+    return this -> r;
 }
 
 float blimp::Color::getG() {
-    return this -> rgb[1];
+    return this -> g;
 }
 
 float blimp::Color::getB() {
-    return this -> rgb[2];
+    return this -> b;
 }
 
 float blimp::Color::getA() {

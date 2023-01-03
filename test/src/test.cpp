@@ -4,6 +4,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
+#include "../../src/color.hpp"
 #include "../../src/cuboid.hpp"
 #include "../../src/material.hpp"
 #include "../../src/node.hpp"
@@ -29,6 +30,7 @@ class CuboidTest : public ::testing::Test {
 
 TEST_F(CuboidTest, IsCenteredAtOrigin) {
     GLfloat* verts = cuboid -> getVertices();
+    std::cout << "OK" << std::endl;
     int vertCount = cuboid -> getVertexCount();
 
     GLfloat sum = 0.0f;
@@ -61,8 +63,7 @@ TEST_F(MaterialTest, ShadersConstructor) {
 
     material = new blimp::Material(
         &vertexShaderSource,
-        &fragmentShaderSource,
-        nullptr
+        &fragmentShaderSource
     );
 
     ASSERT_EQ(
@@ -367,7 +368,10 @@ class WindowTest : public ::testing::Test {
 
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
-    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    ColorVector colors {
+        blimp::Color(blimp::Color::RED)
+    };
+    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1, 0), new blimp::Material());
     blimp::Node* cube2 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
     blimp::Node* cube3 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
     cube1 -> setTranslation(3, 0, -5);

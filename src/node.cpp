@@ -21,7 +21,6 @@ blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
     this -> scale = glm::vec3(1.0f);
     this -> children = new std::vector<blimp::Node*>();
     this -> parentTransformationMatrix = glm::mat4(1.0f);
-
 }
 
 blimp::Node::~Node() {

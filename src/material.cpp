@@ -9,11 +9,10 @@ blimp::Material::Material() {
         "uniform mat4 uViewMatrix;\n"
         "uniform mat4 uProjectionMatrix;\n"
         "layout (location = 0) in vec3 aPosition;\n"
-        "layout (location = 2) in vec3 aNormal;\n"
+        "layout (location = 1) in vec4 aColor;\n"
         "out vec4 vColor;\n"
         "void main() {\n"
-        "   vec4 normal = normalize(uModelMatrix * vec4(aNormal, 0.0));\n"
-        "   vColor = normal * 0.5f + 0.5f;\n"
+        "   vColor = aColor;\n"
         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}\0";
 
@@ -30,10 +29,9 @@ blimp::Material::Material() {
     this -> fragmentShader = defaultFragmentShader;
 }
 
-blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader, ColorVector* colors) {
+blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader) {
     this -> vertexShader = *vertexShader;
     this -> fragmentShader = *fragmentShader;
-    this -> colors = colors;
 }
 
 std::string* blimp::Material::getVertexShader() {
@@ -42,12 +40,4 @@ std::string* blimp::Material::getVertexShader() {
 
 std::string* blimp::Material::getFragmentShader() {
     return (&this -> fragmentShader);
-}
-
-ColorVector* blimp::Material::getColors() {
-    return this -> colors;
-}
-
-void blimp::Material::setColors(ColorVector* colors) {
-    this -> colors = colors;
 }

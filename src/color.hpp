@@ -7,6 +7,7 @@ namespace blimp {
         public:
             Color(float r, float g, float b);
             Color(float r, float g, float b, float a);
+            Color(const float rgb[3]);
             static Color fromRGB(float r, float g, float b);
             float getR();
             float getG();
@@ -32,7 +33,9 @@ namespace blimp {
             static const float AQUA[3];    
 
         private:
-            float rgb[3] = {0.0f, 0.0f, 0.0f};
+            float r = 0.0f;
+            float g = 0.0f;
+            float b = 0.0f;
             float alpha = 1.0f;
     };
 
