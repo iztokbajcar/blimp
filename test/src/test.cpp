@@ -310,6 +310,12 @@ class WindowTest : public ::testing::Test {
                         for (blimp::Node* node: *children) {
                             node -> rotate(0.00f, 0.01f, 0.01f);
                         }
+
+                        if (this -> fpsDisplayThrottle == 10) {
+                            this -> setTitle("BlimpTest | " + std::to_string(this -> getFPS()) + " FPS");
+                            this -> fpsDisplayThrottle = 0;
+                        }
+                        this -> fpsDisplayThrottle++;
                     }
 
                 protected:
@@ -348,6 +354,9 @@ class WindowTest : public ::testing::Test {
                             this -> camera -> rotate(0.0f, -0.05f, 0.0f);
                         }
                     }
+
+                private:
+                    int fpsDisplayThrottle = 0;
             };
 
             this -> window = new MyTestWindow("Test", 800, 600);

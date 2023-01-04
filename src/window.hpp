@@ -2,6 +2,7 @@
 #define _blimp_WINDOW
 
 #define GLEW_STATIC
+#include <chrono>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -22,10 +23,12 @@ namespace blimp {
             Window(std::string title = std::string("Blimp"), int width = 800, int height = 600);
             virtual void update();
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
+            void setTitle(std::string title);
             void setScene(Node* scene);
             void setCamera(Camera* camera);
             void render(Node* scene, Camera* camera);
             void run();
+            float getFPS();
 
         protected:
             int width;
@@ -42,6 +45,9 @@ namespace blimp {
             Node* scene = nullptr;
             Camera* camera = nullptr;
             void* winUserPointer = nullptr;
+            uint64_t lastFrameTime = 0;  // timestamp of the last render
+            float fpsSmoothing = 0.9;  // smoothing factor for the FPS calculation
+            float framesPerSecond = 0;
     };
 
 }

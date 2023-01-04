@@ -50,6 +50,8 @@ void blimp::Window::run() {
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
 
+    this -> lastFrameTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
     while (!glfwWindowShouldClose(this -> window)) {
         glfwPollEvents();
 
@@ -58,6 +60,23 @@ void blimp::Window::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> update();
         this -> render(this -> scene, this -> camera);
+
+        uint64_t now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        float previousFPS = this -> framesPerSecond;  // the value stored from before
+        float currentFPS;  // the FPS that will be calculated from the last render
+
+        // std::cout << this -> lastFrameTime << " " << now << std::endl;
+        if (now - this -> lastFrameTime == 0) {
+            currentFPS = 0;
+        } else {
+            currentFPS = 1000.0f / (now - this -> lastFrameTime);
+        }
+
+        // calculate FPS by smoothing
+        float smoothedFPS = (previousFPS * this -> fpsSmoothing) + (currentFPS * (1 - this -> fpsSmoothing));
+        this -> framesPerSecond = smoothedFPS;
+
+        this -> lastFrameTime = now;
 
         glfwSwapBuffers(this -> window);
     }
@@ -68,6 +87,11 @@ void blimp::Window::run() {
 void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
     glfwSetWindowUserPointer(t -> window, this);
     glfwSetKeyCallback(t -> window, callback);
+}
+
+void blimp::Window::setTitle(std::string title) {
+    this -> title = title;  // TODO check if needed
+    glfwSetWindowTitle(this -> window, this -> title.c_str());
 }
 
 void blimp::Window::setScene(Node* scene) {
@@ -261,4 +285,8 @@ void blimp::Window::keyCallback(int key, int scancode, int action, int mode) {
 
 void blimp::Window::update() {
     
+}
+
+float blimp::Window::getFPS() {
+    return this -> framesPerSecond;
 }
