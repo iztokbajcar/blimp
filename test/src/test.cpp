@@ -312,7 +312,8 @@ class WindowTest : public ::testing::Test {
                         }
 
                         if (this -> fpsDisplayThrottle == 10) {
-                            this -> setTitle("BlimpTest | " + std::to_string(this -> getFPS()) + " FPS");
+                            float fps = this -> getFPS();
+                            this -> setTitle("BlimpTest | " + std::to_string(fps) + " FPS");
                             this -> fpsDisplayThrottle = 0;
                         }
                         this -> fpsDisplayThrottle++;

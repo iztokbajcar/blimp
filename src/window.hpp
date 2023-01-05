@@ -28,7 +28,7 @@ namespace blimp {
             void setCamera(Camera* camera);
             void render(Node* scene, Camera* camera);
             void run();
-            float getFPS();
+            float getFPS(float smoothingFactor = 0.9);
 
         protected:
             int width;
@@ -45,9 +45,10 @@ namespace blimp {
             Node* scene = nullptr;
             Camera* camera = nullptr;
             void* winUserPointer = nullptr;
+
             uint64_t lastFrameTime = 0;  // timestamp of the last render
-            float fpsSmoothing = 0.9;  // smoothing factor for the FPS calculation
-            float framesPerSecond = 0;
+            float previousFramesPerSecond = 0;  // previous FPS value (used for smoothing)
+            float currentFramesPerSecond = 0;
     };
 
 }
