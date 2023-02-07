@@ -17,12 +17,19 @@ namespace blimp {
             Node(Geometry* geometry, Material* material);
             ~Node();
 
+            static const int NODE_TYPE_NODE = 0;
+            static const int NODE_TYPE_DIRECTIONAL_LIGHT = 1;
+            static const int NODE_TYPE_POINT_LIGHT = 2;
+            static const int NODE_TYPE_SPOT_LIGHT = 3;
+
+            int getType();
             glm::mat4 getTransformationMatrix();
             glm::mat4 getGlobalTransformationMatrix();
             glm::mat4 getParentTransformationMatrix();
             glm::vec3 getTranslation();
             glm::quat getRotation();
             glm::vec3 getScale();
+            glm::vec3 getForwardDirection();  // get the direction the node is facing, in world space
             std::vector<Node*>* getChildren();
             Geometry* getGeometry();
             Material* getMaterial();
@@ -35,6 +42,9 @@ namespace blimp {
             void addChild(Node* child);
             void removeChild(Node* child);
             std::vector<Node*> traverseChildren();
+
+        protected:
+            int nodeType = NODE_TYPE_NODE;
 
         private:
             Geometry* geometry = nullptr;

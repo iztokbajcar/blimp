@@ -13,11 +13,14 @@ namespace blimp {
             Material(std::string* vertexShader, std::string* fragmentShader);
             std::string* getVertexShader();
             std::string* getFragmentShader();
+            bool usesLights();
+            void setUsesLights(bool usesLights);
 
         protected:
             std::string vertexShader;
             std::string fragmentShader;
             GLuint program;
+            bool lights = false;  // if the material uses lights
     };
 
 

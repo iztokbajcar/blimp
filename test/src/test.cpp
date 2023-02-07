@@ -1,5 +1,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <gtest/gtest.h>
@@ -116,6 +117,26 @@ TEST_F(NodeTest, Scale) {
     ASSERT_EQ(
         node -> getScale(),
         glm::vec3(7.0f, 8.0f, 9.0f)
+    );
+}
+
+TEST_F(NodeTest, ForwardDirection) {
+    node -> setRotation(0.0f, 0.0f, 0.0f);
+
+    ASSERT_EQ(
+        node -> getForwardDirection(),
+        glm::vec3(0.0f, 0.0f, 1.0f)
+    );
+
+    node -> setRotation(0.0f, glm::half_pi<float>(), 0.0f);
+    // node -> setRotation(0.0f, 3.1415926535897932384626433f / 2, 0.0f);
+
+    std::cout << glm::to_string(node -> getForwardDirection()) << std::endl;
+    std::cout << glm::to_string(glm::vec3(1.0f, 0.0f, 0.0f)) << std::endl;
+
+    ASSERT_LT(
+        node -> getForwardDirection().z - glm::vec3(1.0f, 0.0f, 0.0f).z,
+        1e-7f
     );
 }
 

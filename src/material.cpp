@@ -41,3 +41,11 @@ std::string* blimp::Material::getVertexShader() {
 std::string* blimp::Material::getFragmentShader() {
     return (&this -> fragmentShader);
 }
+
+bool blimp::Material::usesLights() {
+    return (this -> lights);
+}
+
+void blimp::Material::setUsesLights(bool usesLights) {
+    this -> lights = usesLights;
+}

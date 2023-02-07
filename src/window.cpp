@@ -164,11 +164,36 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     return program;
 }
 
+blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
+    DLights dLights = DLights();
+    PLights pLights = PLights();
+    SLights sLights = SLights();
+
+    for (Node* node: *nodes) {
+        int nodeType = node -> getType();
+        if (nodeType == Node::NODE_TYPE_DIRECTIONAL_LIGHT) {
+            dLights.push_back((DirectionalLight*) node);
+        } else if (nodeType == Node::NODE_TYPE_POINT_LIGHT) {
+            pLights.push_back((PointLight*) node);
+        } else if (nodeType == Node::NODE_TYPE_SPOT_LIGHT) {
+            sLights.push_back((SpotLight*) node);
+        } 
+    }
+
+    return LightsData(dLights, pLights, sLights);
+}
+
 void blimp::Window::render(Node* scene, Camera* camera) {
+    // retrieve all nodes in the scene
+    std::vector<Node*> nodes = scene -> traverseChildren();
+
     // sort the nodes in the scene by material
     // this may speed up the rendering process as it will reduce the number of glUseProgram calls needed
-    MatNodeMap nodesByMaterial = this -> sortNodesByMaterial(scene);
+    MatNodeMap nodesByMaterial = this -> sortNodesByMaterial(&nodes);
     ProgramMap programs = ProgramMap();
+
+    // get all lights in the scene
+    LightsData lightsData = this -> getLights(&nodes);
 
     // prepare the scene
     for (MatNodePair pair: nodesByMaterial) {
@@ -179,6 +204,41 @@ void blimp::Window::render(Node* scene, Camera* camera) {
         GLuint program = this -> compileMaterial(material);
         programs[material] = program;
         // std::cout << "compiled program " << program << " for material " << material << std::endl;
+
+        // lights
+        if (material -> usesLights()) {
+            // uniform locations
+            GLint uNumDLights = glGetUniformLocation(program, "uNumDLights");
+            GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
+            GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
+            int nDLights = lightsData.countDirectionalLights();
+            int nPLights = lightsData.countPointLights();
+            int nSLights = lightsData.countSpotLights();
+            glUniform1i(uNumDLights, nDLights);
+            glUniform1i(uNumPLights, nPLights);
+            glUniform1i(uNumSLights, nSLights);
+
+            // directional lights
+            DLights* dLights = lightsData.getDirectionalLights();
+            for (int i = 0; i < nDLights; i++) {
+                // set uniforms
+                // TODO
+            }
+
+            // point lights
+            PLights* pLights = lightsData.getPointLights();
+            for (int i = 0; i < nPLights; i++) {
+                // set uniforms
+                // TODO
+            }
+
+            // spot lights
+            SLights* sLights = lightsData.getSpotLights();
+            for (int i = 0; i < nSLights; i++) {
+                // set uniforms
+                // TODO
+            }
+        }
 
         // prepare nodes
         for (Node* node: nodes) {
@@ -247,13 +307,10 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
 }
 
-MatNodeMap blimp::Window::sortNodesByMaterial(blimp::Node* root) {
+MatNodeMap blimp::Window::sortNodesByMaterial(std::vector<Node*>* nodes) {
     MatNodeMap nodesByMaterial = MatNodeMap();
 
-    // get all the nodes in the scene
-    std::vector<Node*> nodes = root -> traverseChildren();
-
-    for (Node* node : nodes) {
+    for (Node* node : *nodes) {
         Material* material = node -> getMaterial();
 
         // if the material is not in the map, create a new vector

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include "node.hpp"
 
@@ -25,6 +26,10 @@ blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
 
 blimp::Node::~Node() {
     delete this -> children;
+}
+
+int blimp::Node::getType() {
+    return this -> nodeType;
 }
 
 glm::mat4 blimp::Node::getTransformationMatrix() {
@@ -56,6 +61,12 @@ glm::quat blimp::Node::getRotation() {
 
 glm::vec3 blimp::Node::getScale() {
     return this -> scale;
+}
+
+glm::vec3 blimp::Node::getForwardDirection() {
+    glm::mat4 transformationMatrix = this -> getGlobalTransformationMatrix();
+    glm::vec4 forward = transformationMatrix * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);  // by default, the node will look in the positive z direction
+    return glm::normalize(glm::vec3(forward));
 }
 
 std::vector<blimp::Node*>* blimp::Node::getChildren() {

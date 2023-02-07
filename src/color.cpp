@@ -18,10 +18,18 @@ const float blimp::Color::BLUE[3] = {0.0f, 0.0f, 1.0f};
 const float blimp::Color::TEAL[3] = {0.0f, 0.5f, 0.5f};
 const float blimp::Color::AQUA[3] = {0.0f, 1.0f, 1.0f};
 
+blimp::Color::Color() {
+    this -> r = 0.0f;
+    this -> g = 0.0f;
+    this -> b = 0.0f;
+    this -> alpha = 1.0f;
+}
+
 blimp::Color::Color(float r, float g, float b) {
     this -> r = r;
     this -> g = g;
     this -> b = b;
+    this -> alpha = 1.0f;
 }
 
 blimp::Color::Color(float r, float g, float b, float a) {
