@@ -17,6 +17,7 @@ blimp::NormalMaterial::NormalMaterial() {
 
     std::string fragmentShader =
         "#version 330 core\n"
+        "// normal material fragment shader\n"
         "precision mediump float;\n"
         "in vec4 vColor;\n"
         "out vec4 oColor;\n"

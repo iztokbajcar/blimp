@@ -100,6 +100,9 @@ void blimp::Window::setCamera(Camera* camera) {
 }
 
 GLuint blimp::Window::compileMaterial(Material* material) {
+    // if material is not specified, do not compile
+    
+
     // check if the program has already been compiled
     if (this -> programs[material] != 0) {
         return this -> programs[material];
@@ -165,13 +168,17 @@ GLuint blimp::Window::compileMaterial(Material* material) {
 }
 
 blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
+    ALights aLights = ALights();
     DLights dLights = DLights();
     PLights pLights = PLights();
     SLights sLights = SLights();
 
     for (Node* node: *nodes) {
         int nodeType = node -> getType();
-        if (nodeType == Node::NODE_TYPE_DIRECTIONAL_LIGHT) {
+
+        if (nodeType == Node::NODE_TYPE_AMBIENT_LIGHT) {
+            aLights.push_back((AmbientLight*) node);
+        } else if (nodeType == Node::NODE_TYPE_DIRECTIONAL_LIGHT) {
             dLights.push_back((DirectionalLight*) node);
         } else if (nodeType == Node::NODE_TYPE_POINT_LIGHT) {
             pLights.push_back((PointLight*) node);
@@ -180,49 +187,110 @@ blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
         } 
     }
 
-    return LightsData(dLights, pLights, sLights);
+    return LightsData(aLights, dLights, pLights, sLights);
 }
 
 void blimp::Window::render(Node* scene, Camera* camera) {
     // retrieve all nodes in the scene
     std::vector<Node*> nodes = scene -> traverseChildren();
 
-    // sort the nodes in the scene by material
+    // sort the meshes in the scene by material
     // this may speed up the rendering process as it will reduce the number of glUseProgram calls needed
-    MatNodeMap nodesByMaterial = this -> sortNodesByMaterial(&nodes);
+    MatMeshMap meshesByMaterial = this -> sortMeshesByMaterial(&nodes);
     ProgramMap programs = ProgramMap();
 
     // get all lights in the scene
     LightsData lightsData = this -> getLights(&nodes);
 
     // prepare the scene
-    for (MatNodePair pair: nodesByMaterial) {
+    for (MatMeshPair pair: meshesByMaterial) {
         Material* material = pair.first;
-        std::vector<Node*> nodes = pair.second;
+        std::vector<Mesh*> meshes = pair.second;
 
         // compile the material's shaders
         GLuint program = this -> compileMaterial(material);
         programs[material] = program;
-        // std::cout << "compiled program " << program << " for material " << material << std::endl;
+
+        // set the program
+        glUseProgram(program);
 
         // lights
         if (material -> usesLights()) {
             // uniform locations
+            GLint uNumALights = glGetUniformLocation(program, "uNumALights");
             GLint uNumDLights = glGetUniformLocation(program, "uNumDLights");
-            GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
-            GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
+            //GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
+            //GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
+            int nALights = lightsData.countAmbientLights();
             int nDLights = lightsData.countDirectionalLights();
             int nPLights = lightsData.countPointLights();
             int nSLights = lightsData.countSpotLights();
+            glUniform1i(uNumALights, nALights);
             glUniform1i(uNumDLights, nDLights);
-            glUniform1i(uNumPLights, nPLights);
-            glUniform1i(uNumSLights, nSLights);
+            //glUniform1i(uNumPLights, nPLights);
+            //glUniform1i(uNumSLights, nSLights);
+            //std::cout << "uNumALights: " << uNumALights << std::endl;
+            //std::cout << "uNumDLights: " << uNumDLights << std::endl;
+            //std::cout << "uNumPLights: " << uNumPLights << std::endl;
+            //std::cout << "uNumSLights: " << uNumSLights << std::endl;
+
+            GLint uALights = glGetUniformLocation(program, "uALights");
+            GLint uDLights = glGetUniformLocation(program, "uDLights");
+            //GLint uPLights = glGetUniformLocation(program, "uPLights");
+            //GLint uSLights = glGetUniformLocation(program, "uSLights");
+
+            // ambient lights (should only be one in the scene though)
+            ALights* aLights = lightsData.getAmbientLights();
+            for (int i = 0; i < nALights; i++) {
+                AmbientLight* l = aLights -> at(i);
+                Color* c = l -> getColor();
+                float in = l -> getIntensity();
+
+                GLint uALightsIColor = glGetUniformLocation(program, std::string("uALights[" + std::to_string(i) + "].color").c_str());
+                GLint uALightsIIntensity = glGetUniformLocation(program, std::string("uALights[" + std::to_string(i) + "].intensity").c_str());
+
+                // set uniforms
+                glUniform3f(
+                    uALightsIColor,
+                    c -> getR(),
+                    c -> getG(),
+                    c -> getB()
+                );
+                glUniform1f(
+                    uALightsIIntensity,
+                    in
+                );
+            }
 
             // directional lights
             DLights* dLights = lightsData.getDirectionalLights();
             for (int i = 0; i < nDLights; i++) {
+                DirectionalLight* l = dLights -> at(i);
+                Color* c = l -> getColor();
+                glm::vec3 p = l -> getTranslation();
+                float in = l -> getIntensity();
+                
+                GLint uDLightsIColor = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].color").c_str());
+                GLint uDLightsIPosition = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].position").c_str());
+                GLint uDLightsIIntensity = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].intensity").c_str());
+
                 // set uniforms
-                // TODO
+                glUniform3f(
+                    uDLightsIColor,
+                    c -> getR(),
+                    c -> getG(),
+                    c -> getB()
+                );
+                glUniform3f(
+                    uDLightsIPosition,
+                    p.x,
+                    p.y,
+                    p.z
+                );
+                glUniform1f(
+                    uDLightsIIntensity,
+                    in
+                );
             }
 
             // point lights
@@ -240,15 +308,15 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             }
         }
 
-        // prepare nodes
-        for (Node* node: nodes) {
+        // prepare meshes
+        for (Mesh* mesh: meshes) {
             // check if geometry is defined
-            if (node -> getGeometry() == nullptr) {
-                continue;
-            }
+            // if (mesh -> getGeometry() == nullptr) {
+            //     continue;
+            // }
 
             // get vertices
-            Geometry* geometry = node -> getGeometry();
+            Geometry* geometry = mesh -> getGeometry();
             GLfloat* vertices = geometry -> getVertices();
             GLfloat* colors = geometry -> getColors();
             GLfloat* normals = geometry -> getNormals();
@@ -287,14 +355,12 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
-            // set the program
-            glUseProgram(program);
 
             // uniforms
             GLint uModelMatrix = glGetUniformLocation(program, "uModelMatrix");
             GLint uViewMatrix = glGetUniformLocation(program, "uViewMatrix");
             GLint uProjectionMatrix = glGetUniformLocation(program, "uProjectionMatrix");
-            glUniformMatrix4fv(uModelMatrix, 1, GL_FALSE, glm::value_ptr(node -> getGlobalTransformationMatrix()));
+            glUniformMatrix4fv(uModelMatrix, 1, GL_FALSE, glm::value_ptr(mesh -> getGlobalTransformationMatrix()));
             glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE, glm::value_ptr(camera -> getViewMatrix()));
             glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, glm::value_ptr(camera -> getProjectionMatrix()));
 
@@ -307,22 +373,28 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
 }
 
-MatNodeMap blimp::Window::sortNodesByMaterial(std::vector<Node*>* nodes) {
-    MatNodeMap nodesByMaterial = MatNodeMap();
+MatMeshMap blimp::Window::sortMeshesByMaterial(std::vector<Node*>* nodes) {
+    MatMeshMap meshesByMaterial = MatMeshMap();
 
     for (Node* node : *nodes) {
-        Material* material = node -> getMaterial();
+        // skip if the current node is not a mesh
+        if (node -> getType() != Node::NODE_TYPE_MESH) {
+            continue;
+        }
+
+        Mesh* mesh = (Mesh*) node;
+        Material* material = mesh -> getMaterial();
 
         // if the material is not in the map, create a new vector
-        if (nodesByMaterial.find(material) == nodesByMaterial.end()) {
-            nodesByMaterial[material] = std::vector<Node*>();
+        if (meshesByMaterial.find(material) == meshesByMaterial.end()) {
+            meshesByMaterial[material] = std::vector<Mesh*>();
         }
 
         // add the node to the vector of nodes with the same material
-        nodesByMaterial[material].push_back(node);
+        meshesByMaterial[material].push_back(mesh);
     }
 
-    return nodesByMaterial;
+    return meshesByMaterial;
 }
 
 void blimp::Window::keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode) {

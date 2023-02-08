@@ -5,9 +5,12 @@
 #include <glm/gtx/string_cast.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
+#include "../../src/ambientlight.hpp"
 #include "../../src/color.hpp"
 #include "../../src/cuboid.hpp"
+#include "../../src/lambertmaterial.hpp"
 #include "../../src/material.hpp"
+#include "../../src/mesh.hpp"
 #include "../../src/node.hpp"
 #include "../../src/normalmaterial.hpp"
 #include "../../src/perspectivecamera.hpp"
@@ -31,7 +34,6 @@ class CuboidTest : public ::testing::Test {
 
 TEST_F(CuboidTest, IsCenteredAtOrigin) {
     GLfloat* verts = cuboid -> getVertices();
-    std::cout << "OK" << std::endl;
     int vertCount = cuboid -> getVertexCount();
 
     GLfloat sum = 0.0f;
@@ -83,7 +85,7 @@ TEST_F(MaterialTest, ShadersConstructor) {
 class NodeTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
-            node = new blimp::Node(new blimp::Geometry(), new blimp::Material());
+            node = new blimp::Node();
         }
 
         virtual void TearDown() {
@@ -163,7 +165,7 @@ TEST_F(NodeTest, TransformationMatrix) {
 TEST_F(NodeTest, ParentTransformationMatrix) {
     node -> setTranslation(1.0f, 2.0f, 3.0f);
     
-    blimp::Node* child = new blimp::Node(new blimp::Geometry(), new blimp::Material());
+    blimp::Node* child = new blimp::Node();
     node -> addChild(child); 
 
     glm::mat4 testMatrix = glm::mat4(1.0f);
@@ -184,9 +186,9 @@ TEST_F(NodeTest, Children) {
         0
     );
 
-    blimp::Node* child1 = new blimp::Node(new blimp::Geometry(), new blimp::Material());
-    blimp::Node* child2 = new blimp::Node(new blimp::Geometry(), new blimp::Material());
-    blimp::Node* grandchild = new blimp::Node(new blimp::Geometry(), new blimp::Material());
+    blimp::Node* child1 = new blimp::Node();
+    blimp::Node* child2 = new blimp::Node();
+    blimp::Node* grandchild = new blimp::Node();
     node -> addChild(child1);
     node -> addChild(child2);
     child1 -> addChild(grandchild);
@@ -297,21 +299,21 @@ TEST_F(PerspectiveCameraTest, SetParameters) {
 
 //////////////////// PhongMaterial ////////////////////
 
-class PhongMaterialTest : public ::testing::Test {
+class LambertMaterialTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
-            phongMaterial = new blimp::PhongMaterial();
+            lambertMaterial = new blimp::LambertMaterial();
         }
 
         virtual void TearDown() {
-            delete phongMaterial;
+            delete lambertMaterial;
         }
 
-        blimp::PhongMaterial *phongMaterial;
+        blimp::LambertMaterial *lambertMaterial;
 };
 
-TEST_F(PhongMaterialTest, IsNotNull) {
-    ASSERT_NE(phongMaterial, nullptr);
+TEST_F(LambertMaterialTest, IsNotNull) {
+    ASSERT_NE(lambertMaterial, nullptr);
 }
 
 //////////////////// Window ////////////////////
@@ -320,7 +322,7 @@ class WindowTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
             // window = new blimp::Window("BlimpTest");
-            scene = new blimp::Node(NULL, NULL);
+            scene = new blimp::Node();
             camera = new blimp::PerspectiveCamera(80.0f, 800.0f/600.0f, 0.1f, 100.0f);
 
             class MyTestWindow : public blimp::Window {
@@ -400,17 +402,27 @@ class WindowTest : public ::testing::Test {
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
     ColorVector colors {
-        blimp::Color(blimp::Color::RED)
+        blimp::Color(blimp::Color::WHITE)
     };
-    blimp::Node* cube1 = new blimp::Node(new blimp::Cuboid(1, 1, 1, 0), new blimp::Material());
-    blimp::Node* cube2 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
-    blimp::Node* cube3 = new blimp::Node(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    blimp::Mesh* cube1 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::Material());
+    blimp::Mesh* cube2 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    blimp::Mesh* cube3 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
+    blimp::Mesh* cube4 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1, &colors), new blimp::LambertMaterial());
     cube1 -> setTranslation(3, 0, -5);
     cube2 -> setTranslation(-3, 2, -5);
     cube3 -> setTranslation(3, 4, -5);
+    cube4 -> setTranslation(-3, -2, -5);
     scene -> addChild(cube1);
     scene -> addChild(cube2);
     scene -> addChild(cube3);
+    scene -> addChild(cube4);
+
+    blimp::AmbientLight* ambientLight = new blimp::AmbientLight(blimp::Color(blimp::Color::AQUA), 0.5f);
+    scene -> addChild(ambientLight);
+    blimp::DirectionalLight* directionalLight = new blimp::DirectionalLight(blimp::Color(blimp::Color::RED), 0.5f);
+    directionalLight -> setTranslation(10, 3, 2);
+    scene -> addChild(directionalLight);
+
     window -> setScene(scene);
     window -> setCamera(camera);
     window -> run();

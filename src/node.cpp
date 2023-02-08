@@ -5,18 +5,6 @@
 #include "node.hpp"
 
 blimp::Node::Node() {
-    this -> geometry = nullptr;
-    this -> material = nullptr;
-    this -> translation = glm::vec3(0.0f);
-    this -> rotation = glm::vec3(0.0f);
-    this -> scale = glm::vec3(1.0f);
-    this -> children = new std::vector<blimp::Node*>();
-    this -> parentTransformationMatrix = glm::mat4(1.0f);
-}
-
-blimp::Node::Node(blimp::Geometry* geometry, blimp::Material* material) {
-    this -> geometry = geometry;
-    this -> material = material;
     this -> translation = glm::vec3(0.0f);
     this -> rotation = glm::vec3(0.0f);
     this -> scale = glm::vec3(1.0f);
@@ -71,14 +59,6 @@ glm::vec3 blimp::Node::getForwardDirection() {
 
 std::vector<blimp::Node*>* blimp::Node::getChildren() {
     return this -> children;
-}
-
-blimp::Geometry* blimp::Node::getGeometry() {
-    return this -> geometry;
-}
-
-blimp::Material* blimp::Node::getMaterial() {
-    return this -> material;
 }
 
 void blimp::Node::setParentTransformationMatrix(glm::mat4 parentTransformationMatrix) {

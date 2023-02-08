@@ -8,6 +8,7 @@ namespace blimp {
     class DirectionalLight : public blimp::Light {
         public:
             DirectionalLight();
+            DirectionalLight(blimp::Color color, float intensity);
     };
 
 }

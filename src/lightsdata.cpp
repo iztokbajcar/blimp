@@ -1,9 +1,14 @@
 #include "lightsdata.hpp"
 
-blimp::LightsData::LightsData(DLights directionalLights, PLights pointLights, SLights spotLights) {
+blimp::LightsData::LightsData(ALights ambientLights, DLights directionalLights, PLights pointLights, SLights spotLights) {
+    this -> ambientLights = ambientLights;
     this -> directionalLights = directionalLights;
     this -> pointLights = pointLights;
     this -> spotLights = spotLights;
+}
+
+int blimp::LightsData::countAmbientLights() {
+    return this -> ambientLights.size();
 }
 
 int blimp::LightsData::countDirectionalLights() {
@@ -16,6 +21,10 @@ int blimp::LightsData::countPointLights() {
 
 int blimp::LightsData::countSpotLights() {
     return this -> spotLights.size();
+}
+
+ALights* blimp::LightsData::getAmbientLights() {
+    return &this -> ambientLights;
 }
 
 DLights* blimp::LightsData::getDirectionalLights() {

@@ -11,11 +11,11 @@
 
 #include "camera.hpp"
 #include "lightsdata.hpp"
-#include "node.hpp"
+#include "mesh.hpp"
 
 typedef std::map<blimp::Material*, GLuint> ProgramMap;
-typedef std::map<blimp::Material*, std::vector<blimp::Node*>> MatNodeMap;
-typedef std::pair<blimp::Material*, std::vector<blimp::Node*>> MatNodePair;
+typedef std::map<blimp::Material*, std::vector<blimp::Mesh*>> MatMeshMap;
+typedef std::pair<blimp::Material*, std::vector<blimp::Mesh*>> MatMeshPair;
 
 namespace blimp {
 
@@ -42,7 +42,7 @@ namespace blimp {
             GLuint compileMaterial(Material* material);
             LightsData getLights(std::vector<Node*>* nodes);  // finds lights in the vector of nodes
             ProgramMap programs;  // stores the compiled programs for each material
-            MatNodeMap sortNodesByMaterial(std::vector<Node*>* nodes);  // will be used for speeding up the render process by reducing the number of glUseProgram calls
+            MatMeshMap sortMeshesByMaterial(std::vector<Node*>* nodes);  // will be used for speeding up the render process by reducing the number of glUseProgram calls
 
             Node* scene = nullptr;
             Camera* camera = nullptr;
