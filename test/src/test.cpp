@@ -331,7 +331,9 @@ class WindowTest : public ::testing::Test {
                     void update() {
                         std::vector<blimp::Node*>* children = this -> scene -> getChildren();
                         for (blimp::Node* node: *children) {
-                            node -> rotate(0.00f, 0.01f, 0.01f);
+                            if (node -> getType() == blimp::Node::NODE_TYPE_MESH) {
+                                node -> rotate(0.00f, 0.01f, 0.01f);
+                            }
                         }
 
                         if (this -> fpsDisplayThrottle == 10) {
@@ -417,9 +419,9 @@ TEST_F(WindowTest, IsNotNull) {
     scene -> addChild(cube3);
     scene -> addChild(cube4);
 
-    blimp::AmbientLight* ambientLight = new blimp::AmbientLight(blimp::Color(blimp::Color::AQUA), 0.5f);
+    blimp::AmbientLight* ambientLight = new blimp::AmbientLight(blimp::Color(blimp::Color::AQUA), 0.1f);
     scene -> addChild(ambientLight);
-    blimp::DirectionalLight* directionalLight = new blimp::DirectionalLight(blimp::Color(blimp::Color::RED), 0.5f);
+    blimp::DirectionalLight* directionalLight = new blimp::DirectionalLight(blimp::Color(blimp::Color::RED), 1.0f);
     directionalLight -> setTranslation(10, 3, 2);
     scene -> addChild(directionalLight);
 

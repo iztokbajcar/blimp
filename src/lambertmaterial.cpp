@@ -14,11 +14,11 @@ blimp::LambertMaterial::LambertMaterial() {
 
         "out vec3 vPos;\n"
         "out vec4 vColor;\n"
-        "out vec3 vNormal;\n"
+        "out vec4 vNormal;\n"
 
         "void main() {\n"
         "    vColor = aColor;\n"
-        "    vNormal = aNormal;\n"
+        "    vNormal = normalize(uModelMatrix * vec4(aNormal, 0.0));\n"
         "    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "    vPos = vec3(gl_Position);\n"
         "}";
@@ -63,12 +63,12 @@ blimp::LambertMaterial::LambertMaterial() {
 
         "in vec3 vPos;\n"
         "in vec4 vColor;\n"
-        "in vec3 vNormal;\n"
+        "in vec4 vNormal;\n"
         "out vec4 oColor;\n"
 
         "void main() {\n"
         "    vec4 diffuseColor = vColor;\n"
-        "    vec4 normal = vec4(normalize(vNormal), 0.0);\n"
+        "    vec4 normal = vec4(normalize(vNormal));\n"
 
              // calculate color for every light
         "    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n"
