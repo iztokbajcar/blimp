@@ -17,6 +17,107 @@
 #include "../../src/phongmaterial.hpp"
 #include "../../src/window.hpp"
 
+//////////////////// Ambient light ////////////////////
+
+class AmbientLightTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            ambientLight = new blimp::AmbientLight();
+            ambientLight2 = new blimp::AmbientLight(blimp::Color(blimp::Color::PURPLE), 0.77f);
+        }
+
+        virtual void TearDown() {
+            delete ambientLight;
+            delete ambientLight2;
+        }
+
+        blimp::AmbientLight *ambientLight;
+        blimp::AmbientLight *ambientLight2; 
+        blimp::Color* white = new blimp::Color(blimp::Color::WHITE);
+        blimp::Color* purple = new blimp::Color(blimp::Color::PURPLE);
+};
+
+TEST_F(AmbientLightTest, IsNotNull) {
+    ASSERT_TRUE(ambientLight != NULL);
+    ASSERT_TRUE(ambientLight2 != NULL);
+}
+
+TEST_F(AmbientLightTest, IsCorrectType) {
+    std::cout << blimp::Node::NODE_TYPE_AMBIENT_LIGHT << std::endl;
+    ASSERT_TRUE(ambientLight -> getType() ==blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
+    ASSERT_TRUE(ambientLight2 -> getType() == blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
+}
+
+TEST_F(AmbientLightTest, IsCorrectColor) {
+    blimp::Color* c1 = ambientLight -> getColor();
+    blimp::Color* c2 = ambientLight2 -> getColor();
+    ASSERT_EQ(c1 -> getR(), white -> getR());
+    ASSERT_EQ(c1 -> getG(), white -> getG());
+    ASSERT_EQ(c1 -> getB(), white -> getB());
+
+    ASSERT_EQ(c2 -> getR(), purple -> getR());
+    ASSERT_EQ(c2 -> getG(), purple -> getG());
+    ASSERT_EQ(c2 -> getB(), purple -> getB());
+}
+
+TEST_F(AmbientLightTest, IsCorrectIntensity) {
+    ASSERT_EQ(ambientLight -> getIntensity(), 1.0f);
+    ASSERT_EQ(ambientLight2 -> getIntensity(), 0.77f);
+}
+
+//////////////////// Color ////////////////////
+
+class ColorTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            color = new blimp::Color();
+            color2 = new blimp::Color(blimp::Color::PURPLE);
+            color3 = new blimp::Color(0.1f, 0.2f, 0.3f);
+            color4 = new blimp::Color(0.1f, 0.2f, 0.3f, 0.4f);
+        }
+
+        virtual void TearDown() {
+            delete color;
+            delete color2;
+            delete color3;
+            delete color4;
+        }
+
+        blimp::Color *color;
+        blimp::Color *color2;
+        blimp::Color *color3;
+        blimp::Color *color4;
+};
+
+TEST_F(ColorTest, IsNotNull) {
+    ASSERT_TRUE(color != NULL);
+    ASSERT_TRUE(color2 != NULL);
+    ASSERT_TRUE(color3 != NULL);
+    ASSERT_TRUE(color4 != NULL);
+}
+
+TEST_F(ColorTest, IsCorrect) {
+    ASSERT_EQ(color -> getR(), 0.0f);
+    ASSERT_EQ(color -> getG(), 0.0f);
+    ASSERT_EQ(color -> getB(), 0.0f);
+    ASSERT_EQ(color -> getA(), 1.0f);
+
+    ASSERT_EQ(color2 -> getR(), 0.5f);
+    ASSERT_EQ(color2 -> getG(), 0.0f);
+    ASSERT_EQ(color2 -> getB(), 0.5f);
+    ASSERT_EQ(color2 -> getA(), 1.0f);
+
+    ASSERT_EQ(color3 -> getR(), 0.1f);
+    ASSERT_EQ(color3 -> getG(), 0.2f);
+    ASSERT_EQ(color3 -> getB(), 0.3f);
+    ASSERT_EQ(color3 -> getA(), 1.0f);
+
+    ASSERT_EQ(color4 -> getR(), 0.1f);
+    ASSERT_EQ(color4 -> getG(), 0.2f);
+    ASSERT_EQ(color4 -> getB(), 0.3f);
+    ASSERT_EQ(color4 -> getA(), 0.4f);
+}
+
 //////////////////// Cuboid ////////////////////
 
 class CuboidTest : public ::testing::Test {
@@ -329,19 +430,13 @@ class WindowTest : public ::testing::Test {
                 public:
                     MyTestWindow(const char *title, int width, int height) : blimp::Window(title, width, height) {}
                     void update() {
-                        std::vector<blimp::Node*>* children = this -> scene -> getChildren();
-                        for (blimp::Node* node: *children) {
-                            if (node -> getType() == blimp::Node::NODE_TYPE_MESH) {
-                                node -> rotate(0.00f, 0.01f, 0.01f);
-                            }
-                        }
+                        float fps = this -> getFPS();
+                        this -> setTitle("BlimpTest | " + std::to_string(fps) + " FPS");
+                        this -> frameCounter++;
 
-                        if (this -> fpsDisplayThrottle == 10) {
-                            float fps = this -> getFPS();
-                            this -> setTitle("BlimpTest | " + std::to_string(fps) + " FPS");
-                            this -> fpsDisplayThrottle = 0;
+                        if (this -> frameCounter == 10) {
+                            this -> close();
                         }
-                        this -> fpsDisplayThrottle++;
                     }
 
                 protected:
@@ -349,43 +444,13 @@ class WindowTest : public ::testing::Test {
                         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                             glfwSetWindowShouldClose(this -> window, GL_TRUE);
                         }
-                        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-                            this -> camera -> translate(0.0f, 0.0f, -0.1f);
-                        }
-                        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-                            this -> camera -> translate(0.0f, 0.0f, 0.1f);
-                        }
-                        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-                            this -> camera -> translate(-0.1f, 0.0f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-                            this -> camera -> translate(0.1f, 0.0f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-                            this -> camera -> translate(0.0f, 0.1f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-                            this -> camera -> translate(0.0f, -0.1f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-                            this -> camera -> rotate(0.05f, 0.0f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-                            this -> camera -> rotate(-0.05f, 0.0f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-                            this -> camera -> rotate(0.0f, 0.05f, 0.0f);
-                        }
-                        if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-                            this -> camera -> rotate(0.0f, -0.05f, 0.0f);
-                        }
                     }
 
                 private:
-                    int fpsDisplayThrottle = 0;
+                    int frameCounter = 0;
             };
 
-            this -> window = new MyTestWindow("Test", 800, 600);
+            this -> window = new MyTestWindow("BlimpTest", 800, 600);
             this -> window -> setScene(scene);
             this -> window -> setCamera(camera);
         }
@@ -403,36 +468,12 @@ class WindowTest : public ::testing::Test {
 
 TEST_F(WindowTest, IsNotNull) {
     ASSERT_NE(window, nullptr);
-    ColorVector colors {
-        blimp::Color(blimp::Color::WHITE)
-    };
-    blimp::Mesh* cube1 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::Material());
-    blimp::Mesh* cube2 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
-    blimp::Mesh* cube3 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1), new blimp::NormalMaterial());
-    blimp::Mesh* cube4 = new blimp::Mesh(new blimp::Cuboid(1, 1, 1, &colors), new blimp::LambertMaterial());
-    cube1 -> setTranslation(3, 0, -5);
-    cube2 -> setTranslation(-3, 2, -5);
-    cube3 -> setTranslation(3, 4, -5);
-    cube4 -> setTranslation(-3, -2, -5);
-    scene -> addChild(cube1);
-    scene -> addChild(cube2);
-    scene -> addChild(cube3);
-    scene -> addChild(cube4);
-
-    blimp::AmbientLight* ambientLight = new blimp::AmbientLight(blimp::Color(blimp::Color::AQUA), 0.1f);
-    scene -> addChild(ambientLight);
-    blimp::DirectionalLight* directionalLight = new blimp::DirectionalLight(blimp::Color(blimp::Color::RED), 1.0f);
-    directionalLight -> setTranslation(10, 3, 2);
-    scene -> addChild(directionalLight);
-
-    window -> setScene(scene);
-    window -> setCamera(camera);
-    window -> run();
 }
 
-TEST_F(WindowTest, IsNotNullAfterOpen) {
+TEST_F(WindowTest, IsNotNullAfterRun) {
+    window -> run();
     ASSERT_NE(window, nullptr);
-} 
+}
 
 //////////////////////////////////////////////
 

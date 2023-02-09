@@ -29,6 +29,7 @@ namespace blimp {
             void setCamera(Camera* camera);
             void render(Node* scene, Camera* camera);
             void run();
+            void close();
             float getFPS(float smoothingFactor = 0.9);
 
         protected:

@@ -81,6 +81,10 @@ void blimp::Window::run() {
     glfwTerminate();
 }
 
+void blimp::Window::close() {
+    glfwSetWindowShouldClose(this -> window, true);
+}
+
 void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
     glfwSetWindowUserPointer(t -> window, this);
     glfwSetKeyCallback(t -> window, callback);
