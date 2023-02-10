@@ -223,7 +223,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             // uniform locations
             GLint uNumALights = glGetUniformLocation(program, "uNumALights");
             GLint uNumDLights = glGetUniformLocation(program, "uNumDLights");
-            //GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
+            GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
             //GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
             int nALights = lightsData.countAmbientLights();
             int nDLights = lightsData.countDirectionalLights();
@@ -231,7 +231,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             int nSLights = lightsData.countSpotLights();
             glUniform1i(uNumALights, nALights);
             glUniform1i(uNumDLights, nDLights);
-            //glUniform1i(uNumPLights, nPLights);
+            glUniform1i(uNumPLights, nPLights);
             //glUniform1i(uNumSLights, nSLights);
             //std::cout << "uNumALights: " << uNumALights << std::endl;
             //std::cout << "uNumDLights: " << uNumDLights << std::endl;
@@ -240,15 +240,15 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
             GLint uALights = glGetUniformLocation(program, "uALights");
             GLint uDLights = glGetUniformLocation(program, "uDLights");
-            //GLint uPLights = glGetUniformLocation(program, "uPLights");
+            GLint uPLights = glGetUniformLocation(program, "uPLights");
             //GLint uSLights = glGetUniformLocation(program, "uSLights");
 
             // ambient lights (should only be one in the scene though)
             ALights* aLights = lightsData.getAmbientLights();
             for (int i = 0; i < nALights; i++) {
-                AmbientLight* l = aLights -> at(i);
-                Color* c = l -> getColor();
-                float in = l -> getIntensity();
+                AmbientLight* light = aLights -> at(i);
+                Color* lightColor = light -> getColor();
+                float lightIntensity = light -> getIntensity();
 
                 GLint uALightsIColor = glGetUniformLocation(program, std::string("uALights[" + std::to_string(i) + "].color").c_str());
                 GLint uALightsIIntensity = glGetUniformLocation(program, std::string("uALights[" + std::to_string(i) + "].intensity").c_str());
@@ -256,23 +256,23 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 // set uniforms
                 glUniform3f(
                     uALightsIColor,
-                    c -> getR(),
-                    c -> getG(),
-                    c -> getB()
+                    lightColor -> getR(),
+                    lightColor -> getG(),
+                    lightColor -> getB()
                 );
                 glUniform1f(
                     uALightsIIntensity,
-                    in
+                    lightIntensity
                 );
             }
 
             // directional lights
             DLights* dLights = lightsData.getDirectionalLights();
             for (int i = 0; i < nDLights; i++) {
-                DirectionalLight* l = dLights -> at(i);
-                Color* c = l -> getColor();
-                glm::vec3 p = l -> getTranslation();
-                float in = l -> getIntensity();
+                DirectionalLight* light = dLights -> at(i);
+                Color* lightColor = light -> getColor();
+                glm::vec3 lightPos = light -> getTranslation();
+                float lightIntensity = light -> getIntensity();
                 
                 GLint uDLightsIColor = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].color").c_str());
                 GLint uDLightsIPosition = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].position").c_str());
@@ -281,27 +281,57 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 // set uniforms
                 glUniform3f(
                     uDLightsIColor,
-                    c -> getR(),
-                    c -> getG(),
-                    c -> getB()
+                    lightColor -> getR(),
+                    lightColor -> getG(),
+                    lightColor -> getB()
                 );
                 glUniform3f(
                     uDLightsIPosition,
-                    p.x,
-                    p.y,
-                    p.z
+                    lightPos.x,
+                    lightPos.y,
+                    lightPos.z
                 );
                 glUniform1f(
                     uDLightsIIntensity,
-                    in
+                    lightIntensity
                 );
             }
 
             // point lights
             PLights* pLights = lightsData.getPointLights();
             for (int i = 0; i < nPLights; i++) {
+                PointLight* light = pLights -> at(i);
+                Color* lightColor = light -> getColor();
+                glm::vec3 lightPos = light -> getTranslation();
+                float lightIntensity = light -> getIntensity();
+                float lightAttenuation = light -> getAttenuation();
+
+                GLint uPLightsIColor = glGetUniformLocation(program, std::string("uPLights[" + std::to_string(i) + "].color").c_str());
+                GLint uPLightsIPosition = glGetUniformLocation(program, std::string("uPLights[" + std::to_string(i) + "].position").c_str());
+                GLint uPLightsIIntensity = glGetUniformLocation(program, std::string("uPLights[" + std::to_string(i) + "].intensity").c_str());
+                GLint uPLightsIAttenuation = glGetUniformLocation(program, std::string("uPLights[" + std::to_string(i) + "].attenuation").c_str());
+
                 // set uniforms
-                // TODO
+                glUniform3f(
+                    uPLightsIColor,
+                    lightColor -> getR(),
+                    lightColor -> getG(),
+                    lightColor -> getB()
+                );
+                glUniform3f(
+                    uPLightsIPosition,
+                    lightPos.x,
+                    lightPos.y,
+                    lightPos.z
+                );
+                glUniform1f(
+                    uPLightsIIntensity,
+                    lightIntensity
+                );
+                glUniform1f(
+                    uPLightsIAttenuation,
+                    lightAttenuation
+                );
             }
 
             // spot lights

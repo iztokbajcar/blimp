@@ -8,6 +8,12 @@ namespace blimp {
     class PointLight : public blimp::Light {
         public:
             PointLight();
+            PointLight(blimp::Color color, float intensity, float attenuation);
+            float getAttenuation();
+            void setAttenuation(float attenuation);
+
+        protected:
+            float attenuation;
     };
 
 }

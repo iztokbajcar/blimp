@@ -5,6 +5,7 @@
 #include "../../src/node.hpp"
 #include "../../src/normalmaterial.hpp"
 #include "../../src/perspectivecamera.hpp"
+#include "../../src/pointlight.hpp"
 #include "../../src/window.hpp"
 
 using namespace blimp;
@@ -20,7 +21,7 @@ class DemoWindow : public Window {
                 }
             }
 
-            if (this -> fpsDisplayThrottle == 100) {
+            if (this -> fpsDisplayThrottle == 10) {
                 float fps = this -> getFPS();
                 this -> setTitle("BlimpDemo | " + std::to_string(fps) + " FPS");
                 this -> fpsDisplayThrottle = 0;
@@ -166,7 +167,7 @@ class DemoWindow : public Window {
 
 int main() {
     Node* scene = new Node();
-    PerspectiveCamera* camera = new PerspectiveCamera(90.0f, 800.0f/600.0f, 0.1f, 100.0f);
+    PerspectiveCamera* camera = new PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
 
     ColorVector colors {
         Color(Color::WHITE)
@@ -179,18 +180,21 @@ int main() {
     Mesh* cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
     Mesh* cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
     Mesh* cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
-    cube1 -> setTranslation(-2,  2, -5);
-    cube2 -> setTranslation( 2,  2, -5);
-    cube3 -> setTranslation(-2, -2, -5);
+    cube1 -> setTranslation(-2,  2, -7);
+    cube2 -> setTranslation( 2,  2, -7);
+    cube3 -> setTranslation(-2, -2, -7);
     scene -> addChild(cube1);
     scene -> addChild(cube2);
     scene -> addChild(cube3);
 
-    AmbientLight* ambientLight = new AmbientLight(Color(Color::AQUA), 0.1f);
+    AmbientLight* ambientLight = new AmbientLight(Color(Color::AQUA), 0.2f);
     scene -> addChild(ambientLight);
-    DirectionalLight* directionalLight = new DirectionalLight(Color(Color::RED), 1.0f);
+    DirectionalLight* directionalLight = new DirectionalLight(Color(Color::GREEN), 1.0f);
     directionalLight -> setTranslation(10, 3, 2);
     scene -> addChild(directionalLight);
+    PointLight* pointLight = new PointLight(Color(Color::RED), 1.0f, 0.01f);
+    pointLight -> setTranslation(0, 0, 0);
+    scene -> addChild(pointLight);
 
     DemoWindow* window = new DemoWindow("BlimpDemo", 800, 600);
     window -> setScene(scene);
