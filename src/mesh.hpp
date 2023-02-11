@@ -11,10 +11,11 @@ namespace blimp {
         public:
             Mesh();
             Mesh(Geometry* geometry, Material* material);
-            ~Mesh();
 
             Geometry* getGeometry();
             Material* getMaterial();
+            void setGeometry(Geometry* geometry);
+            void setMaterial(Material* material);
 
         private:
             Geometry* geometry = nullptr;

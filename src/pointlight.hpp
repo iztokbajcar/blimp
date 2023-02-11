@@ -13,7 +13,7 @@ namespace blimp {
             void setAttenuation(float attenuation);
 
         protected:
-            float attenuation;
+            float attenuation = 1.0f;
     };
 
 }

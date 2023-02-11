@@ -16,11 +16,11 @@ namespace blimp {
             Node();
             ~Node();
 
-            static const int NODE_TYPE_MESH = 0;
-            static const int NODE_TYPE_DIRECTIONAL_LIGHT = 1;
-            static const int NODE_TYPE_POINT_LIGHT = 2;
-            static const int NODE_TYPE_SPOT_LIGHT = 3;
-            static const int NODE_TYPE_AMBIENT_LIGHT = 4;
+            static const int NODE_TYPE_MESH;
+            static const int NODE_TYPE_DIRECTIONAL_LIGHT;
+            static const int NODE_TYPE_POINT_LIGHT;
+            static const int NODE_TYPE_SPOT_LIGHT;
+            static const int NODE_TYPE_AMBIENT_LIGHT;
 
             int getType();
             glm::mat4 getTransformationMatrix();

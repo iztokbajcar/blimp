@@ -15,11 +15,11 @@ class DemoWindow : public Window {
         DemoWindow(const char *title, int width, int height) : Window(title, width, height) {}
         void update() {
             std::vector<Node*>* children = this -> scene -> getChildren();
-            for (Node* node: *children) {
-                if (node -> getType() == Node::NODE_TYPE_MESH) {
-                    node -> rotate(0.00f, 0.01f, 0.01f);
-                }
-            }
+            
+            cube1 -> rotate(0.00f, 0.01f, 0.01f);
+            cube2 -> rotate(0.00f, 0.01f, 0.01f);
+            cube3 -> rotate(0.00f, 0.01f, 0.01f);
+            // floor -> rotate(0.00f, 0.008f, 0.00f);
 
             if (this -> fpsDisplayThrottle == 10) {
                 float fps = this -> getFPS();
@@ -30,6 +30,12 @@ class DemoWindow : public Window {
 
             move();
         }
+
+        Mesh* cube1;
+        Mesh* cube2;
+        Mesh* cube3;
+        Mesh* floor;
+        Mesh* wall;
 
     private:
         bool wPressed = false;
@@ -166,6 +172,7 @@ class DemoWindow : public Window {
 };
 
 int main() {
+    DemoWindow* window = new DemoWindow("BlimpDemo", 800, 600);
     Node* scene = new Node();
     PerspectiveCamera* camera = new PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
 
@@ -177,26 +184,43 @@ int main() {
     Material* mat2 = new NormalMaterial();
     Material* mat3 = new LambertMaterial();
 
-    Mesh* cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
-    Mesh* cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
-    Mesh* cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
-    cube1 -> setTranslation(-2,  2, -7);
-    cube2 -> setTranslation( 2,  2, -7);
-    cube3 -> setTranslation(-2, -2, -7);
-    scene -> addChild(cube1);
-    scene -> addChild(cube2);
-    scene -> addChild(cube3);
+    window -> cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
+    window -> cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
+    window -> cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
+    window -> floor = new Mesh(new Cuboid(20, 0.1, 20, &colors), mat3);
+    window -> wall = new Mesh(new Cuboid(5, 2, 0.1, &colors), mat3);
+    window -> cube1 -> setTranslation(-2,  2, -7);
+    window -> cube2 -> setTranslation( 2,  2, -7);
+    window -> cube3 -> setTranslation(-2, -2, -7);
+    window -> floor -> setTranslation(0, -3, -9);
+    window -> wall -> setTranslation(3, -1.95, -10);
+    scene -> addChild(window -> cube1);
+    scene -> addChild(window -> cube2);
+    scene -> addChild(window -> cube3);
+    scene -> addChild(window -> floor);
+    scene -> addChild(window -> wall);
 
-    AmbientLight* ambientLight = new AmbientLight(Color(Color::AQUA), 0.2f);
+    // lights
+    AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.1f);
     scene -> addChild(ambientLight);
-    DirectionalLight* directionalLight = new DirectionalLight(Color(Color::GREEN), 1.0f);
-    directionalLight -> setTranslation(10, 3, 2);
+
+    DirectionalLight* directionalLight = new DirectionalLight(Color(Color::WHITE), 0.75f);
+    directionalLight -> setTranslation(6, 2, 4);
     scene -> addChild(directionalLight);
-    PointLight* pointLight = new PointLight(Color(Color::RED), 1.0f, 0.01f);
-    pointLight -> setTranslation(0, 0, 0);
+
+    PointLight* pointLight = new PointLight(Color(1.0f, 0.5f, 0.0f), 1.0f, 1.0f);
+    pointLight -> setTranslation(-3, -1.8, -7);
     scene -> addChild(pointLight);
 
-    DemoWindow* window = new DemoWindow("BlimpDemo", 800, 600);
+    PointLight* pointLight2 = new PointLight(Color(Color::FUCHSIA), 1.0f, 0.8f);
+    pointLight2 -> setTranslation(4, -0.95, -9);
+    scene -> addChild(pointLight2);
+
+    SpotLight* spotLight = new SpotLight(Color(Color::BLUE), 1.0f, 0.9f, 0.85f);
+    spotLight -> setTranslation(1, 5, -8);
+    spotLight -> setRotation(-3.1415926535897932384626433832795028841971693993 / 2, 0.0f, 0.0f);
+    scene -> addChild(spotLight);
+
     window -> setScene(scene);
     window -> setCamera(camera);
     window -> run();

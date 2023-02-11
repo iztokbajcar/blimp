@@ -122,6 +122,7 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     glCompileShader(vertexShader);
 
     // get compilation info
+    // TODO always get info log to account for the possibility of warnings
     GLint success;
     GLchar infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -140,10 +141,10 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     glCompileShader(fragmentShader);
 
     // get compilation info
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << std::endl << "Error compiling fragment shader:" << std::endl << infoLog << std::endl;
         std::cout << "source: " << (*material -> getFragmentShader()) << std::endl << std::endl;
         return 0;
@@ -213,6 +214,12 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
         // compile the material's shaders
         GLuint program = this -> compileMaterial(material);
+
+        // if compilation/linking failed, exit
+        if (program == 0) {
+            exit(0);
+        }
+
         programs[material] = program;
 
         // set the program
@@ -224,7 +231,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             GLint uNumALights = glGetUniformLocation(program, "uNumALights");
             GLint uNumDLights = glGetUniformLocation(program, "uNumDLights");
             GLint uNumPLights = glGetUniformLocation(program, "uNumPLights");
-            //GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
+            GLint uNumSLights = glGetUniformLocation(program, "uNumSLights");
             int nALights = lightsData.countAmbientLights();
             int nDLights = lightsData.countDirectionalLights();
             int nPLights = lightsData.countPointLights();
@@ -232,16 +239,12 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glUniform1i(uNumALights, nALights);
             glUniform1i(uNumDLights, nDLights);
             glUniform1i(uNumPLights, nPLights);
-            //glUniform1i(uNumSLights, nSLights);
-            //std::cout << "uNumALights: " << uNumALights << std::endl;
-            //std::cout << "uNumDLights: " << uNumDLights << std::endl;
-            //std::cout << "uNumPLights: " << uNumPLights << std::endl;
-            //std::cout << "uNumSLights: " << uNumSLights << std::endl;
+            glUniform1i(uNumSLights, nSLights);
 
             GLint uALights = glGetUniformLocation(program, "uALights");
             GLint uDLights = glGetUniformLocation(program, "uDLights");
             GLint uPLights = glGetUniformLocation(program, "uPLights");
-            //GLint uSLights = glGetUniformLocation(program, "uSLights");
+            GLint uSLights = glGetUniformLocation(program, "uSLights");
 
             // ambient lights (should only be one in the scene though)
             ALights* aLights = lightsData.getAmbientLights();
@@ -337,8 +340,52 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             // spot lights
             SLights* sLights = lightsData.getSpotLights();
             for (int i = 0; i < nSLights; i++) {
+                SpotLight* light = sLights -> at(i);
+                Color* lightColor = light -> getColor();
+                glm::vec3 lightPos = light -> getTranslation();
+                glm::vec3 lightDir = light -> getForwardDirection();
+                float lightIntensity = light -> getIntensity();
+                float inner = light -> getInnerCutoff();
+                float outer = light -> getOuterCutoff();
+
+                GLint uSLightsIColor = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].color").c_str());
+                GLint uSLightsIPosition = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].position").c_str());
+                GLint uSLightsIDirection = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].direction").c_str());
+                GLint uSLightsIIntensity = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].intensity").c_str());
+                GLint uSLightsIInner = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].inner").c_str());
+                GLint uSLightsIOuter = glGetUniformLocation(program, std::string("uSLights[" + std::to_string(i) + "].outer").c_str());
+
                 // set uniforms
-                // TODO
+                glUniform3f(
+                    uSLightsIColor,
+                    lightColor -> getR(),
+                    lightColor -> getG(),
+                    lightColor -> getB()
+                );
+                glUniform3f(
+                    uSLightsIPosition,
+                    lightPos.x,
+                    lightPos.y,
+                    lightPos.z
+                );
+                glUniform3f(
+                    uSLightsIDirection,
+                    lightDir.x,
+                    lightDir.y,
+                    lightDir.z
+                );
+                glUniform1f(
+                    uSLightsIIntensity,
+                    lightIntensity
+                );
+                glUniform1f(
+                    uSLightsIInner,
+                    inner
+                );
+                glUniform1f(
+                    uSLightsIOuter,
+                    outer
+                );
             }
         }
 

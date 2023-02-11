@@ -4,6 +4,12 @@
 #include <iostream>
 #include "node.hpp"
 
+const int blimp::Node::NODE_TYPE_MESH = 0;
+const int blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT = 1;
+const int blimp::Node::NODE_TYPE_POINT_LIGHT = 2;
+const int blimp::Node::NODE_TYPE_SPOT_LIGHT = 3;
+const int blimp::Node::NODE_TYPE_AMBIENT_LIGHT = 4;
+
 blimp::Node::Node() {
     this -> translation = glm::vec3(0.0f);
     this -> rotation = glm::vec3(0.0f);
