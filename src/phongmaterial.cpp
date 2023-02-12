@@ -122,7 +122,7 @@ std::string generateFragmentShader(float shininess, float specular) {
     "    for (int i = 0; i < uNumSLights; i++) {\n"
     "        vec4 lightPos = vec4(uSLights[i].position, 1.0);\n"
     "        vec4 distanceVec = lightPos - vec4(vPos, 0.0);\n"
-    "        vec4 spotVec = vec4(uSLights[i].direction, 0.0);\n" 
+    "        vec4 spotVec = -vec4(uSLights[i].direction, 0.0);\n" 
     "        vec4 lightDir = normalize(distanceVec);\n"  // from fragment to light
     "        vec4 reflDir = normalize(reflect(-lightDir, normal));\n"
     "        vec4 spotDir = normalize(spotVec);\n"

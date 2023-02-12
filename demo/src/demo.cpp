@@ -9,6 +9,8 @@
 #include "../../src/pointlight.hpp"
 #include "../../src/window.hpp"
 
+#define PI 3.14159265358979323846f
+
 using namespace blimp;
 
 class DemoWindow : public Window {
@@ -182,24 +184,28 @@ int main() {
     };
 
     Material* mat1 = new Material();
-    Material* mat2 = new NormalMaterial();
-    Material* mat3 = new PhongMaterial(10.0f, 1.0f);
+    NormalMaterial* mat2 = new NormalMaterial();
+    PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
+    LambertMaterial* mat4 = new LambertMaterial();
 
     window -> cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
     window -> cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
     window -> cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
-    window -> floor = new Mesh(new Cuboid(20, 0.1, 20, &colors), mat3);
-    window -> wall = new Mesh(new Cuboid(5, 2, 0.1, &colors), mat3);
+    Mesh* floor = new Mesh(new Cuboid(20, 0.1, 20, &colors), mat3);
+    Mesh* wall = new Mesh(new Cuboid(5, 2, 0.1, &colors), mat4);
+    Mesh* wall2 = new Mesh(new Cuboid(20, 10, 0.1, &colors), mat4);
     window -> cube1 -> setTranslation(-2,  2, -7);
     window -> cube2 -> setTranslation( 2,  2, -7);
     window -> cube3 -> setTranslation(-2, -2, -7);
-    window -> floor -> setTranslation(0, -3, -9);
-    window -> wall -> setTranslation(3, -1.95, -10);
+    floor -> setTranslation(0, -3, -9);
+    wall -> setTranslation(3, -1.95, -10);
+    wall2 -> setTranslation(25, 0, -20);
     scene -> addChild(window -> cube1);
     scene -> addChild(window -> cube2);
     scene -> addChild(window -> cube3);
-    scene -> addChild(window -> floor);
-    scene -> addChild(window -> wall);
+    scene -> addChild(floor);
+    scene -> addChild(wall);
+    scene -> addChild(wall2);
 
     // lights
     AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.1f);
@@ -219,8 +225,18 @@ int main() {
 
     SpotLight* spotLight = new SpotLight(Color(Color::BLUE), 1.0f, 0.9f, 0.85f);
     spotLight -> setTranslation(1, 5, -8);
-    spotLight -> setRotation(-3.1415926535897932384626433832795028841971693993 / 2, 0.0f, 0.0f);
+    spotLight -> setRotation(PI / 2, 0.0f, 0.0f);
     scene -> addChild(spotLight);
+
+    SpotLight* spotLight2 = new SpotLight(Color(Color::LIME), 1.0f, 0.9f, 0.85f);
+    spotLight2 -> setTranslation(27, 0, -12);
+    spotLight2 -> setRotation(PI, 0.0f, 0.0f);
+    scene -> addChild(spotLight2);
+
+    SpotLight* spotLight3 = new SpotLight(Color(Color::RED), 1.0f, 0.9f, 0.85f);
+    spotLight3 -> setTranslation(23, 0, -12);
+    spotLight3 -> setRotation(PI, 0.0f, 0.0f);
+    scene -> addChild(spotLight3);
 
     window -> setScene(scene);
     window -> setCamera(camera);
