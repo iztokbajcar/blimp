@@ -104,9 +104,6 @@ void blimp::Window::setCamera(Camera* camera) {
 }
 
 GLuint blimp::Window::compileMaterial(Material* material) {
-    // if material is not specified, do not compile
-    
-
     // check if the program has already been compiled
     if (this -> programs[material] != 0) {
         return this -> programs[material];
@@ -167,8 +164,11 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     // delete the shaders
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    *material -> getVertexShader() = "";
+    *material -> getFragmentShader() = "";
 
     this -> programs[material] = program;
+
     return program;
 }
 
