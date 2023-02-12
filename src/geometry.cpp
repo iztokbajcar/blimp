@@ -1,4 +1,5 @@
 #include "geometry.hpp"
+#include <iostream>
 
 blimp::Geometry::Geometry() {
 
@@ -22,10 +23,10 @@ void blimp::Geometry::setColors(ColorVector* colors) {
     int colorsSize = colors -> size();
 
     for (int i = 0; i < this -> vertexCount; i++) {
-        this -> colors[i*4] = colors -> at((i*4) % colorsSize).getR();
-        this -> colors[i*4+1] = colors -> at((i*4) % colorsSize).getG();
-        this -> colors[i*4+2] = colors -> at((i*4) % colorsSize).getB();
-        this -> colors[i*4+3] = colors -> at((i*4) % colorsSize).getA();
+        this -> colors[i*4] = colors -> at(i % colorsSize).getR();
+        this -> colors[i*4+1] = colors -> at(i % colorsSize).getG();
+        this -> colors[i*4+2] = colors -> at(i % colorsSize).getB();
+        this -> colors[i*4+3] = colors -> at(i % colorsSize).getA();
     }
 }
 
