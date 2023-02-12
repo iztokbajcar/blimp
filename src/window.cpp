@@ -201,7 +201,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
     // sort the meshes in the scene by material
     // this may speed up the rendering process as it will reduce the number of glUseProgram calls needed
-    MatMeshMap meshesByMaterial = this -> sortMeshesByMaterial(&nodes);
+    MatMeshMap meshesByMaterial = this -> groupMeshesByMaterial(&nodes);
     ProgramMap programs = ProgramMap();
 
     // get all lights in the scene
@@ -454,7 +454,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
 }
 
-MatMeshMap blimp::Window::sortMeshesByMaterial(std::vector<Node*>* nodes) {
+MatMeshMap blimp::Window::groupMeshesByMaterial(std::vector<Node*>* nodes) {
     MatMeshMap meshesByMaterial = MatMeshMap();
 
     for (Node* node : *nodes) {

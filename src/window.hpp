@@ -13,45 +13,110 @@
 #include "lightsdata.hpp"
 #include "mesh.hpp"
 
+/** @file window.hpp */
+
+/** A Map of Material objects and their respective shader programs. */
 typedef std::map<blimp::Material*, GLuint> ProgramMap;
+
+/** A Map that to each Material assigns a vector of Mesh objects that use the material. */
 typedef std::map<blimp::Material*, std::vector<blimp::Mesh*>> MatMeshMap;
+
+/** A pair of a Material and a vector of Mesh objects that use the material. */
 typedef std::pair<blimp::Material*, std::vector<blimp::Mesh*>> MatMeshPair;
 
 namespace blimp {
 
+    //! A window, inside which the graphics will be rendered.
     class Window {
         public:
+            /** Creates a window with the given title and dimensions.
+             * @param title The title of the window
+             * @param width The width of the window
+             * @param height The height of the window
+             */
             Window(std::string title = std::string("Blimp"), int width = 800, int height = 600);
+
+            /** A function that is called before each frame is rendered.
+             * This function should be overridden by the user to implement the desired behavior.
+             */
             virtual void update();
-            void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
+
+            /** Sets the title of the window. 
+             * @param title The new title of the window
+            */
             void setTitle(std::string title);
+
+            /** Sets the scene that will be rendered in the window.
+             * @param scene The scene
+            */
             void setScene(Node* scene);
+
+            /** Sets the camera that will be used to render the scene.
+             * @param camera The camera
+            */
             void setCamera(Camera* camera);
-            void render(Node* scene, Camera* camera);
+
+            /** Displays the window and starts the rendering loop. 
+             */
             void run();
+
+            /** Closes the window.
+             */
             void close();
+
+            /** Returns the number of frames per seconds at which the window is rendering graphics.
+             * @param smoothingFactor The smoothing factor to use when calculating the FPS. The higher the value, the more the FPS will be smoothed.
+             * @return The number of frames per seconds
+            */
             float getFPS(float smoothingFactor = 0.9);
 
         protected:
-            int width;
-            int height;
-            std::string title; 
-            static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
+            int width;  /**< The window width. */
+            int height;  /**< The window height. */
+            std::string title;  /**< The window title. */
+
+            /** A function that is called when a key is pressed.
+             * This function should be overridden by the user to implement the desired behavior.
+             * @param key The key that was pressed
+             * @param scancode The scancode of the key that was pressed
+             * @param action The action that was performed on the key
+             * @param mode The modifier keys that were pressed
+             */
             virtual void keyCallback(int key, int scancode, int action, int mode);
-            GLFWwindow* window = nullptr;
 
+            /** Compiles the shader program for the given material.
+             * @param material The material
+             * @return GLuint The ID of the compiled shader program
+             */
             GLuint compileMaterial(Material* material);
-            LightsData getLights(std::vector<Node*>* nodes);  // finds lights in the vector of nodes
-            ProgramMap programs;  // stores the compiled programs for each material
-            MatMeshMap sortMeshesByMaterial(std::vector<Node*>* nodes);  // will be used for speeding up the render process by reducing the number of glUseProgram calls
 
-            Node* scene = nullptr;
-            Camera* camera = nullptr;
-            void* winUserPointer = nullptr;
+            /** Finds the lights in the given vector of nodes.
+             * @param nodes The vector of nodes
+             * @return LightsData The lights data
+             */
+            LightsData getLights(std::vector<Node*>* nodes);
 
-            uint64_t lastFrameTime = 0;  // timestamp of the last render
-            float previousFramesPerSecond = 0;  // previous FPS value (used for smoothing)
-            float currentFramesPerSecond = 0;
+            /** Group the given vector of nodes by material.
+             * It is used for speeding up the render process by potentially reducing the number of necessary glUseProgram calls.
+             * @param nodes The vector of nodes
+             * @return MatMeshMap The map that to each Material assigns a vector of Mesh objects that use the material
+             */
+            MatMeshMap groupMeshesByMaterial(std::vector<Node*>* nodes);
+
+            ProgramMap programs;  /**< The compiled programs for each material. */
+            Node* scene = nullptr;  /**< The scene that will be rendered. */
+            Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
+            GLFWwindow* window = nullptr;  /**< The GLFW window inside which the graphics will be rendered. */
+            void* winUserPointer = nullptr;  /**< The user pointer of the GLFW window. */
+
+            uint64_t lastFrameTime = 0;  /**< The timestamp of the last render. */
+            float previousFramesPerSecond = 0;  /**< The previous FPS value (used for smoothing). */
+            float currentFramesPerSecond = 0;  /**< The current FPS value. */
+
+        private:
+            void render(Node* scene, Camera* camera);
+            static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
+            void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
     };
 
 }

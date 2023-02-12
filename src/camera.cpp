@@ -2,7 +2,7 @@
 #include "camera.hpp"
 
 blimp::Camera::Camera() {
-    
+    this -> fov = 60.0f;
 }
 
 float blimp::Camera::getFov() {

@@ -3,5 +3,7 @@ build
 lib/*
 bin/*
 demo/bin
+docs/*
+!docs/Doxyfile
 test/bin
 test-cov/*

@@ -73,7 +73,6 @@ class ColorTest : public ::testing::Test {
             color2 = new blimp::Color(blimp::Color::PURPLE);
             color3 = new blimp::Color(0.1f, 0.2f, 0.3f);
             color4 = new blimp::Color(0.1f, 0.2f, 0.3f, 0.4f);
-            color5 = blimp::Color::fromRGB(1.0f, 0.5f, 0.0f);
         }
 
         virtual void TearDown() {
@@ -87,7 +86,6 @@ class ColorTest : public ::testing::Test {
         blimp::Color *color2;
         blimp::Color *color3;
         blimp::Color *color4;
-        blimp::Color color5;
 };
 
 TEST_F(ColorTest, IsNotNull) {
@@ -95,7 +93,6 @@ TEST_F(ColorTest, IsNotNull) {
     ASSERT_TRUE(color2 != NULL);
     ASSERT_TRUE(color3 != NULL);
     ASSERT_TRUE(color4 != NULL);
-    ASSERT_TRUE(&color5 != NULL);
 }
 
 TEST_F(ColorTest, IsCorrect) {
@@ -118,10 +115,6 @@ TEST_F(ColorTest, IsCorrect) {
     ASSERT_EQ(color4 -> getG(), 0.2f);
     ASSERT_EQ(color4 -> getB(), 0.3f);
     ASSERT_EQ(color4 -> getA(), 0.4f);
-
-    ASSERT_EQ(color5.getR(), 1.0f);
-    ASSERT_EQ(color5.getG(), 0.5f);
-    ASSERT_EQ(color5.getB(), 0.0f);
 }
 
 //////////////////// Cuboid ////////////////////

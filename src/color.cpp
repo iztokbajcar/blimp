@@ -61,7 +61,3 @@ float blimp::Color::getB() {
 float blimp::Color::getA() {
     return this -> alpha;
 }
-
-blimp::Color blimp::Color::fromRGB(float r, float g, float b) {
-    return blimp::Color(r, g, b);
-}

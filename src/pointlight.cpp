@@ -2,6 +2,7 @@
 
 blimp::PointLight::PointLight() {
     this -> nodeType = blimp::Node::NODE_TYPE_POINT_LIGHT;
+    this -> attenuation = 1.0f;
 }
 
 blimp::PointLight::PointLight(blimp::Color color, float intensity, float attenuation) : blimp::Light(color, intensity) {

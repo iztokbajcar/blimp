@@ -19,6 +19,8 @@ TEST_BIN_DIR := ./test/bin
 TEST_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(TEST_BIN_DIR)/%.o,$(SRC_FILES)) 
 CFLAGS_TEST := -std=c++11 --coverage -O0 -fprofile-arcs -ftest-coverage -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -lgtest
 
+DOCS_DIR := ./docs
+
 demo: $(DEMO_BIN_DIR)/demo
 
 $(DEMO_BIN_DIR)/demo: $(OBJ_FILES) $(DEMO_SRC_DIR)/demo.cpp
@@ -47,10 +49,12 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 build: $(OBJ_FILES)
 	g++ --shared -fPIC -o $(BIN_DIR)/libblimp.so $(OBJ_FILES)
 
+docs: $(SRC_FILES)
+	cd $(DOCS_DIR); doxygen
+
 clean:
 	-rm ${BIN_DIR}/*.o
 	-rm ${TEST_BIN_DIR}/*.o
-
 
 .PHONY: test clean build
 	
