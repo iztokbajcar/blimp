@@ -5,6 +5,7 @@
 #include "../../src/node.hpp"
 #include "../../src/normalmaterial.hpp"
 #include "../../src/perspectivecamera.hpp"
+#include "../../src/phongmaterial.hpp"
 #include "../../src/pointlight.hpp"
 #include "../../src/window.hpp"
 
@@ -182,7 +183,7 @@ int main() {
 
     Material* mat1 = new Material();
     Material* mat2 = new NormalMaterial();
-    Material* mat3 = new LambertMaterial();
+    Material* mat3 = new PhongMaterial(10.0f, 1.0f);
 
     window -> cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
     window -> cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
@@ -208,11 +209,11 @@ int main() {
     directionalLight -> setTranslation(6, 2, 4);
     scene -> addChild(directionalLight);
 
-    PointLight* pointLight = new PointLight(Color(1.0f, 0.5f, 0.0f), 1.0f, 1.0f);
+    PointLight* pointLight = new PointLight(Color(1.0f, 0.5f, 0.0f), 1.0f, 0.8f);
     pointLight -> setTranslation(-3, -1.8, -7);
     scene -> addChild(pointLight);
 
-    PointLight* pointLight2 = new PointLight(Color(Color::FUCHSIA), 1.0f, 0.8f);
+    PointLight* pointLight2 = new PointLight(Color(Color::FUCHSIA), 1.0f, 1.0f);
     pointLight2 -> setTranslation(4, -0.95, -9);
     scene -> addChild(pointLight2);
 

@@ -387,6 +387,17 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                     outer
                 );
             }
+
+            // other lighting-related uniforms
+            GLint uCameraPos = glGetUniformLocation(program, "uCameraPos");
+            if (uCameraPos != -1) {
+                glUniform3f(
+                    uCameraPos,
+                    camera -> getTranslation().x,
+                    camera -> getTranslation().y,
+                    camera -> getTranslation().z
+                );
+            }
         }
 
         // prepare meshes

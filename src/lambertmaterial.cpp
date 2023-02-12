@@ -39,7 +39,6 @@ blimp::LambertMaterial::LambertMaterial() {
           "    vec3 color;\n"
           "    float intensity;\n"
           "};\n"
-          // TODO
           "struct PLight {\n"
           "    mat4 matrix;\n"
           "    vec3 position;\n"
@@ -47,7 +46,6 @@ blimp::LambertMaterial::LambertMaterial() {
           "    float intensity;\n"
           "    float attenuation;\n"
           "};\n"
-          // TODO
           "struct SLight {\n"
           "    mat4 matrix;\n"
           "    vec3 position;\n"
