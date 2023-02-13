@@ -16,6 +16,7 @@ blimp::Node::Node() {
     this -> translation = glm::vec3(0.0f);
     this -> rotation = glm::vec3(0.0f);
     this -> scale = glm::vec3(1.0f);
+    this -> parent = nullptr;
     this -> children = new std::vector<blimp::Node*>();
     this -> parentTransformationMatrix = glm::mat4(1.0f);
 }
@@ -40,11 +41,11 @@ glm::mat4 blimp::Node::getTransformationMatrix() {
 }
 
 glm::mat4 blimp::Node::getParentTransformationMatrix() {
-    return this -> parentTransformationMatrix;
+    return this -> parent -> getTransformationMatrix();
 }
 
 glm::mat4 blimp::Node::getGlobalTransformationMatrix() {
-    return this -> parentTransformationMatrix * this -> getTransformationMatrix();
+    return this -> getParentTransformationMatrix() * this -> getTransformationMatrix();
 }
 
 glm::vec3 blimp::Node::getTranslation() {
@@ -69,9 +70,9 @@ std::vector<blimp::Node*>* blimp::Node::getChildren() {
     return this -> children;
 }
 
-void blimp::Node::setParentTransformationMatrix(glm::mat4 parentTransformationMatrix) {
-    this -> parentTransformationMatrix = parentTransformationMatrix;
-}
+// void blimp::Node::setParentTransformationMatrix(glm::mat4 parentTransformationMatrix) {
+//     this -> parentTransformationMatrix = parentTransformationMatrix;
+// }
 
 void blimp::Node::setTranslation(float x, float y, float z) {
     this -> translation = glm::vec3(x, y, z);
@@ -94,11 +95,13 @@ void blimp::Node::setScale(float x, float y, float z) {
 }
 
 void blimp::Node::addChild(Node* child) {
-    child -> setParentTransformationMatrix(this -> getGlobalTransformationMatrix());
+    child -> setParent(this);
     this -> children -> push_back(child);
 }
 
 void blimp::Node::removeChild(Node* child) {
+    child -> setParent(nullptr);
+
     // remove every pointer to the child
     this -> children -> erase(
         std::remove(
@@ -131,4 +134,8 @@ std::vector<blimp::Node*> blimp::Node::traverseChildren() {
     }
 
     return nodes;
+}
+
+void blimp::Node::setParent(Node* parent) {
+    this -> parent = parent;
 }

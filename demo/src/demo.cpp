@@ -193,7 +193,7 @@ int main() {
     Node* scene = new Node();
 
     window -> cameraGroup = new Node();
-    window -> orthographicCamera = new OrthographicCamera(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+    window -> orthographicCamera = new OrthographicCamera(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 1000.0f);
     window -> perspectiveCamera = new PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
     window -> cameraGroup -> addChild(window -> orthographicCamera);
     window -> cameraGroup -> addChild(window -> perspectiveCamera);

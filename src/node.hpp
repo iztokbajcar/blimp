@@ -149,8 +149,11 @@ namespace blimp {
             glm::quat rotation;
             glm::vec3 scale;
 
+            Node* parent = nullptr;
             std::vector<Node*>* children;
             glm::mat4 parentTransformationMatrix;
+
+            void setParent(Node* parent);
     };
 
 }
