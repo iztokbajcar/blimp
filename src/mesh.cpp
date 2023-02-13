@@ -3,11 +3,13 @@
 blimp::Mesh::Mesh() {
     this -> geometry = nullptr;
     this -> material = nullptr;
+    this -> nodeType = blimp::Node::NODE_TYPE_MESH;
 }
 
 blimp::Mesh::Mesh(blimp::Geometry* geometry, blimp::Material* material) {
     this -> geometry = geometry;
     this -> material = material;
+    this -> nodeType = blimp::Node::NODE_TYPE_MESH;
 }
 
 blimp::Geometry* blimp::Mesh::getGeometry() {

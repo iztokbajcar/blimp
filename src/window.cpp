@@ -1,5 +1,6 @@
-#include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "window.hpp"
 
 blimp::Window::Window(std::string title, int width, int height) {
@@ -276,7 +277,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             for (int i = 0; i < nDLights; i++) {
                 DirectionalLight* light = dLights -> at(i);
                 Color* lightColor = light -> getColor();
-                glm::vec3 lightPos = light -> getTranslation();
+                glm::vec3 lightPos = glm::vec3(light -> getGlobalTransformationMatrix()[3]);
                 float lightIntensity = light -> getIntensity();
                 
                 GLint uDLightsIColor = glGetUniformLocation(program, std::string("uDLights[" + std::to_string(i) + "].color").c_str());
@@ -307,7 +308,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             for (int i = 0; i < nPLights; i++) {
                 PointLight* light = pLights -> at(i);
                 Color* lightColor = light -> getColor();
-                glm::vec3 lightPos = light -> getTranslation();
+                glm::vec3 lightPos = glm::vec3(light -> getGlobalTransformationMatrix()[3]);
                 float lightIntensity = light -> getIntensity();
                 float lightAttenuation = light -> getAttenuation();
 
@@ -344,7 +345,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             for (int i = 0; i < nSLights; i++) {
                 SpotLight* light = sLights -> at(i);
                 Color* lightColor = light -> getColor();
-                glm::vec3 lightPos = light -> getTranslation();
+                glm::vec3 lightPos = glm::vec3(light -> getGlobalTransformationMatrix()[3]);
                 glm::vec3 lightDir = light -> getForwardDirection();
                 float lightIntensity = light -> getIntensity();
                 float inner = light -> getInnerCutoff();

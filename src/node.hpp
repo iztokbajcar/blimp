@@ -26,6 +26,7 @@ namespace blimp {
             */
             ~Node();
 
+            static const int NODE_TYPE_GROUP;  /**< Indicates that the node will function as a means of grouping objects. */
             static const int NODE_TYPE_MESH;  /**< Indicates that the node is a Mesh. */
             static const int NODE_TYPE_DIRECTIONAL_LIGHT;  /**< Indicates that the node is a DirectionalLight. */
             static const int NODE_TYPE_POINT_LIGHT;  /**< Indicates that the node is a PointLight. */
@@ -135,6 +136,11 @@ namespace blimp {
             */
             void removeChild(Node* child);
 
+            /** Returns the parent node.
+             * @return A pointer to the parent node.
+            */
+            Node* getParent();
+
             /** Returns the vector of all descendant nodes.
              * This includes all child nodes and their children recursively.
              * @return A vector of pointers to the descendant nodes.
@@ -142,7 +148,7 @@ namespace blimp {
             std::vector<Node*> traverseChildren();
 
         protected:
-            int nodeType = NODE_TYPE_MESH; /**< Specifies the node type; mainly used by Window to distinguish between different types of objects when rendering. */
+            int nodeType; /**< Specifies the node type; mainly used by Window to distinguish between different types of objects when rendering. */
 
         private:
             glm::vec3 translation;

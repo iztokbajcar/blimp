@@ -10,6 +10,8 @@
 #include "../../src/pointlight.hpp"
 #include "../../src/window.hpp"
 
+#include <glm/gtx/string_cast.hpp>
+
 #define PI 3.14159265358979323846f
 
 using namespace blimp;
@@ -41,19 +43,19 @@ class DemoWindow : public Window {
             cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
             floor = new Mesh(new Cuboid(20, 0.1, 20, &colors), mat3);
             wall = new Mesh(new Cuboid(5, 2, 0.1, &colors), mat4);
-            wall2 = new Mesh(new Cuboid(20, 10, 0.1, &colors), mat4);
+            wall2 = new Mesh(new Cuboid(5, 5, 0.1, &colors), mat4);
             cube1 -> setTranslation(-2,  2, -7);
             cube2 -> setTranslation( 2,  2, -7);
             cube3 -> setTranslation(-2, -2, -7);
             floor -> setTranslation(0, -3, -9);
             wall -> setTranslation(3, -1.95, -10);
-            wall2 -> setTranslation(25, 0, -20);
+            wall2 -> setTranslation(0, 0, 0);
             scene -> addChild(cube1);
             scene -> addChild(cube2);
             scene -> addChild(cube3);
             scene -> addChild(floor);
             scene -> addChild(wall);
-            scene -> addChild(wall2);
+            // scene -> addChild(wall2);
 
             // lights
             AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.1f);
@@ -76,15 +78,28 @@ class DemoWindow : public Window {
             spotLight -> setRotation(PI / 2, 0.0f, 0.0f);
             scene -> addChild(spotLight);
 
-            SpotLight* spotLight2 = new SpotLight(Color(Color::LIME), 1.0f, 0.9f, 0.85f);
-            spotLight2 -> setTranslation(27, 0, -12);
-            spotLight2 -> setRotation(PI, 0.0f, 0.0f);
-            scene -> addChild(spotLight2);
+            
+            // spotLight4 -> setTranslation(23, 0, -15);
 
-            SpotLight* spotLight3 = new SpotLight(Color(Color::RED), 1.0f, 0.9f, 0.85f);
-            spotLight3 -> setTranslation(23, 0, -12);
+            colorsNode = new Node();
+
+            SpotLight* spotLight2 = new SpotLight(Color(Color::LIME), 1.0f, 0.85f, 0.85f);
+            SpotLight* spotLight3 = new SpotLight(Color(Color::RED), 1.0f, 0.85f, 0.85f);
+            SpotLight* spotLight4 = new SpotLight(Color(Color::BLUE), 1.0f, 0.85f, 0.85f);
+            colorsNode -> addChild(wall2);
+            colorsNode -> addChild(spotLight2);
+            colorsNode -> addChild(spotLight3);
+            colorsNode -> addChild(spotLight4);
+            wall2 -> setTranslation(0, 0, -1.25);
+            spotLight2 -> setTranslation(-0.75, -0.25, 1.5);
+            spotLight3 -> setTranslation(0.75, -0.25, 1.5);
+            spotLight4 -> setTranslation(0, 1, 1.5);
+            spotLight2 -> setRotation(PI, 0.0f, 0.0f);
             spotLight3 -> setRotation(PI, 0.0f, 0.0f);
-            scene -> addChild(spotLight3);
+            spotLight4 -> setRotation(PI, 0.0f, 0.0f);
+
+            colorsNode -> setTranslation(-5, 0, -20);
+            scene -> addChild(colorsNode);
 
             setScene(scene);
             setCamera(perspectiveCamera);
@@ -117,6 +132,7 @@ class DemoWindow : public Window {
         OrthographicCamera* orthographicCamera;
         PerspectiveCamera* perspectiveCamera;
         Node* cameraGroup;
+        Node* colorsNode;
 
     private:
         bool wPressed = false;

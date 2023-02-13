@@ -4,13 +4,14 @@
 #include <iostream>
 #include "node.hpp"
 
-const int blimp::Node::NODE_TYPE_MESH = 0;
-const int blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT = 1;
-const int blimp::Node::NODE_TYPE_POINT_LIGHT = 2;
-const int blimp::Node::NODE_TYPE_SPOT_LIGHT = 3;
-const int blimp::Node::NODE_TYPE_AMBIENT_LIGHT = 4;
-const int blimp::Node::NODE_TYPE_PERSPECTIVE_CAMERA = 5;
-const int blimp::Node::NODE_TYPE_ORTHOGRAPHIC_CAMERA = 6;
+const int blimp::Node::NODE_TYPE_GROUP                  = 0;
+const int blimp::Node::NODE_TYPE_MESH                   = 1;
+const int blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT      = 2;
+const int blimp::Node::NODE_TYPE_POINT_LIGHT            = 3;
+const int blimp::Node::NODE_TYPE_SPOT_LIGHT             = 4;
+const int blimp::Node::NODE_TYPE_AMBIENT_LIGHT          = 5;
+const int blimp::Node::NODE_TYPE_PERSPECTIVE_CAMERA     = 6;
+const int blimp::Node::NODE_TYPE_ORTHOGRAPHIC_CAMERA    = 7;
 
 blimp::Node::Node() {
     this -> translation = glm::vec3(0.0f);
@@ -19,6 +20,7 @@ blimp::Node::Node() {
     this -> parent = nullptr;
     this -> children = new std::vector<blimp::Node*>();
     this -> parentTransformationMatrix = glm::mat4(1.0f);
+    this -> nodeType = blimp::Node::NODE_TYPE_GROUP;
 }
 
 blimp::Node::~Node() {
@@ -47,8 +49,13 @@ glm::mat4 blimp::Node::getParentTransformationMatrix() {
     return this -> parent -> getTransformationMatrix();
 }
 
+//! TODO fix
 glm::mat4 blimp::Node::getGlobalTransformationMatrix() {
-    return this -> getParentTransformationMatrix() * this -> getTransformationMatrix();
+    if (this -> parent == nullptr) {
+        return this -> getTransformationMatrix();
+    } else {
+        return this -> getParent() -> getGlobalTransformationMatrix() * this -> getTransformationMatrix();
+    }
 }
 
 glm::vec3 blimp::Node::getTranslation() {
@@ -77,6 +84,7 @@ std::vector<blimp::Node*>* blimp::Node::getChildren() {
 //     this -> parentTransformationMatrix = parentTransformationMatrix;
 // }
 
+//! TODO operate on a transformation matrix
 void blimp::Node::setTranslation(float x, float y, float z) {
     this -> translation = glm::vec3(x, y, z);
 }
@@ -137,6 +145,10 @@ std::vector<blimp::Node*> blimp::Node::traverseChildren() {
     }
 
     return nodes;
+}
+
+blimp::Node* blimp::Node::getParent() {
+    return this -> parent;
 }
 
 void blimp::Node::setParent(Node* parent) {
