@@ -9,6 +9,8 @@ const int blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT = 1;
 const int blimp::Node::NODE_TYPE_POINT_LIGHT = 2;
 const int blimp::Node::NODE_TYPE_SPOT_LIGHT = 3;
 const int blimp::Node::NODE_TYPE_AMBIENT_LIGHT = 4;
+const int blimp::Node::NODE_TYPE_PERSPECTIVE_CAMERA = 5;
+const int blimp::Node::NODE_TYPE_ORTHOGRAPHIC_CAMERA = 6;
 
 blimp::Node::Node() {
     this -> translation = glm::vec3(0.0f);

@@ -4,6 +4,7 @@
 #include "../../src/mesh.hpp"
 #include "../../src/node.hpp"
 #include "../../src/normalmaterial.hpp"
+#include "../../src/orthographiccamera.hpp"
 #include "../../src/perspectivecamera.hpp"
 #include "../../src/phongmaterial.hpp"
 #include "../../src/pointlight.hpp"
@@ -39,6 +40,9 @@ class DemoWindow : public Window {
         Mesh* cube3;
         Mesh* floor;
         Mesh* wall;
+        OrthographicCamera* orthographicCamera;
+        PerspectiveCamera* perspectiveCamera;
+        Node* cameraGroup;
 
     private:
         bool wPressed = false;
@@ -130,44 +134,54 @@ class DemoWindow : public Window {
             if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE) {
                 this -> minusPressed = false;
             }
+
+            if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
+                if (camera == perspectiveCamera)
+                    setCamera(orthographicCamera);
+                else {
+                    setCamera(perspectiveCamera);
+                }
+            }
         }
 
         void move() {
             if (this -> wPressed) {
-                this -> camera -> translate(0.0f, 0.0f, -0.1f);
+                this -> cameraGroup -> translate(0.0f, 0.0f, -0.1f);
             }
             if (this -> sPressed) {
-                this -> camera -> translate(0.0f, 0.0f, 0.1f);
+                this -> cameraGroup -> translate(0.0f, 0.0f, 0.1f);
             }
             if (this -> aPressed) {
-                this -> camera -> translate(-0.1f, 0.0f, 0.0f);
+                this -> cameraGroup -> translate(-0.1f, 0.0f, 0.0f);
             }
             if (this -> dPressed) {
-                this -> camera -> translate(0.1f, 0.0f, 0.0f);
+                this -> cameraGroup -> translate(0.1f, 0.0f, 0.0f);
             }
             if (this -> rPressed) {
-                this -> camera -> translate(0.0f, 0.1f, 0.0f);
+                this -> cameraGroup -> translate(0.0f, 0.1f, 0.0f);
             }
             if (this -> fPressed) {
-                this -> camera -> translate(0.0f, -0.1f, 0.0f);
+                this -> cameraGroup -> translate(0.0f, -0.1f, 0.0f);
             }
             if (this -> upPressed) {
-                this -> camera -> rotate(0.05f, 0.0f, 0.0f);
+                this -> cameraGroup -> rotate(0.05f, 0.0f, 0.0f);
             }
             if (this -> downPressed) {
-                this -> camera -> rotate(-0.05f, 0.0f, 0.0f);
+                this -> cameraGroup -> rotate(-0.05f, 0.0f, 0.0f);
             }
             if (this -> leftPressed) {
-                this -> camera -> rotate(0.0f, 0.05f, 0.0f);
+                this -> cameraGroup -> rotate(0.0f, 0.05f, 0.0f);
             }
             if (this -> rightPressed) {
-                this -> camera -> rotate(0.0f, -0.05f, 0.0f);
+                this -> cameraGroup -> rotate(0.0f, -0.05f, 0.0f);
             }
-            if (this -> plusPressed) {
-                this -> camera -> setFov(this -> camera -> getFov() + 1.0f);
+            if (this -> plusPressed && this -> camera -> getType() == Node::NODE_TYPE_PERSPECTIVE_CAMERA) {
+                PerspectiveCamera* pc = (PerspectiveCamera*)this -> camera;
+                pc -> setFov(pc -> getFov() + 1.0f);
             }
-            if (this -> minusPressed) {
-                this -> camera -> setFov(this -> camera -> getFov() - 1.0f);
+            if (this -> minusPressed && this -> camera -> getType() == Node::NODE_TYPE_PERSPECTIVE_CAMERA) {
+                PerspectiveCamera* pc = (PerspectiveCamera*)this -> camera;
+                pc -> setFov(pc -> getFov() - 1.0f);
             }
         }
 
@@ -177,7 +191,12 @@ class DemoWindow : public Window {
 int main() {
     DemoWindow* window = new DemoWindow("BlimpDemo", 800, 600);
     Node* scene = new Node();
-    PerspectiveCamera* camera = new PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
+
+    window -> cameraGroup = new Node();
+    window -> orthographicCamera = new OrthographicCamera(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+    window -> perspectiveCamera = new PerspectiveCamera(60.0f, 800.0f/600.0f, 0.1f, 100.0f);
+    window -> cameraGroup -> addChild(window -> orthographicCamera);
+    window -> cameraGroup -> addChild(window -> perspectiveCamera);
 
     ColorVector colors {
         Color(Color::WHITE)
@@ -239,6 +258,6 @@ int main() {
     scene -> addChild(spotLight3);
 
     window -> setScene(scene);
-    window -> setCamera(camera);
+    window -> setCamera(window -> perspectiveCamera);
     window -> run();
 }

@@ -8,6 +8,11 @@ blimp::PerspectiveCamera::PerspectiveCamera(float fov, float aspect, float near,
     this -> aspect = aspect;
     this -> near = near;
     this -> far = far;
+    this -> nodeType = Node::NODE_TYPE_PERSPECTIVE_CAMERA;
+}
+
+float blimp::PerspectiveCamera::getFov() {
+    return this -> fov;
 }
 
 float blimp::PerspectiveCamera::getAspect() {
@@ -20,6 +25,10 @@ float blimp::PerspectiveCamera::getNear() {
 
 float blimp::PerspectiveCamera::getFar() {
     return this -> far;
+}
+
+void blimp::PerspectiveCamera::setFov(float fov) {
+    this -> fov = fov;
 }
 
 void blimp::PerspectiveCamera::setAspect(float aspect) {

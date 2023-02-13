@@ -316,7 +316,7 @@ TEST_F(MaterialTest, ShadersConstructor) {
     std::string vertexShaderSource = "vertex shader source";
     std::string fragmentShaderSource = "fragment shader source";
 
-    material = new blimp::Material(
+    blimp::Material* material = new blimp::Material(
         &vertexShaderSource,
         &fragmentShaderSource
     );

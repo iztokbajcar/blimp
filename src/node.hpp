@@ -31,6 +31,8 @@ namespace blimp {
             static const int NODE_TYPE_POINT_LIGHT;  /**< Indicates that the node is a PointLight. */
             static const int NODE_TYPE_SPOT_LIGHT;  /**< Indicates that the node is a SpotLight. */
             static const int NODE_TYPE_AMBIENT_LIGHT;  /**< Indicates that the node is an AmbientLight. */
+            static const int NODE_TYPE_PERSPECTIVE_CAMERA;  /**< Indicates that the node is a PerspectiveCamera. */
+            static const int NODE_TYPE_ORTHOGRAPHIC_CAMERA;  /**< Indicates that the node is an OrthographicCamera. */
 
             /** Returns the type of the node.
              * @return The node type, as defined by the NODE_TYPE_* constants.

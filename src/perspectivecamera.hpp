@@ -18,6 +18,11 @@ namespace blimp {
              */
             PerspectiveCamera(float fov, float aspect, float near, float far);
 
+            /** Returns the field of view of the camera.
+             * @return The field of view, in degrees
+             */
+            float getFov();
+
             /** Returns the aspect ratio of the camera.
              * @return The aspect ratio
              */
@@ -32,6 +37,11 @@ namespace blimp {
              * @return The distance to the far plane
              */
             float getFar();
+
+            /** Sets the field of view of the camera.
+             * @param fov The new field of view, in degrees
+             */
+            void setFov(float fov);
 
             /** Sets the aspect ratio of the camera.
              * @param aspect The new aspect ratio
@@ -59,6 +69,7 @@ namespace blimp {
             glm::mat4 getProjectionMatrix();
 
         private:
+            float fov;
             float aspect;
             float near;
             float far;
