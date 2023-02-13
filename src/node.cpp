@@ -25,7 +25,7 @@ blimp::Node::~Node() {
     delete this -> children;
 }
 
-int blimp::Node::getType() {
+int blimp::Node::getNodeType() {
     return this -> nodeType;
 }
 

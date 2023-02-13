@@ -43,8 +43,8 @@ TEST_F(AmbientLightTest, IsNotNull) {
 }
 
 TEST_F(AmbientLightTest, IsCorrectType) {
-    ASSERT_TRUE(ambientLight -> getType() ==blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
-    ASSERT_TRUE(ambientLight2 -> getType() == blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
+    ASSERT_TRUE(ambientLight -> getNodeType() ==blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
+    ASSERT_TRUE(ambientLight2 -> getNodeType() == blimp::Node::NODE_TYPE_AMBIENT_LIGHT);
 }
 
 TEST_F(AmbientLightTest, IsCorrectColor) {
@@ -171,8 +171,8 @@ TEST_F(DirectionalLightTest, IsNotNull) {
 }
 
 TEST_F(DirectionalLightTest, IsCorrectType) {
-    ASSERT_TRUE(directionalLight -> getType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
-    ASSERT_TRUE(directionalLight2 -> getType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
+    ASSERT_TRUE(directionalLight -> getNodeType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
+    ASSERT_TRUE(directionalLight2 -> getNodeType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
 }
 
 TEST_F(DirectionalLightTest, IsCorrectColor) {
@@ -254,9 +254,9 @@ TEST_F(LightTest, IsNotNull) {
 }
 
 TEST_F(LightTest, IsCorrectType) {
-    ASSERT_TRUE(light -> getType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
-    ASSERT_TRUE(light2 -> getType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
-    ASSERT_TRUE(light3 -> getType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
+    ASSERT_TRUE(light -> getNodeType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
+    ASSERT_TRUE(light2 -> getNodeType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
+    ASSERT_TRUE(light3 -> getNodeType() == blimp::Node::NODE_TYPE_DIRECTIONAL_LIGHT);
 }
 
 TEST_F(LightTest, IsCorrectColor) {
@@ -657,12 +657,12 @@ TEST_F(PointLightTest, IsNotNull) {
 
 TEST_F(PointLightTest, TypeIsCorrect) {
     ASSERT_EQ(
-        pointLight -> getType(),
+        pointLight -> getNodeType(),
         blimp::Node::NODE_TYPE_POINT_LIGHT
     );
 
     ASSERT_EQ(
-        pointLight2 -> getType(),
+        pointLight2 -> getNodeType(),
         blimp::Light::NODE_TYPE_POINT_LIGHT
     );
 }
@@ -739,12 +739,12 @@ TEST_F(SpotLightTest, IsNotNull) {
 
 TEST_F(SpotLightTest, TypeIsCorrect) {
     ASSERT_EQ(
-        spotLight -> getType(),
+        spotLight -> getNodeType(),
         blimp::Node::NODE_TYPE_SPOT_LIGHT
     );
 
     ASSERT_EQ(
-        spotLight2 -> getType(),
+        spotLight2 -> getNodeType(),
         blimp::Node::NODE_TYPE_SPOT_LIGHT
     );
 }

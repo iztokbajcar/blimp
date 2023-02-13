@@ -37,7 +37,7 @@ namespace blimp {
             /** Returns the type of the node.
              * @return The node type, as defined by the NODE_TYPE_* constants.
             */
-            int getType();
+            int getNodeType();
 
             /** Returns the local transformation matrix of the node.
              * @return The node's local transformation matrix.

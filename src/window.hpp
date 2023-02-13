@@ -36,6 +36,12 @@ namespace blimp {
              */
             Window(std::string title = std::string("Blimp"), int width = 800, int height = 600);
 
+            /** A function that is called immediately after the window is run. 
+             * Should be used for initialization of variables.
+             * This function should be overridden by the user to implement the desired behavior.
+            */
+            virtual void init();
+
             /** A function that is called before each frame is rendered.
              * This function should be overridden by the user to implement the desired behavior.
              */

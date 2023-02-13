@@ -9,6 +9,9 @@ blimp::Window::Window(std::string title, int width, int height) {
 }
 
 void blimp::Window::run() {
+    init();
+    std::cout << "Initialized" << std::endl;
+
     // initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -179,7 +182,7 @@ blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
     SLights sLights = SLights();
 
     for (Node* node: *nodes) {
-        int nodeType = node -> getType();
+        int nodeType = node -> getNodeType();
 
         if (nodeType == Node::NODE_TYPE_AMBIENT_LIGHT) {
             aLights.push_back((AmbientLight*) node);
@@ -470,7 +473,7 @@ MatMeshMap blimp::Window::groupMeshesByMaterial(std::vector<Node*>* nodes) {
 
     for (Node* node : *nodes) {
         // skip if the current node is not a mesh
-        if (node -> getType() != Node::NODE_TYPE_MESH) {
+        if (node -> getNodeType() != Node::NODE_TYPE_MESH) {
             continue;
         }
 
@@ -499,6 +502,10 @@ void blimp::Window::keyCallback(int key, int scancode, int action, int mode) {
         std::cout << "Closing window" << std::endl;
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+}
+
+void blimp::Window::init() {
+
 }
 
 void blimp::Window::update() {
