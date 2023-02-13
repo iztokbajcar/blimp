@@ -10,7 +10,6 @@ blimp::Window::Window(std::string title, int width, int height) {
 
 void blimp::Window::run() {
     init();
-    std::cout << "Initialized" << std::endl;
 
     // initialize GLFW
     if (!glfwInit()) {

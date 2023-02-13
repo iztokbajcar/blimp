@@ -443,7 +443,6 @@ TEST_F(NodeTest, ForwardDirection) {
     );
 
     node -> setRotation(0.0f, glm::half_pi<float>(), 0.0f);
-    // node -> setRotation(0.0f, 3.1415926535897932384626433f / 2, 0.0f);
 
     ASSERT_LT(
         node -> getForwardDirection().z - glm::vec3(1.0f, 0.0f, 0.0f).z,

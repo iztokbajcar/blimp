@@ -41,6 +41,9 @@ glm::mat4 blimp::Node::getTransformationMatrix() {
 }
 
 glm::mat4 blimp::Node::getParentTransformationMatrix() {
+    if (this -> parent == nullptr) {
+        return glm::mat4(1.0f);
+    }
     return this -> parent -> getTransformationMatrix();
 }
 
