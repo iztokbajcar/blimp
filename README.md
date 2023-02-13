@@ -10,7 +10,7 @@ To use the engine, you will need:
 
 To generate documentation and a simple demo, you will also need:  
 
-- [Doxygen](http://www.stack.nl/~dimitri/doxygen/)  
+- [Doxygen](https://www.doxygen.nl/)  
 - [gcc](https://gcc.gnu.org/)  
 - [Make](https://www.gnu.org/software/make/)  
 
