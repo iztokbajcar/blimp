@@ -94,7 +94,7 @@ void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
 }
 
 void blimp::Window::setTitle(std::string title) {
-    this -> title = title;  // TODO check if needed
+    this -> title = title;  //!< @todo check if needed
     glfwSetWindowTitle(this -> window, this -> title.c_str());
 }
 
@@ -122,7 +122,7 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     glCompileShader(vertexShader);
 
     // get compilation info
-    // TODO always get info log to account for the possibility of warnings
+    //! @todo always get info log to account for the possibility of warnings
     GLint success;
     GLchar infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);

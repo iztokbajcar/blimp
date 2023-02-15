@@ -151,15 +151,14 @@ namespace blimp {
             int nodeType; /**< Specifies the node type; mainly used by Window to distinguish between different types of objects when rendering. */
 
         private:
-            glm::vec3 translation;
-            glm::quat rotation;
-            glm::vec3 scale;
+            glm::mat4 transformationMatrix;
 
             Node* parent = nullptr;
             std::vector<Node*>* children;
             glm::mat4 parentTransformationMatrix;
 
             void setParent(Node* parent);
+            glm::mat4 genTransformationMatrix(glm::vec3 translation, glm::quat rotation, glm::vec3 scale);
     };
 
 }

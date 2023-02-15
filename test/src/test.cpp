@@ -13,6 +13,7 @@
 #include "../../src/mesh.hpp"
 #include "../../src/node.hpp"
 #include "../../src/normalmaterial.hpp"
+#include "../../src/orthographiccamera.hpp"
 #include "../../src/perspectivecamera.hpp"
 #include "../../src/phongmaterial.hpp"
 #include "../../src/window.hpp"
@@ -408,20 +409,20 @@ TEST_F(NodeTest, Translation) {
     );
 }
 
-TEST_F(NodeTest, Rotation) {
+TEST_F(NodeTest, Rotation) {   
     node -> setRotation(4.0f, 5.0f, 6.0f);
 
     ASSERT_EQ(
-        node -> getRotation(),
-        glm::quat(glm::vec3(4.0f, 5.0f, 6.0f))
+        glm::to_string(node -> getRotation()),
+        "quat(-0.406853, {-0.686041, -0.349363, 0.491695})"
     );
 
     node -> setRotation(0.0f, 0.0f, 0.0f);
     node -> rotate(1.0f, 2.0f, 3.0f);
 
     ASSERT_EQ(
-        node -> getRotation(),
-        glm::quat(glm::vec3(1.0f, 2.0f, 3.0f))
+        glm::to_string(node -> getRotation()),
+        "quat(-0.368871, {-0.754934, 0.206149, -0.501509})"
     );
 }
 
@@ -539,6 +540,130 @@ TEST_F(NodeTest, Children) {
     delete child2;
 }
 
+//////////////////// NormalMaterial ////////////////////
+
+class NormalMaterialTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            normalMaterial = new blimp::NormalMaterial();
+        }
+
+        virtual void TearDown() {
+            delete normalMaterial;
+        }
+
+        blimp::NormalMaterial *normalMaterial;
+};
+
+TEST_F(NormalMaterialTest, IsNotNull) {
+    ASSERT_TRUE(normalMaterial != NULL);
+}
+
+//////////////////// OrthographicCamera ////////////////////
+
+class OrthographicCameraTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            orthographicCamera = new blimp::OrthographicCamera(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+        }
+
+        virtual void TearDown() {
+            delete orthographicCamera;
+        }
+
+        blimp::OrthographicCamera *orthographicCamera;
+};
+
+TEST_F(OrthographicCameraTest, ViewMatrixIsCorrect) {
+    glm::mat4 viewMatrix = orthographicCamera -> getViewMatrix();
+
+    ASSERT_EQ(
+        viewMatrix, 
+        glm::inverse(glm::mat4(1.0f))
+    );
+}
+
+TEST_F(OrthographicCameraTest, ParametersAreCorrect) {
+    ASSERT_EQ(
+        orthographicCamera -> getLeft(),
+        -1.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getRight(),
+        1.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getBottom(),
+        -1.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getTop(),
+        1.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getNear(),
+        0.1f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getFar(),
+        100.0f
+    );
+}
+
+TEST_F(OrthographicCameraTest, SetParameters) {
+    orthographicCamera -> setLeft(-2.0f);
+    orthographicCamera -> setRight(2.0f);
+    orthographicCamera -> setBottom(-2.0f);
+    orthographicCamera -> setTop(2.0f);
+    orthographicCamera -> setNear(0.2f);
+    orthographicCamera -> setFar(200.0f);
+
+    ASSERT_EQ(
+        orthographicCamera -> getLeft(),
+        -2.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getRight(),
+        2.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getBottom(),
+        -2.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getTop(),
+        2.0f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getNear(),
+        0.2f
+    );
+
+    ASSERT_EQ(
+        orthographicCamera -> getFar(),
+        200.0f
+    );
+}
+
+TEST_F(OrthographicCameraTest, ProjectionMatrixIsCorrect) {
+    orthographicCamera = new blimp::OrthographicCamera(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+    glm::mat4 projectionMatrix = orthographicCamera -> getProjectionMatrix();
+
+    ASSERT_EQ(
+        projectionMatrix,
+        glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f)
+    );
+}
+
 //////////////////// PerspectiveCamera ////////////////////
 
 class PerspectiveCameraTest : public ::testing::Test {
@@ -614,21 +739,65 @@ TEST_F(PerspectiveCameraTest, SetParameters) {
 
 //////////////////// PhongMaterial ////////////////////
 
-class LambertMaterialTest : public ::testing::Test {
+class PhongMaterialTest : public ::testing::Test {
     protected:
         virtual void SetUp() {
-            lambertMaterial = new blimp::LambertMaterial();
+            phongMaterial = new blimp::PhongMaterial();
+            phongMaterial2 = new blimp::PhongMaterial(10.0f, 0.5f);
         }
 
         virtual void TearDown() {
-            delete lambertMaterial;
+            delete phongMaterial;
+            delete phongMaterial2;
         }
 
-        blimp::LambertMaterial *lambertMaterial;
+        blimp::PhongMaterial *phongMaterial;
+        blimp::PhongMaterial *phongMaterial2;
 };
 
-TEST_F(LambertMaterialTest, IsNotNull) {
-    ASSERT_NE(lambertMaterial, nullptr);
+TEST_F(PhongMaterialTest, IsNotNull) {
+    ASSERT_NE(phongMaterial, nullptr);
+    ASSERT_NE(phongMaterial2, nullptr);
+}
+
+TEST_F(PhongMaterialTest, ParametersCorrect) {
+    ASSERT_EQ(
+        phongMaterial -> getShininess(),
+        32.0f
+    );
+
+    ASSERT_EQ(
+        phongMaterial -> getSpecular(),
+        0.75f
+    );
+
+    ASSERT_EQ(
+        phongMaterial2 -> getShininess(),
+        10.0f
+    );
+
+    ASSERT_EQ(
+        phongMaterial2 -> getSpecular(),
+        0.5f
+    );
+}
+
+TEST_F(PhongMaterialTest, SetShininess) {
+    phongMaterial -> setShininess(64.0f);
+
+    ASSERT_EQ(
+        phongMaterial -> getShininess(),
+        64.0f
+    );
+}
+
+TEST_F(PhongMaterialTest, SetSpecularFactor) {
+    phongMaterial -> setSpecular(0.2f);
+
+    ASSERT_EQ(
+        phongMaterial -> getSpecular(),
+        0.2f
+    );
 }
 
 //////////////////// PointLight ////////////////////

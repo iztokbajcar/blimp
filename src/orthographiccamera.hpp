@@ -3,8 +3,11 @@
 
 #include "camera.hpp"
 
+/** @file orthographiccamera.hpp */
+
 namespace blimp {
 
+    //! Represents an orthographic camera.
     class OrthographicCamera : public blimp::Camera {
         public: 
             /** Creates an orthographic camera with the given left, right, bottom, top, near and far planes. 

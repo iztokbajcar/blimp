@@ -3,7 +3,7 @@ SRC_DIR := ./src
 BIN_DIR := ./bin
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%.o,$(SRC_FILES)) 
-CFLAGS_PROD := -std=c++11 -fPIC -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
+CFLAGS_PROD := -std=c++14 -fPIC -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
 
 # demo params
 DEMO_DIR := ./demo
@@ -17,7 +17,7 @@ TEST_COVERAGE_REPORT_FILE := coverage_report.info
 TEST_SRC_DIR := ./test/src
 TEST_BIN_DIR := ./test/bin
 TEST_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(TEST_BIN_DIR)/%.o,$(SRC_FILES)) 
-CFLAGS_TEST := -std=c++11 --coverage -O0 -fprofile-arcs -ftest-coverage -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -lgtest
+CFLAGS_TEST := -std=c++14 --coverage -O0 -fprofile-arcs -ftest-coverage -lGLEW -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -lgtest
 
 DOCS_DIR := ./docs
 

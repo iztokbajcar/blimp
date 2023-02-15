@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include "node.hpp"
@@ -14,9 +15,7 @@ const int blimp::Node::NODE_TYPE_PERSPECTIVE_CAMERA     = 6;
 const int blimp::Node::NODE_TYPE_ORTHOGRAPHIC_CAMERA    = 7;
 
 blimp::Node::Node() {
-    this -> translation = glm::vec3(0.0f);
-    this -> rotation = glm::vec3(0.0f);
-    this -> scale = glm::vec3(1.0f);
+    this -> transformationMatrix = glm::mat4(1.0f);
     this -> parent = nullptr;
     this -> children = new std::vector<blimp::Node*>();
     this -> parentTransformationMatrix = glm::mat4(1.0f);
@@ -32,12 +31,12 @@ int blimp::Node::getNodeType() {
 }
 
 glm::mat4 blimp::Node::getTransformationMatrix() {
-    glm::mat4 rotationMatrix = glm::toMat4(this -> rotation);
-    glm::mat4 transformationMatrix = glm::mat4(1.0f);  // identity
+    // glm::mat4 rotationMatrix = glm::toMat4(this -> rotation);
+    // glm::mat4 transformationMatrix = glm::mat4(1.0f);  // identity
 
-    transformationMatrix = glm::translate(transformationMatrix, this -> translation);
-    transformationMatrix *= rotationMatrix;
-    transformationMatrix = glm::scale(transformationMatrix, this -> scale);
+    // transformationMatrix = glm::translate(transformationMatrix, this -> translation);
+    // transformationMatrix *= rotationMatrix;
+    // transformationMatrix = glm::scale(transformationMatrix, this -> scale);
 
     return transformationMatrix;
 }
@@ -49,7 +48,6 @@ glm::mat4 blimp::Node::getParentTransformationMatrix() {
     return this -> parent -> getTransformationMatrix();
 }
 
-//! TODO fix
 glm::mat4 blimp::Node::getGlobalTransformationMatrix() {
     if (this -> parent == nullptr) {
         return this -> getTransformationMatrix();
@@ -59,15 +57,27 @@ glm::mat4 blimp::Node::getGlobalTransformationMatrix() {
 }
 
 glm::vec3 blimp::Node::getTranslation() {
-    return this -> translation; 
+    return glm::vec3(this -> transformationMatrix[3]);
 }
 
 glm::quat blimp::Node::getRotation() {
-    return this -> rotation;
+    glm::vec3 translation;
+    glm::quat rotation;
+    glm::vec3 scale;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(this -> transformationMatrix, scale, rotation, translation, skew, perspective);
+    return glm::conjugate(rotation);
 }
 
 glm::vec3 blimp::Node::getScale() {
-    return this -> scale;
+    glm::vec3 translation;
+    glm::quat rotation;
+    glm::vec3 scale;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(this -> transformationMatrix, scale, rotation, translation, skew, perspective);
+    return scale;
 }
 
 glm::vec3 blimp::Node::getForwardDirection() {
@@ -84,25 +94,44 @@ std::vector<blimp::Node*>* blimp::Node::getChildren() {
 //     this -> parentTransformationMatrix = parentTransformationMatrix;
 // }
 
-//! TODO operate on a transformation matrix
 void blimp::Node::setTranslation(float x, float y, float z) {
-    this -> translation = glm::vec3(x, y, z);
+    glm::vec3 scale, translation, skew;
+    glm::vec4 perspective;
+    glm::quat orientation;
+    glm::decompose(this -> transformationMatrix, scale, orientation, translation, skew, perspective);
+
+    this -> transformationMatrix = genTransformationMatrix(glm::vec3(), orientation, scale);
+    this -> translate(x, y, z);
 }
 
 void blimp::Node::setRotation(float x, float y, float z) {
-    this -> rotation = glm::quat(glm::vec3(x, y, z));
-}
+    glm::vec3 scale, translation, skew;
+    glm::vec4 perspective;
+    glm::quat orientation;
+    glm::decompose(this -> transformationMatrix, scale, orientation, translation, skew, perspective);
 
-void blimp::Node::translate(float x, float y, float z) {
-    this -> translation += glm::vec3(x, y, z);
-}
-
-void blimp::Node::rotate(float x, float y, float z) {
-    this -> rotation = glm::quat(glm::vec3(x, y, z)) * this -> rotation;
+    this -> transformationMatrix = genTransformationMatrix(translation, glm::quat(), scale);
+    this -> rotate(x, y, z);
 }
 
 void blimp::Node::setScale(float x, float y, float z) {
-    this -> scale = glm::vec3(x, y, z);
+    glm::vec3 scale, translation, skew;
+    glm::vec4 perspective;
+    glm::quat orientation;
+    glm::decompose(this -> transformationMatrix, scale, orientation, translation, skew, perspective);
+
+    this -> transformationMatrix = genTransformationMatrix(translation, orientation, glm::vec3(x, y, z));
+}
+
+void blimp::Node::translate(float x, float y, float z) {
+    this -> transformationMatrix = glm::translate(this -> transformationMatrix, glm::vec3(x, y, z));
+}
+
+void blimp::Node::rotate(float x, float y, float z) {
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), x, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotation = glm::rotate(rotation, y, glm::vec3(0.0f, 1.0f, 0.0f));
+    rotation = glm::rotate(rotation, z, glm::vec3(0.0f, 0.0f, 1.0f));
+    this -> transformationMatrix *= rotation;
 }
 
 void blimp::Node::addChild(Node* child) {
@@ -153,4 +182,13 @@ blimp::Node* blimp::Node::getParent() {
 
 void blimp::Node::setParent(Node* parent) {
     this -> parent = parent;
+}
+
+glm::mat4 blimp::Node::genTransformationMatrix(glm::vec3 translation, glm::quat rotation, glm::vec3 scale) {
+    glm::mat4 newMatrix = glm::mat4(1.0f);
+    newMatrix = glm::translate(newMatrix, translation);
+    newMatrix *= glm::toMat4(rotation);
+    newMatrix = glm::scale(newMatrix, scale);
+
+    return newMatrix;
 }
