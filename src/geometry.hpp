@@ -51,9 +51,10 @@ namespace blimp {
             */
             virtual void setColors(ColorVector* colors);
         protected:
-            GLfloat* vertices = nullptr;  /**< The geometry's vertices. */
+            GLfloat* vertices = nullptr;  /**< The geometry's vertices. */  // no indexes because we need to use normals and define each triangle's vertex separately
             GLfloat* colors = nullptr;  /**< The geometry's colors. */
             GLfloat* normals = nullptr;  /**< The geometry's normals. */
+            
             int vertexCount = 0;  /**< The number of vertices in the geometry. Should not be set manually. */
     };
 

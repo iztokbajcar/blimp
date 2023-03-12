@@ -15,7 +15,7 @@ blimp::Cuboid::Cuboid(float a, float b, float c, ColorVector* colors) {
                         a
     */
 
-    this -> vertexCount = 12*3;
+    this -> vertexCount = 12*3;  // 12 triangles, 3 vertices each
     this -> vertices = new GLfloat[12*3*3] {
         // front face
         -a/2, -b/2, -c/2,  // front bottom left  
@@ -129,12 +129,11 @@ blimp::Cuboid::Cuboid(float a, float b, float c, ColorVector* colors) {
     };
 
     // if colors are defined (not a null pointer), use the specified colors
-    // otherwise default to red
+    // otherwise use the default color
     if (colors != nullptr) {
         this -> setColors(colors);
     } else {
-        Color red = Color(Color::RED);
-        ColorVector cv = ColorVector {red};
+        ColorVector cv = ColorVector {Color()};  // default color
         this -> setColors(&cv);
     }
 }

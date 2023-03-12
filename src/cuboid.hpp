@@ -11,7 +11,7 @@ namespace blimp {
     class Cuboid : public blimp::Geometry {
         public:
             /** The default constructor.
-             * Creates a red `1x1x1` cube.
+             * Creates a black `1x1x1` cube.
              * @param a The length of the cuboid's x axis
              * @param b The length of the cuboid's y axis
              * @param c The length of the cuboid's z axis

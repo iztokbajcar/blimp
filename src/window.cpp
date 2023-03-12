@@ -59,7 +59,7 @@ void blimp::Window::run() {
         glfwPollEvents();
 
         // clear the screen
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  //! @todo make default background color configurable
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> update();
         this -> render(this -> scene, this -> camera);
@@ -461,7 +461,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
             // render
             glBindVertexArray(VAO);
-            glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+            glDrawArrays(GL_TRIANGLES, 0, vertexCount);  //! @todo Support for wireframe mode and other draw modes
             glBindVertexArray(0);
         }
     }

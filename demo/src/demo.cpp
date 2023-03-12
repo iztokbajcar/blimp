@@ -8,6 +8,7 @@
 #include "../../src/perspectivecamera.hpp"
 #include "../../src/phongmaterial.hpp"
 #include "../../src/pointlight.hpp"
+#include "../../src/regularpolygon.hpp"
 #include "../../src/window.hpp"
 
 #include <glm/gtx/string_cast.hpp>
@@ -29,33 +30,44 @@ class DemoWindow : public Window {
             cameraGroup -> addChild(orthographicCamera);
             cameraGroup -> addChild(perspectiveCamera);
 
-            ColorVector colors {
+            ColorVector white {
                 Color(Color::WHITE)
             };
+
+            ColorVector red {
+                Color(Color::RED)
+            };
+
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
 
-            cube1 = new Mesh(new Cuboid(1, 1, 1), mat1);
+            cube1 = new Mesh(new Cuboid(1, 1, 1, &red), mat1);
             cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
-            cube3 = new Mesh(new Cuboid(1, 1, 1, &colors), mat3);
-            floor = new Mesh(new Cuboid(20, 0.1, 20, &colors), mat3);
-            wall = new Mesh(new Cuboid(5, 2, 0.1, &colors), mat4);
-            wall2 = new Mesh(new Cuboid(5, 5, 0.1, &colors), mat4);
+            cube3 = new Mesh(new Cuboid(1, 1, 1, &white), mat3);
+            floor = new Mesh(new Cuboid(20, 0.1, 20, &white), mat3);
+            wall = new Mesh(new Cuboid(5, 2, 0.1, &white), mat4);
+            wall2 = new Mesh(new Cuboid(5, 5, 0.1, &white), mat4);
+            regPoly3 = new Mesh(new RegularPolygon(3, 0.9, &white), mat2);
+            regPoly4 = new Mesh(new RegularPolygon(4, 0.9, &white), mat2);
+            regPoly5 = new Mesh(new RegularPolygon(5, 0.9, &white), mat2);
+            regPoly6 = new Mesh(new RegularPolygon(6, 0.9, &white), mat2);
+            regPoly7 = new Mesh(new RegularPolygon(7, 0.9, &white), mat2);
+            regPoly8 = new Mesh(new RegularPolygon(8, 0.9, &white), mat2);
+
             cube1 -> setTranslation(-2,  2, -7);
             cube2 -> setTranslation( 2,  2, -7);
             cube3 -> setTranslation(-2, -2, -7);
             floor -> setTranslation(0, -3, -9);
             wall -> setTranslation(3, -1.95, -10);
-            wall2 -> setTranslation(0, 0, 0);
+            // wall2 -> setTranslation(0, 0, 0);
             scene -> addChild(cube1);
             scene -> addChild(cube2);
             scene -> addChild(cube3);
             scene -> addChild(floor);
             scene -> addChild(wall);
-            // scene -> addChild(wall2);
 
             // lights
             AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.1f);
@@ -101,6 +113,24 @@ class DemoWindow : public Window {
             colorsNode -> setTranslation(-5, 0, -20);
             scene -> addChild(colorsNode);
 
+            regPolysNode = new Node();
+
+            regPolysNode -> addChild(regPoly3);
+            regPolysNode -> addChild(regPoly4);
+            regPolysNode -> addChild(regPoly5);
+            regPolysNode -> addChild(regPoly6);
+            regPolysNode -> addChild(regPoly7);
+            regPolysNode -> addChild(regPoly8);
+            regPoly3 -> setTranslation(0, 0, 0);
+            regPoly4 -> setTranslation(2, 0, 0);
+            regPoly5 -> setTranslation(4, 0, 0);
+            regPoly6 -> setTranslation(6, 0, 0);
+            regPoly7 -> setTranslation(8, 0, 0);
+            regPoly8 -> setTranslation(10, 0, 0);
+
+            regPolysNode -> setTranslation(0, 0, -21.25);
+            scene -> addChild(regPolysNode);
+
             setScene(scene);
             setCamera(perspectiveCamera);
         }
@@ -129,10 +159,17 @@ class DemoWindow : public Window {
         Mesh* floor;
         Mesh* wall;
         Mesh* wall2;
+        Mesh* regPoly3;
+        Mesh* regPoly4;
+        Mesh* regPoly5;
+        Mesh* regPoly6;
+        Mesh* regPoly7;
+        Mesh* regPoly8;
         OrthographicCamera* orthographicCamera;
         PerspectiveCamera* perspectiveCamera;
         Node* cameraGroup;
         Node* colorsNode;
+        Node* regPolysNode;
 
     private:
         bool wPressed = false;
