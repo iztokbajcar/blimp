@@ -47,8 +47,9 @@ void blimp::Window::run() {
 
     this -> window = window;
 
-    // register key callback
+    // register GLFW callbacks
     this -> setKeyCallback(this, &keyCallbackWrapper);
+    this -> setFbSizeCallback(this, &fbSizeCallbackWrapper);
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -91,6 +92,11 @@ void blimp::Window::close() {
 void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
     glfwSetWindowUserPointer(t -> window, this);
     glfwSetKeyCallback(t -> window, callback);
+}
+
+void blimp::Window::setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback) {
+    glfwSetWindowUserPointer(t -> window, this);
+    glfwSetWindowSizeCallback(t -> window, callback);
 }
 
 void blimp::Window::setTitle(std::string title) {
@@ -492,6 +498,10 @@ MatMeshMap blimp::Window::groupMeshesByMaterial(std::vector<Node*>* nodes) {
     return meshesByMaterial;
 }
 
+void blimp::Window::updateViewport() {
+    glViewport(0, 0, this -> width, this -> height);
+}
+
 void blimp::Window::keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode) {
     blimp::Window* win = (blimp::Window*) glfwGetWindowUserPointer(window); 
     win -> keyCallback(key, scancode, action, mode);
@@ -502,6 +512,22 @@ void blimp::Window::keyCallback(int key, int scancode, int action, int mode) {
         std::cout << "Closing window" << std::endl;
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+}
+
+void blimp::Window::fbSizeCallbackWrapper(GLFWwindow* window, int width, int height) {
+    blimp::Window* win = (blimp::Window*) glfwGetWindowUserPointer(window); 
+    win -> fbSizeCallback(width, height);
+}
+
+void blimp::Window::fbSizeCallback(int width, int height) {
+    std::cout << width << ", " << height << std::endl;
+
+    if (width != 0 && height != 0) {
+        this -> width = width;
+        this -> height = height;
+    }
+    
+    this -> updateViewport();
 }
 
 void blimp::Window::init() {

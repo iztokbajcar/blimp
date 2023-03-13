@@ -90,6 +90,14 @@ namespace blimp {
              */
             virtual void keyCallback(int key, int scancode, int action, int mode);
 
+            /**
+             * A function that is called when the window's framebuffer is resized.
+             * This function should be overridden by the user to implement the desired behavior.
+             * @param width The new width of the framebuffer
+             * @param height The new height of the framebuffer
+             */
+            virtual void fbSizeCallback(int width, int height);
+
             /** Compiles the shader program for the given material.
              * @param material The material
              * @return GLuint The ID of the compiled shader program
@@ -109,6 +117,11 @@ namespace blimp {
              */
             MatMeshMap groupMeshesByMaterial(std::vector<Node*>* nodes);
 
+            /** Updates the viewport size based on the size of the window.
+             * 
+             */
+            void updateViewport();
+
             ProgramMap programs;  /**< The compiled programs for each material. */
             Node* scene = nullptr;  /**< The scene that will be rendered. */
             Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
@@ -122,7 +135,9 @@ namespace blimp {
         private:
             void render(Node* scene, Camera* camera);
             static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
+            static void fbSizeCallbackWrapper(GLFWwindow* window, int width, int height);
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
+            void setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback);
     };
 
 }
