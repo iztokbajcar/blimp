@@ -181,6 +181,42 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     return program;
 }
 
+GLuint blimp::Window::loadTexture(blimp::Texture* texture) {
+    // if a texture has already been loaded, return its texture unit
+    if (this -> textures[texture] != 0) {
+        return this -> textures[texture];
+    }
+
+    GLuint texUnit;
+    glGenTextures(1, &texUnit);
+    glBindTexture(GL_TEXTURE_2D, texUnit);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    unsigned char* image = texture -> getData();
+
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGBA,
+        texture -> getWidth(),
+        texture -> getHeight(),
+        0,
+        GL_RGBA,
+        GL_UNSIGNED_BYTE,
+        texture -> getData()    
+    );
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    this -> textures[texture] = texUnit;
+    return texUnit;
+}
+
 blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
     ALights aLights = ALights();
     DLights dLights = DLights();
@@ -409,6 +445,18 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             }
         }
 
+        if (material -> getTexture() != nullptr) {
+            //! @todo use multiple texture units for different textures (to speed up rendering etc.)
+            GLuint texture = loadTexture(material -> getTexture());
+            
+            glUniform1i(glGetUniformLocation(program, "uTexture"), texture);
+            glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
+            glActiveTexture(GL_TEXTURE0 + texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+        } else {
+            glUniform1i(glGetUniformLocation(program, "uUseTexture"), 0);
+        }
+
         // prepare meshes
         for (Mesh* mesh: meshes) {
             // check if geometry is defined
@@ -421,6 +469,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             GLfloat* vertices = geometry -> getVertices();
             GLfloat* colors = geometry -> getColors();
             GLfloat* normals = geometry -> getNormals();
+            GLfloat* texCoords = geometry -> getTexCoords();
             int vertexCount = geometry -> getVertexCount();
 
             // create a VAO
@@ -429,7 +478,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glBindVertexArray(VAO);
 
             // send the vertices to the GPU
-            GLuint VBOPos, VBOCol, VBONorm;
+            GLuint VBOPos, VBOCol, VBONorm, VBOTex;
 
             // position
             glGenBuffers(1, &VBOPos);
@@ -451,6 +500,13 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glBindBuffer(GL_ARRAY_BUFFER, VBONorm);
             glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), normals, GL_STATIC_DRAW);
             glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+            // texture coordinates
+            glGenBuffers(1, &VBOTex);
+            glEnableVertexAttribArray(3);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOTex);
+            glBufferData(GL_ARRAY_BUFFER, vertexCount * 2 * sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+            glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
             // unbind buffers
             glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -520,7 +576,6 @@ void blimp::Window::fbSizeCallbackWrapper(GLFWwindow* window, int width, int hei
 }
 
 void blimp::Window::fbSizeCallback(int width, int height) {
-    std::cout << width << ", " << height << std::endl;
 
     if (width != 0 && height != 0) {
         this -> width = width;

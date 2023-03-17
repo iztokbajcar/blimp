@@ -18,6 +18,9 @@
 /** A Map of Material objects and their respective shader programs. */
 typedef std::map<blimp::Material*, GLuint> ProgramMap;
 
+/** A Map that assigns a texture unit index to each texture. */
+typedef std::map<blimp::Texture*, GLuint> TextureMap;
+
 /** A Map that to each Material assigns a vector of Mesh objects that use the material. */
 typedef std::map<blimp::Material*, std::vector<blimp::Mesh*>> MatMeshMap;
 
@@ -104,6 +107,12 @@ namespace blimp {
              */
             GLuint compileMaterial(Material* material);
 
+            /** Loads the texture and assigns it a texture unit on the GPU.
+             * @param texture The texture
+             * @return GLuint The texture unit index
+            */
+            GLuint loadTexture(Texture* texture);
+
             /** Finds the lights in the given vector of nodes.
              * @param nodes The vector of nodes
              * @return LightsData The lights data
@@ -123,6 +132,7 @@ namespace blimp {
             void updateViewport();
 
             ProgramMap programs;  /**< The compiled programs for each material. */
+            TextureMap textures;  /**< The texture unit index for each texture. */
             Node* scene = nullptr;  /**< The scene that will be rendered. */
             Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
             GLFWwindow* window = nullptr;  /**< The GLFW window inside which the graphics will be rendered. */

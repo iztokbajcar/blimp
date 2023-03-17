@@ -10,15 +10,18 @@ std::string generateVertexShader() {
         "layout (location = 0) in vec3 aPosition;\n"
         "layout (location = 1) in vec4 aColor;\n"
         "layout (location = 2) in vec3 aNormal;\n"
+        "layout (location = 3) in vec2 aTexCoord;\n"
 
         "out vec3 vPos;\n"
         "out vec4 vColor;\n"
         "out vec4 vNormal;\n"
+        "out vec2 vTexCoord;\n"
 
         "void main() {\n"
         "    vColor = aColor;\n"
         "    vNormal = normalize(uModelMatrix * vec4(aNormal, 0.0));\n"
         "    vPos = vec3(uModelMatrix * vec4(aPosition, 1.0));\n"
+        "    vTexCoord = vec2(aTexCoord.x, 1.0f - aTexCoord.y);\n"  // flip the image, as SOIL loads it upside-down
         "    gl_Position = uProjectionMatrix * uViewMatrix * vec4(vPos, 1.0);\n"
         "}";
 }
@@ -69,14 +72,24 @@ std::string generateFragmentShader(float shininess, float specular) {
     "uniform DLight uDLights[MAX_LIGHTS];\n"
     "uniform PLight uPLights[MAX_LIGHTS];\n"
     "uniform SLight uSLights[MAX_LIGHTS];\n"
+    "uniform bool uUseTexture;\n"  // whether the shader should use a texture or not
+    "uniform sampler2D uTexture;\n"
 
     "in vec3 vPos;\n"
     "in vec4 vColor;\n"
     "in vec4 vNormal;\n"
+    "in vec2 vTexCoord;\n"
     "out vec4 oColor;\n"
 
+    //! @todo add a way to determine how to mix texture with color and if we should use the texture at all
     "vec4 calculateLightContribution(vec4 lightColor, float lightIntensity, vec4 diffuseColor, vec4 lightDir, vec4 normal, float specularFactor, float specular) {\n"
-    "    return (lightColor * lightIntensity) * diffuseColor * dot(lightDir, normal) + specularFactor * lightColor * specular;\n"
+    "    vec4 c;"
+    "    if (uUseTexture) {\n"
+    "        c = texture(uTexture, vTexCoord);\n"
+    "    } else {\n"
+    "        c = diffuseColor;\n"
+    "    }\n"
+    "    return (lightColor * lightIntensity) * c * dot(lightDir, normal) + specularFactor * lightColor * specular;\n"
     "}\n"
 
     "void main() {\n"
@@ -154,6 +167,7 @@ blimp::PhongMaterial::PhongMaterial() {
     this -> vertexShader = generateVertexShader();
     this -> fragmentShader = generateFragmentShader(this -> shininess, this -> specular);
     this -> lights = true;
+    // this -> texture = nullptr;
 }
 
 blimp::PhongMaterial::PhongMaterial(float shininess, float specular) {
@@ -162,6 +176,7 @@ blimp::PhongMaterial::PhongMaterial(float shininess, float specular) {
     this -> vertexShader = generateVertexShader();
     this -> fragmentShader = generateFragmentShader(this -> shininess, this -> specular);
     this -> lights = true;
+    // this -> texture = nullptr;
 }
 
 float blimp::PhongMaterial::getShininess() {

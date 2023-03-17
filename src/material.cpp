@@ -10,9 +10,12 @@ blimp::Material::Material() {
         "uniform mat4 uProjectionMatrix;\n"
         "layout (location = 0) in vec3 aPosition;\n"
         "layout (location = 1) in vec4 aColor;\n"
+        "layout (location = 3) in vec2 aTexCoord;\n"
         "out vec4 vColor;\n"
+        "out vec2 vTexCoord;\n"
         "void main() {\n"
         "   vColor = aColor;\n"
+        "   vTexCoord = aTexCoord;\n"
         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}\0";
 
@@ -20,6 +23,7 @@ blimp::Material::Material() {
         "#version 330 core\n"
         "precision mediump float;\n"
         "in vec4 vColor;\n"
+        "in vec2 vTexCoord;\n"
         "out vec4 oColor;\n"
         "void main() {\n"
         "   oColor = vColor;\n"
@@ -27,6 +31,7 @@ blimp::Material::Material() {
 
     this -> vertexShader = defaultVertexShader;
     this -> fragmentShader = defaultFragmentShader;
+    this -> texture = nullptr;
 }
 
 blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader) {
@@ -48,4 +53,12 @@ bool blimp::Material::usesLights() {
 
 void blimp::Material::setUsesLights(bool usesLights) {
     this -> lights = usesLights;
+}
+
+blimp::Texture* blimp::Material::getTexture() {
+    return this -> texture;
+}
+
+void blimp::Material::setTexture(blimp::Texture* texture) {
+    this -> texture = texture;
 }

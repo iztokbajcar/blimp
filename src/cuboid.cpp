@@ -128,6 +128,33 @@ blimp::Cuboid::Cuboid(float a, float b, float c, ColorVector* colors) {
          1,  0,  0,  // front top right
     };
 
+    this -> texCoords = new GLfloat[12*3*2];
+    for (int i = 0; i < 12*3*2; i += 12) {
+        // bottom left
+        this -> texCoords[i] = 0;
+        this -> texCoords[i+1] = 0;
+
+        // bottom right
+        this -> texCoords[i+2] = 1;
+        this -> texCoords[i+3] = 0;
+
+        // top left
+        this -> texCoords[i+4] = 0;
+        this -> texCoords[i+5] = 1;
+
+        // bottom right
+        this -> texCoords[i+6] = 1;
+        this -> texCoords[i+7] = 0;
+
+        // top right
+        this -> texCoords[i+8] = 1;
+        this -> texCoords[i+9] = 1;
+
+        // top left
+        this -> texCoords[i+10] = 0;
+        this -> texCoords[i+11] = 1;
+    }
+
     // if colors are defined (not a null pointer), use the specified colors
     // otherwise use the default color
     if (colors != nullptr) {

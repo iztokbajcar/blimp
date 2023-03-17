@@ -18,7 +18,7 @@ GLfloat* blimp::Geometry::getColors() {
 }
 
 void blimp::Geometry::setColors(ColorVector* colors) {
-    //  allocate as much colors as there are vertices
+    // allocate as much colors as there are vertices
     this -> colors = new GLfloat[this -> vertexCount * 4];
     int colorsSize = colors -> size();
 
@@ -32,6 +32,10 @@ void blimp::Geometry::setColors(ColorVector* colors) {
 
 GLfloat* blimp::Geometry::getNormals() {
     return this -> normals;
+}
+
+GLfloat* blimp::Geometry::getTexCoords() {
+    return this -> texCoords;
 }
 
 int blimp::Geometry::getVertexCount() {

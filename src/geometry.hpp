@@ -41,6 +41,11 @@ namespace blimp {
             */
             GLfloat* getNormals();
 
+            /** Returns the geometry's texture coordinates.
+             * @return The texture coordinates
+            */
+            GLfloat* getTexCoords();
+
             /** Returns the number of vertices in the geometry.
              * @return The number of vertices in the geometry
             */
@@ -54,6 +59,7 @@ namespace blimp {
             GLfloat* vertices = nullptr;  /**< The geometry's vertices. */  // no indexes because we need to use normals and define each triangle's vertex separately
             GLfloat* colors = nullptr;  /**< The geometry's colors. */
             GLfloat* normals = nullptr;  /**< The geometry's normals. */
+            GLfloat* texCoords = nullptr;  /**< The geometry's texture coordinates. */
             
             int vertexCount = 0;  /**< The number of vertices in the geometry. Should not be set manually. */
     };

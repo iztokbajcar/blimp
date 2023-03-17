@@ -9,6 +9,7 @@
 #include "../../src/phongmaterial.hpp"
 #include "../../src/pointlight.hpp"
 #include "../../src/regularpolygon.hpp"
+#include "../../src/texture.hpp"
 #include "../../src/window.hpp"
 
 #include <glm/gtx/string_cast.hpp>
@@ -38,16 +39,20 @@ class DemoWindow : public Window {
                 Color(Color::RED)
             };
 
+            Texture* blimp = new Texture("demo/assets/textures/blimp.png");
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
+            PhongMaterial* mat5 = new PhongMaterial(10.0f, 1.0f);
+
+            mat3 -> setTexture(blimp);
 
             cube1 = new Mesh(new Cuboid(1, 1, 1, &red), mat1);
             cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
             cube3 = new Mesh(new Cuboid(1, 1, 1, &white), mat3);
-            floor = new Mesh(new Cuboid(20, 0.1, 20, &white), mat3);
+            floor = new Mesh(new Cuboid(20, 0.1, 20, &white), mat5);
             wall = new Mesh(new Cuboid(5, 2, 0.1, &white), mat4);
             wall2 = new Mesh(new Cuboid(5, 5, 0.1, &white), mat4);
             regPoly3 = new Mesh(new RegularPolygon(3, 0.9, &white), mat2);
