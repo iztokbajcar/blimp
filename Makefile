@@ -21,12 +21,14 @@ CFLAGS_TEST := -std=c++14 --coverage -O0 -fprofile-arcs -ftest-coverage -lGLEW -
 
 DOCS_DIR := ./docs
 
+debug: CFLAGS_PROD += -g
+debug: demo
+
 demo: $(DEMO_BIN_DIR)/demo
 
 $(DEMO_BIN_DIR)/demo: $(OBJ_FILES) $(DEMO_SRC_DIR)/demo.cpp
 	mkdir -p $(DEMO_BIN_DIR)
 	g++ $(CFLAGS_PROD) $(DEMO_SRC_DIR)/demo.cpp -o $@ $(OBJ_FILES)
-	$(DEMO_BIN_DIR)/demo
 
 test: $(TEST_BIN_DIR)/test
 
@@ -56,5 +58,5 @@ clean:
 	-rm ${BIN_DIR}/*.o
 	-rm ${TEST_BIN_DIR}/*.o
 
-.PHONY: test clean build
+.PHONY: test clean build debug
 	

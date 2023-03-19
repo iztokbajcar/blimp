@@ -3,6 +3,7 @@
 blimp::Mesh::Mesh() {
     this -> geometry = nullptr;
     this -> material = nullptr;
+    this -> texture = nullptr;
     this -> nodeType = blimp::Node::NODE_TYPE_MESH;
 }
 
@@ -26,4 +27,12 @@ void blimp::Mesh::setGeometry(blimp::Geometry* geometry) {
 
 void blimp::Mesh::setMaterial(blimp::Material* material) {
     this -> material = material;
+}
+
+blimp::Texture* blimp::Mesh::getTexture() {
+    return this -> texture;
+}
+
+void blimp::Mesh::setTexture(blimp::Texture* texture) {
+    this -> texture = texture;
 }

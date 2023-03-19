@@ -44,9 +44,20 @@ namespace blimp {
              */
             void setMaterial(Material* material);
 
+            /** Gets the mesh's texture.
+             * @return The mesh's texture
+             */
+            Texture* getTexture();
+
+            /** Sets the mesh's texture.
+             * @param texture The mesh's texture
+             */
+            void setTexture(Texture* texture);
+
         private:
             Geometry* geometry = nullptr;
             Material* material = nullptr;
+            Texture* texture = nullptr;
     };
 
 }

@@ -31,7 +31,6 @@ blimp::Material::Material() {
 
     this -> vertexShader = defaultVertexShader;
     this -> fragmentShader = defaultFragmentShader;
-    this -> texture = nullptr;
 }
 
 blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader) {
@@ -53,12 +52,4 @@ bool blimp::Material::usesLights() {
 
 void blimp::Material::setUsesLights(bool usesLights) {
     this -> lights = usesLights;
-}
-
-blimp::Texture* blimp::Material::getTexture() {
-    return this -> texture;
-}
-
-void blimp::Material::setTexture(blimp::Texture* texture) {
-    this -> texture = texture;
 }

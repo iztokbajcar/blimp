@@ -49,20 +49,10 @@ namespace blimp {
             */
             void setUsesLights(bool usesLights);
 
-            /** Gets the material's texture.
-             * @return The material's texture
-             */
-            Texture* getTexture();
-
-            /** Sets the material's texture.
-             * @param texture The material's texture
-             */
-            void setTexture(Texture* texture);
 
         protected:
             std::string vertexShader;  /**< The material's vertex shader source. */
             std::string fragmentShader;  /**< The material's fragment shader source. */
-            Texture* texture = nullptr;  /**< The material's texture. */
             GLuint program;  /**< The ID of the material's shader program. Should not be set manually as it will be determined automatically by Window when compiling the material's shaders. */
             bool lights = false;  /**< `true` if the material uses lights, `false` otherwise. */
     };

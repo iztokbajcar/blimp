@@ -445,18 +445,6 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             }
         }
 
-        if (material -> getTexture() != nullptr) {
-            //! @todo use multiple texture units for different textures (to speed up rendering etc.)
-            GLuint texture = loadTexture(material -> getTexture());
-            
-            glUniform1i(glGetUniformLocation(program, "uTexture"), texture);
-            glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
-            glActiveTexture(GL_TEXTURE0 + texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-        } else {
-            glUniform1i(glGetUniformLocation(program, "uUseTexture"), 0);
-        }
-
         // prepare meshes
         for (Mesh* mesh: meshes) {
             // check if geometry is defined
@@ -520,6 +508,18 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             glUniformMatrix4fv(uModelMatrix, 1, GL_FALSE, glm::value_ptr(mesh -> getGlobalTransformationMatrix()));
             glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE, glm::value_ptr(camera -> getViewMatrix()));
             glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, glm::value_ptr(camera -> getProjectionMatrix()));
+
+            if (mesh -> getTexture() != nullptr) {
+                //! @todo use multiple texture units for different textures (to speed up rendering etc.)
+                GLuint texture = loadTexture(mesh -> getTexture());
+                
+                glUniform1i(glGetUniformLocation(program, "uTexture"), texture);
+                glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
+                glActiveTexture(GL_TEXTURE0 + texture);
+                glBindTexture(GL_TEXTURE_2D, texture);
+            } else {
+                glUniform1i(glGetUniformLocation(program, "uUseTexture"), 0);
+            }
 
             // render
             glBindVertexArray(VAO);
@@ -586,7 +586,9 @@ void blimp::Window::fbSizeCallback(int width, int height) {
 }
 
 void blimp::Window::init() {
-
+    // enable OpenGL debugging
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(&this -> openGLMessageCallback, 0);
 }
 
 void blimp::Window::update() {
@@ -597,4 +599,19 @@ float blimp::Window::getFPS(float smoothingFactor) {
     // calculate FPS by smoothing
     float smoothedFPS = (this -> previousFramesPerSecond * smoothingFactor) + (this -> currentFramesPerSecond * (1 - smoothingFactor));
     return smoothedFPS;
+}
+
+// for debugging OpenGL errors
+void GLAPIENTRY blimp::Window::openGLMessageCallback(
+    GLenum source,
+    GLenum type,
+    GLuint id,
+    GLenum severity,
+    GLsizei length,
+    const GLchar* message,
+    const void* userParam
+) {
+    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+        ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+        type, severity, message );
 }

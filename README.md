@@ -36,4 +36,5 @@ make docs
 To build and run the demo, run:
 ```bash
 make demo
+demo/bin/demo
 ```

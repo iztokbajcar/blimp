@@ -146,6 +146,7 @@ namespace blimp {
             void render(Node* scene, Camera* camera);
             static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
             static void fbSizeCallbackWrapper(GLFWwindow* window, int width, int height);
+            static void GLAPIENTRY openGLMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
             void setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback);
     };

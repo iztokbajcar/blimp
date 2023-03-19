@@ -45,9 +45,7 @@ class DemoWindow : public Window {
             NormalMaterial* mat2 = new NormalMaterial();
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
-            PhongMaterial* mat5 = new PhongMaterial(10.0f, 1.0f);
-
-            mat3 -> setTexture(blimp);
+            LambertMaterial* mat5 = new LambertMaterial();
 
             cube1 = new Mesh(new Cuboid(1, 1, 1, &red), mat1);
             cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
@@ -61,6 +59,8 @@ class DemoWindow : public Window {
             regPoly6 = new Mesh(new RegularPolygon(6, 0.9, &white), mat2);
             regPoly7 = new Mesh(new RegularPolygon(7, 0.9, &white), mat2);
             regPoly8 = new Mesh(new RegularPolygon(8, 0.9, &white), mat2);
+
+            cube3 -> setTexture(blimp);
 
             cube1 -> setTranslation(-2,  2, -7);
             cube2 -> setTranslation( 2,  2, -7);
