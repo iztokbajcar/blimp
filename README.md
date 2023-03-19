@@ -7,6 +7,7 @@ To use the engine, you will need:
 - [GLEW](http://glew.sourceforge.net/)  
 - [GLFW](http://www.glfw.org/)  
 - [glm](https://github.com/g-truc/glm)  
+- [SOIL](https://github.com/littlstar/soil)
 
 To generate documentation and a simple demo, you will also need:  
 
@@ -18,12 +19,12 @@ On Linux, you can install these with your package manager.
 
 - using `apt`:  
 ```bash
-apt-get install doxygen g++ libglew-dev libglfw3-dev libglm-dev make
+apt-get install doxygen g++ libglew-dev libglfw3-dev libglm-dev libsoil-dev make
 ```  
 
 - using `pacman`:  
 ```bash
-pacman -S doxygen gcc glew glfw glm make
+pacman -S doxygen gcc glew glfw glm make soil
 ```
 
 ## Docs
