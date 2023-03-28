@@ -22,7 +22,7 @@ void blimp::Window::run() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    // glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);  // hide window initially
+    glfwWindowHint(GLFW_SAMPLES, 4);  // number of MSAA samples
 
     GLFWwindow* window = glfwCreateWindow(this -> width, this -> height, this -> title.c_str(), nullptr, nullptr);
     if (!window) {
@@ -53,6 +53,9 @@ void blimp::Window::run() {
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
+
+    // enable multisampling
+    glEnable(GL_MULTISAMPLE);
 
     this -> lastFrameTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
