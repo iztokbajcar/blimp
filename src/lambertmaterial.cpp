@@ -11,15 +11,18 @@ blimp::LambertMaterial::LambertMaterial() {
           "layout (location = 0) in vec3 aPosition;\n"
           "layout (location = 1) in vec4 aColor;\n"
           "layout (location = 2) in vec3 aNormal;\n"
+          "layout (location = 3) in vec2 aTexCoord;\n"
 
           "out vec3 vPos;\n"
           "out vec4 vColor;\n"
           "out vec4 vNormal;\n"
+          "out vec2 vTexCoord;\n"
 
           "void main() {\n"
           "    vColor = aColor;\n"
           "    vNormal = normalize(uModelMatrix * vec4(aNormal, 0.0));\n"
           "    vPos = vec3(uModelMatrix * vec4(aPosition, 1.0));\n"
+          "    vTexCoord = vec2(aTexCoord.x, 1.0f - aTexCoord.y);\n"  // flip the image, as SOIL loads it upside-down
           "    gl_Position = uProjectionMatrix * uViewMatrix * vec4(vPos, 1.0);\n"
           "}";
 
@@ -67,22 +70,31 @@ blimp::LambertMaterial::LambertMaterial() {
           "uniform DLight uDLights[MAX_LIGHTS];\n"
           "uniform PLight uPLights[MAX_LIGHTS];\n"
           "uniform SLight uSLights[MAX_LIGHTS];\n"
+          "uniform bool uUseTexture;\n"
+          "uniform sampler2D uTexture;\n"
 
           "in vec3 vPos;\n"
           "in vec4 vColor;\n"
           "in vec4 vNormal;\n"
+          "in vec2 vTexCoord;\n"
           "out vec4 oColor;\n"
 
           "void main() {\n"
           "    vec4 diffuseColor = vColor;\n"
           "    vec4 normal = vec4(normalize(vNormal));\n"
+
+          "    vec4 c = diffuseColor;\n"
+          "    if (uUseTexture) {\n"
+          "         c = texture(uTexture, vTexCoord);\n"
+          "    }\n"
+
                // calculate color for every light
           "    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n"
                // ambient lights
           "    for (int i = 0; i < uNumALights; i++) {\n"
           "        vec4 lightColor = vec4(uALights[i].color, 1.0);\n"
           "        float lightIntensity = uALights[i].intensity;\n"
-          "        vec4 newColor = (lightColor * lightIntensity) * diffuseColor;\n"
+          "        vec4 newColor = (lightColor * lightIntensity) * c;\n"
           "        color += newColor;\n"
           "    }\n"
                // directional lights
@@ -91,7 +103,7 @@ blimp::LambertMaterial::LambertMaterial() {
           "        vec4 lightDir = vec4(normalize(lightPos - vec4(0.0f)));\n"  // light points to origin
           "        vec4 lightColor = vec4(uDLights[i].color, 1.0);\n"
           "        float lightIntensity = uDLights[i].intensity;\n"
-          "        vec4 newColor = (lightColor * lightIntensity) * diffuseColor * dot(lightDir, normal);\n"
+          "        vec4 newColor = (lightColor * lightIntensity) * c * dot(lightDir, normal);\n"
           "        color += clamp(newColor, 0.0, 1.0);\n"
           "    }\n"
                // point lights
@@ -102,7 +114,7 @@ blimp::LambertMaterial::LambertMaterial() {
           "        vec4 lightDir = normalize(distanceVec);\n"  // from fragment to light
           "        vec4 lightColor = vec4(uPLights[i].color, 1.0) / (uPLights[i].attenuation * (dLength * dLength));\n"  // attenuates with square of distance
           "        float lightIntensity = uPLights[i].intensity;\n"
-          "        vec4 newColor = (lightColor * lightIntensity) * diffuseColor * dot(lightDir, normal);\n"
+          "        vec4 newColor = (lightColor * lightIntensity) * c * dot(lightDir, normal);\n"
           "        color += clamp(newColor, 0.0, 1.0);\n"
           "    }\n"
                // spot lights
@@ -124,7 +136,7 @@ blimp::LambertMaterial::LambertMaterial() {
           "                intensity = clamp(intensity, 0.0, 1.0);\n"
           "                lightColor = vec4(uSLights[i].color, 1.0) * intensity;\n" 
           "            }\n"
-          "            vec4 newColor = (lightColor * lightIntensity) * diffuseColor * dot(lightDir, normal);\n"
+          "            vec4 newColor = (lightColor * lightIntensity) * c * dot(lightDir, normal);\n"
           "            color += clamp(newColor, 0.0, 1.0);\n"
           "        }\n"
           "    }\n"
