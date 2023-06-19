@@ -4,13 +4,20 @@ blimp::Mesh::Mesh() {
     this -> geometry = nullptr;
     this -> material = nullptr;
     this -> texture = nullptr;
+    this -> texOptions = new blimp::TextureOptions();
+    this -> usingDefaultTexOptions = true;
     this -> nodeType = blimp::Node::NODE_TYPE_MESH;
 }
 
-blimp::Mesh::Mesh(blimp::Geometry* geometry, blimp::Material* material) {
+blimp::Mesh::Mesh(blimp::Geometry* geometry, blimp::Material* material) : Mesh() {
     this -> geometry = geometry;
     this -> material = material;
-    this -> nodeType = blimp::Node::NODE_TYPE_MESH;
+}
+
+blimp::Mesh::~Mesh() {
+    if (this -> usingDefaultTexOptions) {
+        delete this -> texOptions;
+    }
 }
 
 blimp::Geometry* blimp::Mesh::getGeometry() {
@@ -35,4 +42,24 @@ blimp::Texture* blimp::Mesh::getTexture() {
 
 void blimp::Mesh::setTexture(blimp::Texture* texture) {
     this -> texture = texture;
+}
+
+void blimp::Mesh::setTexture(blimp::Texture* texture, blimp::TextureOptions* options) {
+    this -> texture = texture;
+    this -> texOptions = options;
+    this -> usingDefaultTexOptions = false;
+}
+
+blimp::TextureOptions* blimp::Mesh::getTextureOptions() {
+    return this -> texOptions;
+}   
+
+void blimp::Mesh::setTextureOptions(blimp::TextureOptions* options) {
+    // if the default texture options are being used, delete the object,
+    // because it was created in the constructor
+    if (this -> usingDefaultTexOptions) {
+        delete this -> texOptions;
+    }
+
+    this -> texOptions = options;
 }

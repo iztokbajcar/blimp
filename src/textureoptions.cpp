@@ -1,10 +1,17 @@
 #include "textureoptions.hpp"
 
 blimp::TextureOptions::TextureOptions() {
+    this -> scaleS = 1.0f;
+    this -> scaleT = 1.0f;
     this -> wrapS = WrapMode::REPEAT;
     this -> wrapT = WrapMode::REPEAT;
     this -> minFilterMode = FilterMode::LINEAR;
     this -> magFilterMode = FilterMode::LINEAR;
+}
+
+blimp::TextureOptions::TextureOptions(float scaleS, float scaleT) : TextureOptions() {
+    this -> scaleS = scaleS;
+    this -> scaleT = scaleT;
 }
 
 blimp::TextureOptions::TextureOptions(WrapMode wrapMode) : TextureOptions() {
@@ -24,11 +31,31 @@ blimp::TextureOptions::TextureOptions(WrapMode wrapMode, FilterMode filterMode) 
     this -> magFilterMode = filterMode;
 }
 
-blimp::TextureOptions::TextureOptions(WrapMode wrapModeS, WrapMode wrapModeT, FilterMode minFilterMode, FilterMode magFilterMode) {
+blimp::TextureOptions::TextureOptions(float scaleS, float scaleT, WrapMode wrapModeS, WrapMode wrapModeT, FilterMode minFilterMode, FilterMode magFilterMode) {
+    this -> scaleS = scaleS;
+    this -> scaleT = scaleT;
     this -> wrapS = wrapModeS;
     this -> wrapT = wrapModeT;
     this -> minFilterMode = minFilterMode;
     this -> magFilterMode = magFilterMode;
+}
+
+void blimp::TextureOptions::setScale(float scale) {
+    this -> scaleS = scale;
+    this -> scaleT = scale;
+}
+
+void blimp::TextureOptions::setScale(float scaleS, float scaleT) {
+    this -> scaleS = scaleS;
+    this -> scaleT = scaleT;
+}
+
+void blimp::TextureOptions::setScaleS(float scaleS) {
+    this -> scaleS = scaleS;
+}
+
+void blimp::TextureOptions::setScaleT(float scaleT) {
+    this -> scaleT = scaleT;
 }
 
 void blimp::TextureOptions::setWrapMode(WrapMode wrapMode) {
@@ -36,7 +63,7 @@ void blimp::TextureOptions::setWrapMode(WrapMode wrapMode) {
     this -> wrapT = wrapMode;
 }
 
-void blimp::TextureOptions::setWrapModes(WrapMode wrapModeS, WrapMode wrapModeT) {
+void blimp::TextureOptions::setWrapMode(WrapMode wrapModeS, WrapMode wrapModeT) {
     this -> wrapS = wrapModeS;
     this -> wrapT = wrapModeT;
 }
@@ -54,7 +81,7 @@ void blimp::TextureOptions::setFilterMode(FilterMode filterMode) {
     this -> magFilterMode = filterMode;
 }
 
-void blimp::TextureOptions::setFilterModes(FilterMode minFilterMode, FilterMode magFilterMode) {
+void blimp::TextureOptions::setFilterMode(FilterMode minFilterMode, FilterMode magFilterMode) {
     this -> minFilterMode = minFilterMode;
     this -> magFilterMode = magFilterMode;
 }
@@ -65,6 +92,14 @@ void blimp::TextureOptions::setMinFilterMode(FilterMode minFilterMode) {
 
 void blimp::TextureOptions::setMagFilterMode(FilterMode magFilterMode) {
     this -> magFilterMode = magFilterMode;
+}
+
+float blimp::TextureOptions::getScaleS() {
+    return this -> scaleS;
+}
+
+float blimp::TextureOptions::getScaleT() {
+    return this -> scaleT;
 }
 
 blimp::TextureOptions::WrapMode blimp::TextureOptions::getWrapModeS() {

@@ -40,6 +40,8 @@ class DemoWindow : public Window {
             };
 
             Texture* blimp = new Texture("demo/assets/textures/blimp.png");
+            Texture* bricks = new Texture("demo/assets/textures/bricks.jpg");
+            Texture* grass = new Texture("demo/assets/textures/grass.jpg");
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();
@@ -61,6 +63,12 @@ class DemoWindow : public Window {
             regPoly8 = new Mesh(new RegularPolygon(8, 0.9, &white), mat2);
 
             cube3 -> setTexture(blimp);
+            floor -> setTexture(grass, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
+            floor -> getTextureOptions() -> setScale(0.25f);
+            wall -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
+            wall -> getTextureOptions() -> setScale(0.5f, 1.0f);
+            wall2 -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
+            wall2 -> getTextureOptions() -> setScale(0.5f);
 
             cube1 -> setTranslation(-2,  2, -7);
             cube2 -> setTranslation( 2,  2, -7);
@@ -75,10 +83,10 @@ class DemoWindow : public Window {
             scene -> addChild(wall);
 
             // lights
-            AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.1f);
+            AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.2f);
             scene -> addChild(ambientLight);
 
-            DirectionalLight* directionalLight = new DirectionalLight(Color(Color::WHITE), 0.75f);
+            DirectionalLight* directionalLight = new DirectionalLight(Color(Color::WHITE), 1.0f);
             directionalLight -> setTranslation(6, 2, 4);
             scene -> addChild(directionalLight);
 
@@ -90,7 +98,7 @@ class DemoWindow : public Window {
             pointLight2 -> setTranslation(4, -0.95, -9);
             scene -> addChild(pointLight2);
 
-            SpotLight* spotLight = new SpotLight(Color(Color::BLUE), 1.0f, 0.9f, 0.85f);
+            SpotLight* spotLight = new SpotLight(Color(Color::YELLOW), 1.0f, 0.9f, 0.85f);
             spotLight -> setTranslation(1, 5, -8);
             spotLight -> setRotation(PI / 2, 0.0f, 0.0f);
             scene -> addChild(spotLight);

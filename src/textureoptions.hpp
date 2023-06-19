@@ -36,11 +36,11 @@ namespace blimp {
             */
             TextureOptions();
 
-            /** Creates a texture options object, setting every offset to the respective given offset and leaving the wrap modes at their default values.
-             * @param offsetS The offset to use for the S coordinate
-             * @param offsetT The offset to use for the T coordinate
+            /** Creates a texture options object, setting scale along each axis to the respective given scale and leaving other options at their default values.
+             * @param scaleS The offset to use for the S coordinate
+             * @param scaleT The offset to use for the T coordinate
             */
-            TextureOptions(int offsetS, int offsetT);
+            TextureOptions(float scaleS, float scaleT);
 
             /** Creates a texture options object, setting all wrap modes to the given wrap mode and leaving the filter modes at their default values.
              * @param wrapMode The wrap mode to use
@@ -59,12 +59,35 @@ namespace blimp {
             TextureOptions(WrapMode wrapMode, FilterMode filterMode);
 
             /** Creates a texture options object, setting both wrap modes to the respective given wrap modes and both filter modes to the respective given filter mode.
-             * @param wrapModeS The wrap mode to use for the S coordinate
-             * @param wrapModeT The wrap mode to use for the T coordinate
+             * @param scaleS The scaling factor along the S axis
+             * @param scaleT The scaling factor along the T axis
+             * @param wrapModeS The wrap mode to use for the S axis
+             * @param wrapModeT The wrap mode to use for the T axis
              * @param minFilterMode The filter mode to use for the minification filter
              * @param magFilterMode The filter mode to use for the magnification filter
             */
-            TextureOptions(WrapMode wrapModeS, WrapMode wrapModeT, FilterMode minFilterMode, FilterMode magFilterMode);
+            TextureOptions(float scaleS, float scaleT, WrapMode wrapModeS, WrapMode wrapModeT, FilterMode minFilterMode, FilterMode magFilterMode);
+
+            /** Sets the scale along both axes to the given scale.
+             * @param scale The scale to use
+            */
+            void setScale(float scale);
+
+            /** Sets the scale along each axis to the respective given scale.
+             * @param scaleS The scale to use for the S axis
+             * @param scaleT The scale to use for the T axis
+            */
+            void setScale(float scaleS, float scaleT);
+
+            /** Sets the scale along the S axis.
+             * @param scaleS The scale to use for the S axis
+            */
+            void setScaleS(float scaleS);
+
+            /** Sets the scale along the T axis.
+             * @param scaleT The scale to use for the T axis
+            */
+            void setScaleT(float scaleT);
 
             /** Sets the wrap mode across all axes to the given wrap mode.
              * @param wrapMode The wrap mode to use
@@ -72,18 +95,18 @@ namespace blimp {
             void setWrapMode(WrapMode wrapMode);
 
             /** Sets the wrap modes across the respective axes.
-             * @param wrapModeS The wrap mode to use for the S coordinate
-             * @param wrapModeT The wrap mode to use for the T coordinate
+             * @param wrapModeS The wrap mode to use for the S axis
+             * @param wrapModeT The wrap mode to use for the T axis
             */
-            void setWrapModes(WrapMode wrapModeS, WrapMode wrapModeT); 
+            void setWrapMode(WrapMode wrapModeS, WrapMode wrapModeT); 
 
             /** Sets the wrap mode across the S axis.
-             * @param wrapModeS The wrap mode to use for the S coordinate
+             * @param wrapModeS The wrap mode to use for the S axis
             */
             void setWrapModeS(WrapMode wrapModeS);
 
             /** Sets the wrap mode across the T axis.
-             * @param wrapModeT The wrap mode to use for the T coordinate
+             * @param wrapModeT The wrap mode to use for the T axis
             */
             void setWrapModeT(WrapMode wrapModeT);
 
@@ -96,7 +119,7 @@ namespace blimp {
              * @param minFilterMode The filter mode to use for the minification filter
              * @param magFilterMode The filter mode to use for the magnification filter
             */
-            void setFilterModes(FilterMode minFilterMode, FilterMode magFilterMode);
+            void setFilterMode(FilterMode minFilterMode, FilterMode magFilterMode);
 
             /** Sets the minifying filter mode.
              * @param minFilterMode The filter mode to use for the minification filter
@@ -107,6 +130,16 @@ namespace blimp {
              * @param magFilterMode The filter mode to use for the magnification filter
             */
             void setMagFilterMode(FilterMode magFilterMode);
+
+            /** Returns the scale along the S axis.
+             * @return The scale along the S axis
+            */
+            float getScaleS();
+
+            /** Returns the scale along the T axis.
+             * @return The scale along the T axis
+            */
+            float getScaleT();
 
             /** Returns the wrap mode across the S axis.
              * @return The wrap mode across the S axis
@@ -129,6 +162,8 @@ namespace blimp {
             FilterMode getMagFilterMode();
             
         private:
+            float scaleS;
+            float scaleT; 
             WrapMode wrapS;
             WrapMode wrapT;
             FilterMode minFilterMode;

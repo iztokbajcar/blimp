@@ -72,6 +72,8 @@ blimp::LambertMaterial::LambertMaterial() {
           "uniform SLight uSLights[MAX_LIGHTS];\n"
           "uniform bool uUseTexture;\n"
           "uniform sampler2D uTexture;\n"
+          "uniform float uTextureScaleS;\n"
+          "uniform float uTextureScaleT;\n"
 
           "in vec3 vPos;\n"
           "in vec4 vColor;\n"
@@ -85,7 +87,7 @@ blimp::LambertMaterial::LambertMaterial() {
 
           "    vec4 c = diffuseColor;\n"
           "    if (uUseTexture) {\n"
-          "         c = texture(uTexture, vTexCoord);\n"
+          "         c = texture(uTexture, vec2(vTexCoord.x / uTextureScaleS, vTexCoord.y / uTextureScaleT));\n"
           "    }\n"
 
                // calculate color for every light

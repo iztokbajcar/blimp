@@ -518,6 +518,8 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 
                 glUniform1i(glGetUniformLocation(program, "uTexture"), texture);
                 glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
+                glUniform1f(glGetUniformLocation(program, "uTextureScaleS"), mesh -> getTextureOptions() -> getScaleS());
+                glUniform1f(glGetUniformLocation(program, "uTextureScaleT"), mesh -> getTextureOptions() -> getScaleT());
                 glActiveTexture(GL_TEXTURE0 + texture);
                 glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -526,25 +528,25 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 glTexParameteri(
                     GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_S,
-                    mesh -> getTexture() -> getOptions() -> getWrapModeS()
+                    mesh -> getTextureOptions() -> getWrapModeS()
                 );
 
                 glTexParameteri(
                     GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_T,
-                    mesh -> getTexture() -> getOptions() -> getWrapModeT()
+                    mesh -> getTextureOptions() -> getWrapModeT()
                 );
 
                 glTexParameteri(
                     GL_TEXTURE_2D,
                     GL_TEXTURE_MIN_FILTER,
-                    mesh -> getTexture() -> getOptions() -> getMinFilterMode()
+                    mesh -> getTextureOptions() -> getMinFilterMode()
                 );
 
                 glTexParameteri(
                     GL_TEXTURE_2D,
                     GL_TEXTURE_MAG_FILTER,
-                    mesh -> getTexture() -> getOptions() -> getMagFilterMode()
+                    mesh -> getTextureOptions() -> getMagFilterMode()
                 );
 
             } else {

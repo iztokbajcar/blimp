@@ -24,6 +24,9 @@ namespace blimp {
              */
             Mesh(Geometry* geometry, Material* material);
 
+            /** The default destructor. */
+            ~Mesh();
+
             /** Returns the geometry used by this mesh. 
              * @return The geometry used by this mesh
             */
@@ -54,10 +57,28 @@ namespace blimp {
              */
             void setTexture(Texture* texture);
 
+            /** Sets the mesh's texture, using the provided options.
+             * @param texture The mesh's texture
+             * @param options The texture options
+             */
+            void setTexture(Texture* texture, TextureOptions* options);
+
+            /** Returns a pointer to the texture options object.
+             * @return The pointer to the texture options object
+            */
+            TextureOptions* getTextureOptions();
+
+            /** Sets the texture options object.
+             * @param options A pointer to the new texture options object
+            */
+            void setTextureOptions(TextureOptions* options);
+
         private:
             Geometry* geometry = nullptr;
             Material* material = nullptr;
             Texture* texture = nullptr;
+            TextureOptions* texOptions = nullptr;
+            bool usingDefaultTexOptions;
     };
 
 }

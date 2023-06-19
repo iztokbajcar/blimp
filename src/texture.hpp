@@ -20,12 +20,6 @@ namespace blimp {
             */
             Texture(std::string filename);
 
-            /** Creates a texture from an image file with the given filename and options.
-             * @param filename The filename of the image file
-             * @param options The options to use when loading the texture
-            */
-            Texture(std::string filename, TextureOptions* options);
-
             //! @todo Add support for creating textures from raw data
 
             /** Returns the width of the texture.
@@ -37,11 +31,6 @@ namespace blimp {
              * @return The height of the texture
             */
             int getHeight();
-
-            /** Returns a pointer to the texture options object.
-             * @return The pointer to the texture options object
-            */
-            TextureOptions* getOptions();
 
             /** Returns the data of the texture as a char array.
              * @return The data of the texture

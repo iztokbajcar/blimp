@@ -74,6 +74,8 @@ std::string generateFragmentShader(float shininess, float specular) {
     "uniform SLight uSLights[MAX_LIGHTS];\n"
     "uniform bool uUseTexture;\n"  // whether the shader should use a texture or not
     "uniform sampler2D uTexture;\n"
+    "uniform float uTextureScaleS;\n"
+    "uniform float uTextureScaleT;\n"
 
     "in vec3 vPos;\n"
     "in vec4 vColor;\n"
@@ -85,7 +87,7 @@ std::string generateFragmentShader(float shininess, float specular) {
     "vec4 calculateLightContribution(vec4 lightColor, float lightIntensity, vec4 diffuseColor, vec4 lightDir, vec4 normal, float specularFactor, float specular) {\n"
     "    vec4 c;"
     "    if (uUseTexture) {\n"
-    "        c = texture(uTexture, vTexCoord);\n"
+    "        c = texture(uTexture, vec2(vTexCoord.x / uTextureScaleS, vTexCoord.y / uTextureScaleT));\n"
     "    } else {\n"
     "        c = diffuseColor;\n"
     "    }\n"
