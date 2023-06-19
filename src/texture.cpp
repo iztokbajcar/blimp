@@ -9,6 +9,12 @@ blimp::Texture::Texture(std::string filename) {
         std::cout << "Error loading texture: " << filename << std::endl;
         exit(1);
     }
+
+    this -> options = new TextureOptions();
+}
+
+blimp::Texture::Texture(std::string filename, TextureOptions* options) : Texture(filename){
+    this -> options = options;
 }
 
 int blimp::Texture::getWidth() {
@@ -18,6 +24,10 @@ int blimp::Texture::getWidth() {
 int blimp::Texture::getHeight() {
     return this -> height;
 }
+
+blimp::TextureOptions* blimp::Texture::getOptions() {
+    return this -> options;
+}   
 
 unsigned char* blimp::Texture::getData() {
     return this -> data;

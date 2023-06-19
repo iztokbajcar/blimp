@@ -520,6 +520,33 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                 glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
                 glActiveTexture(GL_TEXTURE0 + texture);
                 glBindTexture(GL_TEXTURE_2D, texture);
+
+                // set texture parameters
+                //! @todo set only if not not setting the same/default values
+                glTexParameteri(
+                    GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S,
+                    mesh -> getTexture() -> getOptions() -> getWrapModeS()
+                );
+
+                glTexParameteri(
+                    GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T,
+                    mesh -> getTexture() -> getOptions() -> getWrapModeT()
+                );
+
+                glTexParameteri(
+                    GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER,
+                    mesh -> getTexture() -> getOptions() -> getMinFilterMode()
+                );
+
+                glTexParameteri(
+                    GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER,
+                    mesh -> getTexture() -> getOptions() -> getMagFilterMode()
+                );
+
             } else {
                 glUniform1i(glGetUniformLocation(program, "uUseTexture"), 0);
             }
@@ -597,8 +624,8 @@ void blimp::Window::fbSizeCallback(int width, int height) {
 
 void blimp::Window::init() {
     // enable OpenGL debugging
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(&this -> openGLMessageCallback, 0);
+    // glEnable(GL_DEBUG_OUTPUT);
+    // glDebugMessageCallback(&this -> openGLMessageCallback, 0);
 }
 
 void blimp::Window::update() {
