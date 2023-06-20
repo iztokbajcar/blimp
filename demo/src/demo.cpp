@@ -39,6 +39,9 @@ class DemoWindow : public Window {
                 Color(Color::RED)
             };
 
+            bgColor = new Color(Color::TEAL);
+            this -> setBackgroundColor(bgColor);
+
             Texture* blimp = new Texture("demo/assets/textures/blimp.png");
             Texture* bricks = new Texture("demo/assets/textures/bricks.jpg");
             Texture* grass = new Texture("demo/assets/textures/grass.jpg");
@@ -183,6 +186,7 @@ class DemoWindow : public Window {
         Node* cameraGroup;
         Node* colorsNode;
         Node* regPolysNode;
+        Color* bgColor;
 
     private:
         bool wPressed = false;

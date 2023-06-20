@@ -65,6 +65,16 @@ namespace blimp {
             */
             void setCamera(Camera* camera);
 
+            /** Sets the background color of the window.
+             * @param color A pointer to the color object
+            */
+            void setBackgroundColor(Color* color);
+
+            /** Returns the background color of the window.
+             * @return A pointer to the color object
+            */
+            Color* getBackgroundColor();
+
             /** Displays the window and starts the rendering loop. 
              */
             void run();
@@ -133,6 +143,7 @@ namespace blimp {
 
             ProgramMap programs;  /**< The compiled programs for each material. */
             TextureMap textures;  /**< The texture unit index for each texture. */
+            Color* backgroundColor = nullptr;  /**< The background color of the window. */
             Node* scene = nullptr;  /**< The scene that will be rendered. */
             Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
             GLFWwindow* window = nullptr;  /**< The GLFW window inside which the graphics will be rendered. */

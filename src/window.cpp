@@ -63,7 +63,19 @@ void blimp::Window::run() {
         glfwPollEvents();
 
         // clear the screen
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  //! @todo make default background color configurable
+        // (if the color was not specified, default to black)
+        float r, g, b;
+        Color* c = this -> getBackgroundColor();
+        if (c == nullptr) {
+            r = 0;
+            g = 0;
+            b = 0;
+        } else {
+            r = c -> getR();
+            g = c -> getG();
+            b = c -> getB();
+        }
+        glClearColor(r, g, b, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> update();
         this -> render(this -> scene, this -> camera);
@@ -113,6 +125,14 @@ void blimp::Window::setScene(Node* scene) {
 
 void blimp::Window::setCamera(Camera* camera) {
     this -> camera = camera;
+}
+
+void blimp::Window::setBackgroundColor(Color* color) {
+    this -> backgroundColor = color;
+}
+
+blimp::Color* blimp::Window::getBackgroundColor() {
+    return this -> backgroundColor;
 }
 
 GLuint blimp::Window::compileMaterial(Material* material) {
