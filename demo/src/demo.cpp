@@ -68,9 +68,9 @@ class DemoWindow : public Window {
             cube3 -> setTexture(blimp);
             floor -> setTexture(grass, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
             floor -> getTextureOptions() -> setScale(0.25f);
-            wall -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
+            wall -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::LINEAR));
             wall -> getTextureOptions() -> setScale(0.5f, 1.0f);
-            wall2 -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
+            wall2 -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::LINEAR));
             wall2 -> getTextureOptions() -> setScale(0.5f);
 
             cube1 -> setTranslation(-2,  2, -7);
@@ -106,7 +106,6 @@ class DemoWindow : public Window {
             spotLight -> setRotation(PI / 2, 0.0f, 0.0f);
             scene -> addChild(spotLight);
 
-            
             // spotLight4 -> setTranslation(23, 0, -15);
 
             colorsNode = new Node();
@@ -201,6 +200,12 @@ class DemoWindow : public Window {
         bool rightPressed = false;
         bool plusPressed = false;
         bool minusPressed = false;
+        bool firstMouse = true;
+        double lastX = 0.0f;
+        double lastY = 0.0f;
+        double yaw = -90.0f;
+        double pitch = 0.0f;
+        double mouseSensitivity = 0.01f;
 
         void keyCallback(int key, int scancode, int action, int mode) {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -329,10 +334,33 @@ class DemoWindow : public Window {
             }
         }
 
+        void mouseMoveCallback(double xPos, double yPos) {
+            if (this -> firstMouse) {
+                this -> lastX = xPos;
+                this -> lastY = yPos;
+                this -> firstMouse = false;
+            }
+
+            float xOffset = xPos - this -> lastX;
+            float yOffset = this -> lastY - yPos;
+            this -> lastX = xPos;
+            this -> lastY = yPos;
+
+            // this -> yaw -= xOffset * this -> mouseSensitivity;
+            // this -> pitch -= yOffset * this -> mouseSensitivity;
+
+            this -> cameraGroup -> rotate(
+                xOffset * this -> mouseSensitivity,
+                yOffset * this -> mouseSensitivity,
+                0.0f
+            );
+        }
+
         float fpsDisplayThrottle = 0;
 };
 
 int main() {
     DemoWindow* window = new DemoWindow("BlimpDemo", 800, 600);
+    window -> lockCursor(); 
     window -> run();
 }

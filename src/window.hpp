@@ -89,6 +89,10 @@ namespace blimp {
             */
             float getFPS(float smoothingFactor = 0.9);
 
+            /** Hides the cursor and prevents it from moving outside the window.
+             */
+            void lockCursor();
+
         protected:
             int width;  /**< The window width. */
             int height;  /**< The window height. */
@@ -110,6 +114,13 @@ namespace blimp {
              * @param height The new height of the framebuffer
              */
             virtual void fbSizeCallback(int width, int height);
+
+            /** A function that is called when the mouse is moved.
+             * This function should be overridden by the user to implement the desired behavior.
+             * @param xpos The new x position of the mouse
+             * @param ypos The new y position of the mouse
+             */
+            virtual void mouseMoveCallback(double xPos, double yPos);
 
             /** Compiles the shader program for the given material.
              * @param material The material
@@ -137,7 +148,7 @@ namespace blimp {
             MatMeshMap groupMeshesByMaterial(std::vector<Node*>* nodes);
 
             /** Updates the viewport size based on the size of the window.
-             * 
+             * Can be called, for example, whenever the size of the window changes.
              */
             void updateViewport();
 
@@ -157,9 +168,13 @@ namespace blimp {
             void render(Node* scene, Camera* camera);
             static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
             static void fbSizeCallbackWrapper(GLFWwindow* window, int width, int height);
+            static void mouseMoveCallbackWrapper(GLFWwindow* window, double xpos, double ypos); 
             static void GLAPIENTRY openGLMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
             void setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback);
+            void setMouseMoveCallback(blimp::Window *t, GLFWcursorposfun callback);
+            bool cursorLocked = false;
+            bool cursorLockRequested = false;
     };
 
 }

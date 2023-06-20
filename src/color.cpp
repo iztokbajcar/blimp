@@ -1,5 +1,4 @@
 #include "color.hpp"
-#include <iostream>
 
 // definitions of Color constants
 const float blimp::Color::BLACK[3] = {0.0f, 0.0f, 0.0f};

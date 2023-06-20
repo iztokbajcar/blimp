@@ -50,6 +50,13 @@ void blimp::Window::run() {
     // register GLFW callbacks
     this -> setKeyCallback(this, &keyCallbackWrapper);
     this -> setFbSizeCallback(this, &fbSizeCallbackWrapper);
+    this -> setMouseMoveCallback(this, &mouseMoveCallbackWrapper);
+
+    // if the cursor lock was requested before, but has failed,
+    // lock it now, when the window has been initialized
+    if (this -> cursorLockRequested && !this -> cursorLocked) {
+        this -> lockCursor();
+    }
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -112,6 +119,11 @@ void blimp::Window::setKeyCallback(blimp::Window *t, GLFWkeyfun callback) {
 void blimp::Window::setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback) {
     glfwSetWindowUserPointer(t -> window, this);
     glfwSetWindowSizeCallback(t -> window, callback);
+}
+
+void blimp::Window::setMouseMoveCallback(blimp::Window *t, GLFWcursorposfun callback) {
+    glfwSetWindowUserPointer(t -> window, this);
+    glfwSetCursorPosCallback(t -> window, callback);
 }
 
 void blimp::Window::setTitle(std::string title) {
@@ -642,6 +654,29 @@ void blimp::Window::fbSizeCallback(int width, int height) {
     }
     
     this -> updateViewport();
+}
+
+void blimp::Window::mouseMoveCallbackWrapper(GLFWwindow* window, double xPos, double yPos) {
+    blimp::Window* win = (blimp::Window*) glfwGetWindowUserPointer(window); 
+    win -> mouseMoveCallback(xPos, yPos);
+}
+
+void blimp::Window::mouseMoveCallback(double xPos, double yPos) {
+    // the default cursor position callback will do nothing
+}
+
+void blimp::Window::lockCursor() {
+    this -> cursorLockRequested = true;
+
+    // try to lock the cursor immediately,
+    // if it fails, presume that the window is not yet initialized
+    // and that the initialization routine will handle the locking request later
+    if (this -> window == NULL) {
+        return;
+    }
+
+    glfwSetInputMode(this -> window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    this -> cursorLocked = true;
 }
 
 void blimp::Window::init() {
