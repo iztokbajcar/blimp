@@ -10,6 +10,7 @@
 #include "../../src/pointlight.hpp"
 #include "../../src/regularpolygon.hpp"
 #include "../../src/regularprism.hpp"
+#include "../../src/regularpyramid.hpp"
 #include "../../src/texture.hpp"
 #include "../../src/window.hpp"
 
@@ -72,6 +73,12 @@ class DemoWindow : public Window {
             regPrism6 = new Mesh(new RegularPrism(6, 0.9, 0.9, &white), mat2);
             regPrism7 = new Mesh(new RegularPrism(7, 0.9, 0.9, &white), mat2);
             regPrism8 = new Mesh(new RegularPrism(8, 0.9, 0.9, &white), mat2);
+            regPyramid3 = new Mesh(new RegularPyramid(3, 0.9, 0.9, &white), mat2);
+            regPyramid4 = new Mesh(new RegularPyramid(4, 0.9, 0.9, &white), mat2);
+            regPyramid5 = new Mesh(new RegularPyramid(5, 0.9, 0.9, &white), mat2);
+            regPyramid6 = new Mesh(new RegularPyramid(6, 0.9, 0.9, &white), mat2);
+            regPyramid7 = new Mesh(new RegularPyramid(7, 0.9, 0.9, &white), mat2);
+            regPyramid8 = new Mesh(new RegularPyramid(8, 0.9, 0.9, &white), mat2);
 
             cube3 -> setTexture(blimp);
             floor -> setTexture(grass, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
@@ -150,7 +157,7 @@ class DemoWindow : public Window {
             regPoly6 -> setTranslation(6, 0, 0);
             regPoly7 -> setTranslation(8, 0, 0);
             regPoly8 -> setTranslation(10, 0, 0);
-            regPolysNode -> setTranslation(0, 0, -21.25);
+            regPolysNode -> setTranslation(0, 4, -21.25);
             scene -> addChild(regPolysNode);
 
             regPrismsNode = new Node();
@@ -166,8 +173,24 @@ class DemoWindow : public Window {
             regPrism6 -> setTranslation(6, 0, 0);
             regPrism7 -> setTranslation(8, 0, 0);
             regPrism8 -> setTranslation(10, 0, 0);
-            regPrismsNode -> setTranslation(0, -2, -19.5);
+            regPrismsNode -> setTranslation(0, 2, -19.25);
             scene -> addChild(regPrismsNode);
+
+            regPyramidsNode = new Node();
+            regPyramidsNode -> addChild(regPyramid3);
+            regPyramidsNode -> addChild(regPyramid4);
+            regPyramidsNode -> addChild(regPyramid5);
+            regPyramidsNode -> addChild(regPyramid6);
+            regPyramidsNode -> addChild(regPyramid7);
+            regPyramidsNode -> addChild(regPyramid8);
+            regPyramid3 -> setTranslation(0, 0, 0);
+            regPyramid4 -> setTranslation(2, 0, 0);
+            regPyramid5 -> setTranslation(4, 0, 0);
+            regPyramid6 -> setTranslation(6, 0, 0);
+            regPyramid7 -> setTranslation(8, 0, 0);
+            regPyramid8 -> setTranslation(10, 0, 0);
+            regPyramidsNode -> setTranslation(0, 0, -17.25);
+            scene -> addChild(regPyramidsNode);
 
             setScene(scene);
             setCamera(perspectiveCamera);
@@ -209,11 +232,18 @@ class DemoWindow : public Window {
         Mesh* regPrism6;
         Mesh* regPrism7;
         Mesh* regPrism8;
+        Mesh* regPyramid3;
+        Mesh* regPyramid4;
+        Mesh* regPyramid5;
+        Mesh* regPyramid6;
+        Mesh* regPyramid7;
+        Mesh* regPyramid8;
         OrthographicCamera* orthographicCamera;
         PerspectiveCamera* perspectiveCamera;
         Node* cameraGroup;
         Node* colorsNode;
         Node* regPolysNode;
+        Node* regPyramidsNode;
         Node* regPrismsNode;
         Color* bgColor;
 

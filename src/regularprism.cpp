@@ -126,15 +126,11 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         this -> vertices[i+7] = base2V0Y;   //   *          
         this -> vertices[i+8] = base2V0Z;   //  1V0   
 
-        this -> normals[i] = normal.x;
-        this -> normals[i+1] = normal.y;
-        this -> normals[i+2] = normal.z;
-        this -> normals[i+3] = normal.x;
-        this -> normals[i+4] = normal.y;
-        this -> normals[i+5] = normal.z;
-        this -> normals[i+6] = normal.x;
-        this -> normals[i+7] = normal.y;
-        this -> normals[i+8] = normal.z;      
+        for (int j = 0; j < 9; j += 3) {
+            this -> normals[i+j] = normal.x;
+            this -> normals[i+j+1] = normal.y;
+            this -> normals[i+j+2] = normal.z;
+        }      
 
         // the second triangle of the side face
         // base 1 vertex 0, base 1 vertex 1, base 2 vertex 1
@@ -150,15 +146,11 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         this -> vertices[i+16] = base2V1Y;  //   *-------*   
         this -> vertices[i+17] = base2V1Z;  //  1V0     1V1    
 
-        this -> normals[i+9] = normal.x;
-        this -> normals[i+10] = normal.y;
-        this -> normals[i+11] = normal.z;
-        this -> normals[i+12] = normal.x;
-        this -> normals[i+13] = normal.y;
-        this -> normals[i+14] = normal.z;
-        this -> normals[i+15] = normal.x;
-        this -> normals[i+16] = normal.y;
-        this -> normals[i+17] = normal.z;
+        for (int j = 0; j < 9; j += 3) {
+            this -> normals[i+9+j] = normal.x;
+            this -> normals[i+9+j+1] = normal.y;
+            this -> normals[i+9+j+2] = normal.z;
+        }
     }
 
     delete base1;
