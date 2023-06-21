@@ -36,12 +36,10 @@ namespace blimp {
              * @return The data of the texture
             */
             unsigned char* getData();
-            
-        protected:
-            int width;
-            int height;
 
         private:
+            int width;
+            int height;
             TextureOptions* options;
             unsigned char* data;
     };

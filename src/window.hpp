@@ -117,8 +117,8 @@ namespace blimp {
 
             /** A function that is called when the mouse is moved.
              * This function should be overridden by the user to implement the desired behavior.
-             * @param xpos The new x position of the mouse
-             * @param ypos The new y position of the mouse
+             * @param xPos The new x position of the mouse
+             * @param yPos The new y position of the mouse
              */
             virtual void mouseMoveCallback(double xPos, double yPos);
 

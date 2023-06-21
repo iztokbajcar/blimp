@@ -26,6 +26,9 @@ namespace blimp {
              */           
             Geometry(ColorVector* colors);
 
+            /** The default destructor. */
+            ~Geometry();
+
             /** Returns the geometry's vertices.
              * @return The geometry's vertices
             */

@@ -69,4 +69,7 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
         ColorVector cv = ColorVector {Color()};  // default color
         this -> setColors(&cv);
     }
+
+    delete[] polygonVertices;
+    delete[] polygonNormals;
 }

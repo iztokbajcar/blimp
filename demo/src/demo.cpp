@@ -9,6 +9,7 @@
 #include "../../src/phongmaterial.hpp"
 #include "../../src/pointlight.hpp"
 #include "../../src/regularpolygon.hpp"
+#include "../../src/regularprism.hpp"
 #include "../../src/texture.hpp"
 #include "../../src/window.hpp"
 
@@ -50,12 +51,13 @@ class DemoWindow : public Window {
             NormalMaterial* mat2 = new NormalMaterial();
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
-            LambertMaterial* mat5 = new LambertMaterial();
+
+            // TODO free allocated stuff when closing
 
             cube1 = new Mesh(new Cuboid(1, 1, 1, &red), mat1);
             cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
             cube3 = new Mesh(new Cuboid(1, 1, 1, &white), mat3);
-            floor = new Mesh(new Cuboid(20, 0.1, 20, &white), mat5);
+            floor = new Mesh(new Cuboid(50, 0.1, 50, &white), mat4);
             wall = new Mesh(new Cuboid(5, 2, 0.1, &white), mat4);
             wall2 = new Mesh(new Cuboid(5, 5, 0.1, &white), mat4);
             regPoly3 = new Mesh(new RegularPolygon(3, 0.9, &white), mat2);
@@ -64,6 +66,12 @@ class DemoWindow : public Window {
             regPoly6 = new Mesh(new RegularPolygon(6, 0.9, &white), mat2);
             regPoly7 = new Mesh(new RegularPolygon(7, 0.9, &white), mat2);
             regPoly8 = new Mesh(new RegularPolygon(8, 0.9, &white), mat2);
+            regPrism3 = new Mesh(new RegularPrism(3, 0.9, 0.9, &white), mat2);
+            regPrism4 = new Mesh(new RegularPrism(4, 0.9, 0.9, &white), mat2);
+            regPrism5 = new Mesh(new RegularPrism(5, 0.9, 0.9, &white), mat2);
+            regPrism6 = new Mesh(new RegularPrism(6, 0.9, 0.9, &white), mat2);
+            regPrism7 = new Mesh(new RegularPrism(7, 0.9, 0.9, &white), mat2);
+            regPrism8 = new Mesh(new RegularPrism(8, 0.9, 0.9, &white), mat2);
 
             cube3 -> setTexture(blimp);
             floor -> setTexture(grass, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
@@ -78,6 +86,7 @@ class DemoWindow : public Window {
             cube3 -> setTranslation(-2, -2, -7);
             floor -> setTranslation(0, -3, -9);
             wall -> setTranslation(3, -1.95, -10);
+
             // wall2 -> setTranslation(0, 0, 0);
             scene -> addChild(cube1);
             scene -> addChild(cube2);
@@ -129,7 +138,6 @@ class DemoWindow : public Window {
             scene -> addChild(colorsNode);
 
             regPolysNode = new Node();
-
             regPolysNode -> addChild(regPoly3);
             regPolysNode -> addChild(regPoly4);
             regPolysNode -> addChild(regPoly5);
@@ -142,9 +150,24 @@ class DemoWindow : public Window {
             regPoly6 -> setTranslation(6, 0, 0);
             regPoly7 -> setTranslation(8, 0, 0);
             regPoly8 -> setTranslation(10, 0, 0);
-
             regPolysNode -> setTranslation(0, 0, -21.25);
             scene -> addChild(regPolysNode);
+
+            regPrismsNode = new Node();
+            regPrismsNode -> addChild(regPrism3);
+            regPrismsNode -> addChild(regPrism4);
+            regPrismsNode -> addChild(regPrism5);
+            regPrismsNode -> addChild(regPrism6);
+            regPrismsNode -> addChild(regPrism7);
+            regPrismsNode -> addChild(regPrism8);
+            regPrism3 -> setTranslation(0, 0, 0);
+            regPrism4 -> setTranslation(2, 0, 0);
+            regPrism5 -> setTranslation(4, 0, 0);
+            regPrism6 -> setTranslation(6, 0, 0);
+            regPrism7 -> setTranslation(8, 0, 0);
+            regPrism8 -> setTranslation(10, 0, 0);
+            regPrismsNode -> setTranslation(0, -2, -19.5);
+            scene -> addChild(regPrismsNode);
 
             setScene(scene);
             setCamera(perspectiveCamera);
@@ -180,11 +203,18 @@ class DemoWindow : public Window {
         Mesh* regPoly6;
         Mesh* regPoly7;
         Mesh* regPoly8;
+        Mesh* regPrism3;
+        Mesh* regPrism4;
+        Mesh* regPrism5;
+        Mesh* regPrism6;
+        Mesh* regPrism7;
+        Mesh* regPrism8;
         OrthographicCamera* orthographicCamera;
         PerspectiveCamera* perspectiveCamera;
         Node* cameraGroup;
         Node* colorsNode;
         Node* regPolysNode;
+        Node* regPrismsNode;
         Color* bgColor;
 
     private:
@@ -350,8 +380,8 @@ class DemoWindow : public Window {
             // this -> pitch -= yOffset * this -> mouseSensitivity;
 
             this -> cameraGroup -> rotate(
-                xOffset * this -> mouseSensitivity,
                 yOffset * this -> mouseSensitivity,
+                -xOffset * this -> mouseSensitivity,
                 0.0f
             );
         }

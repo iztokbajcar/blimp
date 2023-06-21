@@ -9,6 +9,13 @@ blimp::Geometry::Geometry(ColorVector* colors) {
     this -> setColors(colors);
 }
 
+blimp::Geometry::~Geometry() {
+    delete[] this -> vertices;
+    delete[] this -> colors;
+    delete[] this -> normals;
+    delete[] this -> texCoords;
+}
+
 GLfloat* blimp::Geometry::getVertices() {
     return this -> vertices;
 }
