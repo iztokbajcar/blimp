@@ -155,12 +155,5 @@ blimp::Cuboid::Cuboid(float a, float b, float c, ColorVector* colors) {
         this -> texCoords[i+11] = 1;
     }
 
-    // if colors are defined (not a null pointer), use the specified colors
-    // otherwise use the default color
-    if (colors != nullptr) {
-        this -> setColors(colors);
-    } else {
-        ColorVector cv = ColorVector {Color()};  // default color
-        this -> setColors(&cv);
-    }
+    this -> setColors(colors);
 }

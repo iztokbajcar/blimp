@@ -61,24 +61,24 @@ class DemoWindow : public Window {
             floor = new Mesh(new Cuboid(50, 0.1, 50, &white), mat4);
             wall = new Mesh(new Cuboid(5, 2, 0.1, &white), mat4);
             wall2 = new Mesh(new Cuboid(5, 5, 0.1, &white), mat4);
-            regPoly3 = new Mesh(new RegularPolygon(3, 0.9, &white), mat2);
-            regPoly4 = new Mesh(new RegularPolygon(4, 0.9, &white), mat2);
-            regPoly5 = new Mesh(new RegularPolygon(5, 0.9, &white), mat2);
-            regPoly6 = new Mesh(new RegularPolygon(6, 0.9, &white), mat2);
-            regPoly7 = new Mesh(new RegularPolygon(7, 0.9, &white), mat2);
-            regPoly8 = new Mesh(new RegularPolygon(8, 0.9, &white), mat2);
-            regPrism3 = new Mesh(new RegularPrism(3, 0.9, 0.9, &white), mat2);
-            regPrism4 = new Mesh(new RegularPrism(4, 0.9, 0.9, &white), mat2);
-            regPrism5 = new Mesh(new RegularPrism(5, 0.9, 0.9, &white), mat2);
-            regPrism6 = new Mesh(new RegularPrism(6, 0.9, 0.9, &white), mat2);
-            regPrism7 = new Mesh(new RegularPrism(7, 0.9, 0.9, &white), mat2);
-            regPrism8 = new Mesh(new RegularPrism(8, 0.9, 0.9, &white), mat2);
-            regPyramid3 = new Mesh(new RegularPyramid(3, 0.9, 0.9, &white), mat2);
-            regPyramid4 = new Mesh(new RegularPyramid(4, 0.9, 0.9, &white), mat2);
-            regPyramid5 = new Mesh(new RegularPyramid(5, 0.9, 0.9, &white), mat2);
-            regPyramid6 = new Mesh(new RegularPyramid(6, 0.9, 0.9, &white), mat2);
-            regPyramid7 = new Mesh(new RegularPyramid(7, 0.9, 0.9, &white), mat2);
-            regPyramid8 = new Mesh(new RegularPyramid(8, 0.9, 0.9, &white), mat2);
+            regPoly3 = new Mesh(new RegularPolygon(3, 0.9), mat2);
+            regPoly4 = new Mesh(new RegularPolygon(4, 0.9), mat2);
+            regPoly5 = new Mesh(new RegularPolygon(5, 0.9), mat2);
+            regPoly6 = new Mesh(new RegularPolygon(6, 0.9), mat2);
+            regPoly7 = new Mesh(new RegularPolygon(7, 0.9), mat2);
+            regPoly8 = new Mesh(new RegularPolygon(8, 0.9), mat2);
+            regPrism3 = new Mesh(new RegularPrism(3, 0.9, 0.9), mat2);
+            regPrism4 = new Mesh(new RegularPrism(4, 0.9, 0.9), mat2);
+            regPrism5 = new Mesh(new RegularPrism(5, 0.9, 0.9), mat2);
+            regPrism6 = new Mesh(new RegularPrism(6, 0.9, 0.9), mat2);
+            regPrism7 = new Mesh(new RegularPrism(7, 0.9, 0.9), mat2);
+            regPrism8 = new Mesh(new RegularPrism(8, 0.9, 0.9), mat2);
+            regPyramid3 = new Mesh(new RegularPyramid(3, 0.9, 0.9), mat2);
+            regPyramid4 = new Mesh(new RegularPyramid(4, 0.9, 0.9), mat2);
+            regPyramid5 = new Mesh(new RegularPyramid(5, 0.9, 0.9), mat2);
+            regPyramid6 = new Mesh(new RegularPyramid(6, 0.9, 0.9), mat2);
+            regPyramid7 = new Mesh(new RegularPyramid(7, 0.9, 0.9), mat2);
+            regPyramid8 = new Mesh(new RegularPyramid(8, 0.9, 0.9), mat2);
 
             cube3 -> setTexture(blimp);
             floor -> setTexture(grass, new TextureOptions(TextureOptions::REPEAT, TextureOptions::NEAREST));
@@ -202,6 +202,12 @@ class DemoWindow : public Window {
             cube1 -> rotate(0.00f, 0.01f, 0.01f);
             cube2 -> rotate(0.00f, 0.01f, 0.01f);
             cube3 -> rotate(0.00f, 0.01f, 0.01f);
+            regPyramid3 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid4 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid5 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid6 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid7 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid8 -> rotate(0.00f, 0.00f, 0.01f);
 
             if (this -> fpsDisplayThrottle == 10) {
                 float fps = this -> getFPS();

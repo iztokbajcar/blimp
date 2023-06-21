@@ -153,6 +153,8 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         }
     }
 
+    this -> setColors(colors);
+
     delete base1;
     delete base2;
 }

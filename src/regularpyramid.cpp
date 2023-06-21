@@ -91,5 +91,7 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
         }
     }
 
+    this -> setColors(colors);
+
     delete base;
 }

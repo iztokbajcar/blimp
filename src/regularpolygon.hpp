@@ -20,6 +20,7 @@ namespace blimp {
              * @param colors The colors of the polygon's vertices
             */
             RegularPolygon(int sides = 3, float radius = 0.5, ColorVector* colors = nullptr);
+            //! @todo set texture coordinates
     };
 
 }

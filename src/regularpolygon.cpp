@@ -28,6 +28,7 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
 
     this -> vertexCount = sides + (numOfDiagonals * 2); 
     this -> vertices = new GLfloat[vertexCount*3];
+    this -> colors = new GLfloat[vertexCount];
     this -> normals = new GLfloat[vertexCount*3];
 
     // construct the triangles
@@ -63,12 +64,7 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
         }
     }
 
-    if (colors != nullptr) {
-        this -> setColors(colors);
-    } else {
-        ColorVector cv = ColorVector {Color()};  // default color
-        this -> setColors(&cv);
-    }
+    this -> setColors(colors);
 
     delete[] polygonVertices;
     delete[] polygonNormals;

@@ -17,7 +17,7 @@ namespace blimp {
              * @param colors The colors of the pyramid's vertices.
             */
             RegularPyramid(int sides = 3, float radius = 0.5f, float height = 1.0f, ColorVector* colors = nullptr);
-            // TODO apply colors, set texture coordinates
+            //! @todo set texture coordinates
     };
 
 }

@@ -25,6 +25,13 @@ GLfloat* blimp::Geometry::getColors() {
 }
 
 void blimp::Geometry::setColors(ColorVector* colors) {
+    // if colors are defined (not a null pointer), use the specified colors
+    // otherwise use the default color
+    if (colors == nullptr) {
+        ColorVector cv = ColorVector {Color()};  // default color
+        colors = &cv;
+    }
+
     // allocate as much colors as there are vertices
     this -> colors = new GLfloat[this -> vertexCount * 4];
     int colorsSize = colors -> size();
