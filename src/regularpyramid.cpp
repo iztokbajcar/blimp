@@ -10,6 +10,11 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
     GLfloat* baseVertices = base -> getVertices();
     GLfloat* baseNormals = base -> getNormals();
 
+    // invert the base normals
+    for (int i = 0; i < baseVertexCount; i++) {
+       baseNormals[i*3+2] *= -1;
+    }
+
     this -> vertexCount = 
         baseVertexCount +  // base face
         sides * 3;  // 3 vertices (1 triangle) per side

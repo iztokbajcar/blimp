@@ -202,12 +202,12 @@ class DemoWindow : public Window {
             cube1 -> rotate(0.00f, 0.01f, 0.01f);
             cube2 -> rotate(0.00f, 0.01f, 0.01f);
             cube3 -> rotate(0.00f, 0.01f, 0.01f);
-            regPyramid3 -> rotate(0.00f, 0.00f, 0.01f);
-            regPyramid4 -> rotate(0.00f, 0.00f, 0.01f);
-            regPyramid5 -> rotate(0.00f, 0.00f, 0.01f);
-            regPyramid6 -> rotate(0.00f, 0.00f, 0.01f);
-            regPyramid7 -> rotate(0.00f, 0.00f, 0.01f);
-            regPyramid8 -> rotate(0.00f, 0.00f, 0.01f);
+            regPyramid3 -> rotate(0.00f, 0.00f, 0.003f);
+            regPyramid4 -> rotate(0.00f, 0.00f, 0.003f);
+            regPyramid5 -> rotate(0.00f, 0.00f, 0.003f);
+            regPyramid6 -> rotate(0.00f, 0.00f, 0.003f);
+            regPyramid7 -> rotate(0.00f, 0.00f, 0.003f);
+            regPyramid8 -> rotate(0.00f, 0.00f, 0.003f);
 
             if (this -> fpsDisplayThrottle == 10) {
                 float fps = this -> getFPS();
