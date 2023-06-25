@@ -1,49 +1,44 @@
 #include <string>
 #include <iostream>
+
 #include "material.hpp"
+#include "shader.hpp"
+#include "vertexshader.hpp"
+#include "fragmentshader.hpp"
+
+blimp::VertexShader blimp::Material::defaultVertexShader = VertexShader(
+    std::vector<ShaderFeature> {
+        ShaderFeature::USES_POSITION,
+        ShaderFeature::USES_COLOR,
+        ShaderFeature::USES_TEXTURES,
+    }
+);
+
+blimp::FragmentShader blimp::Material::defaultFragmentShader = FragmentShader(
+    std::vector<ShaderFeature> {
+        ShaderFeature::USES_POSITION,
+        ShaderFeature::USES_COLOR,
+        ShaderFeature::USES_TEXTURES,
+    }
+);
 
 blimp::Material::Material() {
-    std::string defaultVertexShader = 
-        "#version 330 core\n"
-        "uniform mat4 uModelMatrix;\n"
-        "uniform mat4 uViewMatrix;\n"
-        "uniform mat4 uProjectionMatrix;\n"
-        "layout (location = 0) in vec3 aPosition;\n"
-        "layout (location = 1) in vec4 aColor;\n"
-        "layout (location = 3) in vec2 aTexCoord;\n"
-        "out vec4 vColor;\n"
-        "out vec2 vTexCoord;\n"
-        "void main() {\n"
-        "   vColor = aColor;\n"
-        "   vTexCoord = aTexCoord;\n"
-        "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
-        "}\0";
-
-    std::string defaultFragmentShader =
-        "#version 330 core\n"
-        "precision mediump float;\n"
-        "in vec4 vColor;\n"
-        "in vec2 vTexCoord;\n"
-        "out vec4 oColor;\n"
-        "void main() {\n"
-        "   oColor = vColor;\n"
-        "}\0";
-
-    this -> vertexShader = defaultVertexShader;
-    this -> fragmentShader = defaultFragmentShader;
+    this -> vertexShader = &blimp::Material::defaultVertexShader;
+    this -> fragmentShader = &blimp::Material::defaultFragmentShader;
 }
 
-blimp::Material::Material(std::string* vertexShader, std::string* fragmentShader) {
-    this -> vertexShader = *vertexShader;
-    this -> fragmentShader = *fragmentShader;
+blimp::Material::Material(VertexShader* vertexShader, FragmentShader* fragmentShader) {
+    this -> vertexShader = vertexShader;
+    this -> fragmentShader = fragmentShader;
 }
 
-std::string* blimp::Material::getVertexShader() {
-    return (&this -> vertexShader);
+
+blimp::VertexShader* blimp::Material::getVertexShader() {
+    return this -> vertexShader;
 }
 
-std::string* blimp::Material::getFragmentShader() {
-    return (&this -> fragmentShader);
+blimp::FragmentShader* blimp::Material::getFragmentShader() {
+    return this -> fragmentShader;
 }
 
 bool blimp::Material::usesLights() {

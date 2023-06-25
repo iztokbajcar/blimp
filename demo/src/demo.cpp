@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../../src/cuboid.hpp"
+#include "../../src/fragmentshader.hpp"
 #include "../../src/lambertmaterial.hpp"
 #include "../../src/mesh.hpp"
 #include "../../src/node.hpp"
@@ -11,7 +12,9 @@
 #include "../../src/regularpolygon.hpp"
 #include "../../src/regularprism.hpp"
 #include "../../src/regularpyramid.hpp"
+#include "../../src/shader.hpp"
 #include "../../src/texture.hpp"
+#include "../../src/vertexshader.hpp"
 #include "../../src/window.hpp"
 
 #include <glm/gtx/string_cast.hpp>
@@ -53,7 +56,7 @@ class DemoWindow : public Window {
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
 
-            // TODO free allocated stuff when closing
+            //! @todo free allocated stuff when closing
 
             cube1 = new Mesh(new Cuboid(1, 1, 1, &red), mat1);
             cube2 = new Mesh(new Cuboid(1, 1, 1), mat2);
@@ -117,7 +120,7 @@ class DemoWindow : public Window {
             pointLight2 -> setTranslation(4, -0.95, -9);
             scene -> addChild(pointLight2);
 
-            SpotLight* spotLight = new SpotLight(Color(Color::YELLOW), 1.0f, 0.9f, 0.85f);
+            SpotLight* spotLight = new SpotLight(Color(Color::AQUA), 1.0f, 0.9f, 0.85f);
             spotLight -> setTranslation(1, 5, -8);
             spotLight -> setRotation(PI / 2, 0.0f, 0.0f);
             scene -> addChild(spotLight);

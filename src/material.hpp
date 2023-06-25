@@ -5,7 +5,9 @@
 #include <string>
 #include <vector>
 
+#include "fragmentshader.hpp"
 #include "texture.hpp"
+#include "vertexshader.hpp"
 
 /** @file material.hpp */
 
@@ -25,17 +27,17 @@ namespace blimp {
              * @param vertexShader The vertex shader
              * @param fragmentShader The fragment shader
             */
-            Material(std::string* vertexShader, std::string* fragmentShader);
+            Material(VertexShader* vertexShader, FragmentShader* fragmentShader);
 
             /** Returns the material's vertex shader.
-             * @return The source code of the material's vertex shader
+             * @return The material's vertex shader
             */
-            std::string* getVertexShader();
+            VertexShader* getVertexShader();
 
             /** Returns the material's fragment shader.
-             * @return The source code of the material's fragment shader
+             * @return The material's fragment shader
             */
-            std::string* getFragmentShader();
+            FragmentShader* getFragmentShader();
 
             /** Determines if the material was set to use lights.
              * This is used by Window to determine if it should pass lighting data to the material when rendering.
@@ -49,12 +51,17 @@ namespace blimp {
             */
             void setUsesLights(bool usesLights);
 
+            //! @todo allow custom ambient, diffuse and specular colors
 
         protected:
-            std::string vertexShader;  /**< The material's vertex shader source. */
-            std::string fragmentShader;  /**< The material's fragment shader source. */
+            VertexShader* vertexShader;  /**< The material's vertex shader source. */
+            FragmentShader* fragmentShader;  /**< The material's fragment shader source. */
             GLuint program;  /**< The ID of the material's shader program. Should not be set manually as it will be determined automatically by Window when compiling the material's shaders. */
             bool lights = false;  /**< `true` if the material uses lights, `false` otherwise. */
+
+        private:
+            static VertexShader defaultVertexShader;
+            static FragmentShader defaultFragmentShader;
     };
 
 

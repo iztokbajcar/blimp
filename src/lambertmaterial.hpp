@@ -15,6 +15,10 @@ namespace blimp {
              * It will take into account all AmbientLight, DirectionalLight, PointLight and SpotLight objects in the scene.
              */
             LambertMaterial();
+
+        private:
+            static VertexShader defaultVertexShader;
+            static FragmentShader defaultFragmentShader;
     };
 
 }

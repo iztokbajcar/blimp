@@ -1,30 +1,62 @@
 #include "normalmaterial.hpp"
+#include <iostream>
 
-blimp::NormalMaterial::NormalMaterial() {
-    std::string vertexShader = 
-        "#version 330 core\n"
-        "uniform mat4 uModelMatrix;\n"
-        "uniform mat4 uViewMatrix;\n"
-        "uniform mat4 uProjectionMatrix;\n"
-        "layout (location = 0) in vec3 aPosition;\n"
-        "layout (location = 2) in vec3 aNormal;\n"
-        "out vec4 vColor;\n"
+blimp::NormalMaterial::NormalMaterialVertexShader::NormalMaterialVertexShader() : blimp::VertexShader() {
+
+}
+
+blimp::NormalMaterial::NormalMaterialVertexShader::NormalMaterialVertexShader(std::vector<ShaderFeature> shaderFeatures) : blimp::VertexShader(shaderFeatures) {
+
+}
+
+std::string blimp::NormalMaterial::NormalMaterialVertexShader::generateAbout() {
+    return 
+        "// *************************************\n"
+        "// *  Normal material - vertex shader  *\n"
+        "// *************************************\n";
+}
+
+std::string blimp::NormalMaterial::NormalMaterialVertexShader::generateMain() {
+    return 
         "void main() {\n"
         "   vec4 normal = normalize(uModelMatrix * vec4(aNormal, 0.0));\n"
         "   vColor = normal * 0.5f + 0.5f;\n"
         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}";
+}
 
-    std::string fragmentShader =
-        "#version 330 core\n"
-        "// normal material fragment shader\n"
-        "precision mediump float;\n"
-        "in vec4 vColor;\n"
-        "out vec4 oColor;\n"
-        "void main() {\n"
-        "   oColor = vColor;\n"
-        "}";
+blimp::NormalMaterial::NormalMaterialFragmentShader::NormalMaterialFragmentShader() : blimp::FragmentShader() {
 
-    this -> vertexShader = vertexShader;
-    this -> fragmentShader = fragmentShader;
+}
+
+blimp::NormalMaterial::NormalMaterialFragmentShader::NormalMaterialFragmentShader(std::vector<ShaderFeature> shaderFeatures) : blimp::FragmentShader(shaderFeatures) {
+    
+}
+
+std::string blimp::NormalMaterial::NormalMaterialFragmentShader::generateAbout() {
+    return 
+        "// ***************************************\n"
+        "// *  Normal material - fragment shader  *\n"
+        "// ***************************************\n";
+}
+
+blimp::NormalMaterial::NormalMaterialVertexShader blimp::NormalMaterial::defaultVertexShader = NormalMaterialVertexShader(
+    std::vector<ShaderFeature> {
+        ShaderFeature::USES_POSITION,
+        ShaderFeature::USES_COLOR,
+        ShaderFeature::USES_NORMALS
+    }
+);
+
+blimp::NormalMaterial::NormalMaterialFragmentShader blimp::NormalMaterial::defaultFragmentShader = NormalMaterialFragmentShader(
+    std::vector<ShaderFeature> {
+        ShaderFeature::USES_POSITION,
+        ShaderFeature::USES_COLOR,
+        ShaderFeature::USES_NORMALS
+    }
+);
+
+blimp::NormalMaterial::NormalMaterial() {
+    this -> vertexShader = &blimp::NormalMaterial::defaultVertexShader;
+    this -> fragmentShader = &blimp::NormalMaterial::defaultFragmentShader;
 }

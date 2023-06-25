@@ -7,6 +7,7 @@
 
 namespace blimp {
 
+    //! A regular pyramid geometry. Represents a pyramid with a regular polygon for its base. 
     class RegularPyramid : public Geometry {
         public:
             /** The default constructor.

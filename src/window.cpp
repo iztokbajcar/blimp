@@ -157,7 +157,7 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     GLuint fragmentShader;
 
     // try to compile the vertex shader
-    const char* vertexShaderSource = material -> getVertexShader() -> c_str();
+    const char* vertexShaderSource = material -> getVertexShader() -> generateSource() -> c_str();
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, (GLchar* const*)(&vertexShaderSource), NULL);
     glCompileShader(vertexShader);
@@ -165,18 +165,18 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     // get compilation info
     //! @todo always get info log to account for the possibility of warnings
     GLint success;
-    GLchar infoLog[512];
+    GLchar infoLog[10000];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(vertexShader, 10000, NULL, infoLog);
         std::cout << std::endl << "Error compiling vertex shader:" << std::endl << infoLog << std::endl;
-        std::cout << "source: " << (*material -> getVertexShader()) << std::endl << std::endl;
+        std::cout << "source:\n" << (*material -> getVertexShader() -> generateSource()) << std::endl << std::endl;
         return 0;  // signal failure
     }
 
     // try to compile the fragment shader
-    const char* fragmentShaderSource = material -> getFragmentShader() -> c_str();
+    const char* fragmentShaderSource = material -> getFragmentShader() -> generateSource() -> c_str();
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, (GLchar* const*)(&fragmentShaderSource), NULL);
     glCompileShader(fragmentShader);
@@ -185,9 +185,9 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentShader, 10000, NULL, infoLog);
         std::cout << std::endl << "Error compiling fragment shader:" << std::endl << infoLog << std::endl;
-        std::cout << "source: " << (*material -> getFragmentShader()) << std::endl << std::endl;
+        std::cout << "source:\n" << (*material -> getFragmentShader() -> generateSource()) << std::endl << std::endl;
         return 0;
     }
 
@@ -208,8 +208,8 @@ GLuint blimp::Window::compileMaterial(Material* material) {
     // delete the shaders
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-    *material -> getVertexShader() = "";
-    *material -> getFragmentShader() = "";
+    // *material -> getVertexShader() = "";
+    // *material -> getFragmentShader() = "";
 
     this -> programs[material] = program;
 

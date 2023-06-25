@@ -47,6 +47,35 @@ namespace blimp {
         protected:
             float shininess;  /**< The material's shininess. */
             float specular;  /**< The specular factor. */
+        
+        private:
+            class PhongMaterialVertexShader : public VertexShader {
+                public:
+                    PhongMaterialVertexShader();
+                    PhongMaterialVertexShader(std::vector<ShaderFeature> shaderFeatures);
+                
+                protected:
+                    std::string generateAbout();
+            };
+
+            class PhongMaterialFragmentShader : public FragmentShader {
+                public:
+                    PhongMaterialFragmentShader();
+                    PhongMaterialFragmentShader(std::vector<ShaderFeature> shaderFeatures);
+
+                protected:
+                    std::string generateAbout();
+                    std::string generateGlobals();
+                    std::string generateMain();
+
+                private:
+                    float shininess;
+                    float specular;
+                    std::string generateMain(float shininess, float specular);
+            };
+
+            static PhongMaterialVertexShader defaultVertexShader;
+            static PhongMaterialFragmentShader defaultFragmentShader;
             
     };
 
