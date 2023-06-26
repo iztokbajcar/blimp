@@ -75,11 +75,13 @@ namespace blimp {
             */
             Color* getBackgroundColor();
 
-            /** Displays the window and starts the rendering loop. 
+            /** 
+             * Displays the window and starts the rendering loop. 
              */
             void run();
 
-            /** Closes the window.
+            /** 
+             * Closes the window.
              */
             void close();
 
@@ -89,9 +91,35 @@ namespace blimp {
             */
             float getFPS(float smoothingFactor = 0.9);
 
-            /** Hides the cursor and prevents it from moving outside the window.
-             */
+            /** Locks the cursor.
+             * Hides the cursor and prevents it from moving outside the window.
+            */
             void lockCursor();
+
+            /** Unlocks the cursor.
+             * If the cursor has been locked, unlocks it and allows it to move outside the window again.
+            */
+            void unlockCursor();
+
+            /** Toggles the cursor lock.
+             * See Window::lockCursor and Window::unlockCursor.
+            */
+            void toggleCursorLock();
+
+            /** Enables wireframe mode.
+             * In this mode, every mesh in the scene will be drawn in wireframe, i.e. only the edges of the triangles it consists of will be visible.
+            */
+            void enableWireframeMode();
+
+            /** Disables wireframe mode.
+             * Everything will be drawn "normally", i.e. the meshes' faces will be visible.
+            */
+            void disableWireframeMode();
+
+            /** Toggles wireframe mode.
+             * See Window::enableWireframeMode and Window::disableWireframeMode.
+            */
+            void toggleWireframeMode();
 
         protected:
             int width;  /**< The window width. */
@@ -175,6 +203,7 @@ namespace blimp {
             void setMouseMoveCallback(blimp::Window *t, GLFWcursorposfun callback);
             bool cursorLocked = false;
             bool cursorLockRequested = false;
+            bool wireframeMode = false;
     };
 
 }

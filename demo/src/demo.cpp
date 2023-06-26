@@ -261,8 +261,8 @@ class DemoWindow : public Window {
         bool sPressed = false;
         bool aPressed = false;
         bool dPressed = false;
-        bool rPressed = false;
-        bool fPressed = false;
+        bool spacePressed = false;
+        bool shiftPressed = false;
         bool upPressed = false;
         bool downPressed = false;
         bool leftPressed = false;
@@ -304,17 +304,17 @@ class DemoWindow : public Window {
             if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
                 this -> dPressed = false;
             }
-            if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-                this -> rPressed = true;
+            if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+                this -> spacePressed = true;
             }
-            if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
-                this -> rPressed = false;
+            if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+                this -> spacePressed = false;
             }
-            if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-                this -> fPressed = true;
+            if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
+                this -> shiftPressed = true;
             }
-            if (key == GLFW_KEY_F && action == GLFW_RELEASE) {
-                this -> fPressed = false;
+            if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+                this -> shiftPressed = false;
             }
             if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
                 this -> upPressed = true;
@@ -360,6 +360,14 @@ class DemoWindow : public Window {
                     setCamera(perspectiveCamera);
                 }
             }
+
+            if (key == GLFW_KEY_C && action == GLFW_RELEASE) {
+                this -> toggleCursorLock();
+            }
+
+            if (key == GLFW_KEY_PERIOD && action == GLFW_RELEASE) {
+                this -> toggleWireframeMode();
+            }
         }
 
         void move() {
@@ -375,10 +383,10 @@ class DemoWindow : public Window {
             if (this -> dPressed) {
                 this -> cameraGroup -> translate(0.1f, 0.0f, 0.0f);
             }
-            if (this -> rPressed) {
+            if (this -> spacePressed) {
                 this -> cameraGroup -> translate(0.0f, 0.1f, 0.0f);
             }
-            if (this -> fPressed) {
+            if (this -> shiftPressed) {
                 this -> cameraGroup -> translate(0.0f, -0.1f, 0.0f);
             }
             if (this -> upPressed) {

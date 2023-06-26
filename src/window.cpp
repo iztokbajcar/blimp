@@ -127,7 +127,7 @@ void blimp::Window::setMouseMoveCallback(blimp::Window *t, GLFWcursorposfun call
 }
 
 void blimp::Window::setTitle(std::string title) {
-    this -> title = title;  //!< @todo check if needed
+    this -> title = title;  //! @todo check if needed
     glfwSetWindowTitle(this -> window, this -> title.c_str());
 }
 
@@ -696,6 +696,43 @@ void blimp::Window::lockCursor() {
 
     glfwSetInputMode(this -> window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     this -> cursorLocked = true;
+}
+
+void blimp::Window::unlockCursor() {
+    this -> cursorLockRequested = false;
+
+    if (this -> window == NULL) {
+        return;
+    }
+
+    glfwSetInputMode(this -> window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    this -> cursorLocked = false;
+}
+
+void blimp::Window::toggleCursorLock() {
+    if (this -> cursorLocked) {
+        this -> unlockCursor();
+    } else {
+        this -> lockCursor();
+    }
+}
+
+void blimp::Window::enableWireframeMode() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    this -> wireframeMode = true;
+}
+
+void blimp::Window::disableWireframeMode() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    this -> wireframeMode = false;
+}
+
+void blimp::Window::toggleWireframeMode() {
+    if (this -> wireframeMode) {
+        this -> disableWireframeMode();
+    } else {
+        this -> enableWireframeMode();
+    }
 }
 
 void blimp::Window::init() {
