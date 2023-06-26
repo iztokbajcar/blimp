@@ -54,6 +54,12 @@ build: $(OBJ_FILES)
 docs: $(SRC_FILES)
 	cd $(DOCS_DIR); doxygen
 
+count:
+	wc -l src/*
+
+countall:
+	wc -l src/* demo/src/* test/src/*
+
 clean:
 	-rm ${BIN_DIR}/*.o
 	-rm ${TEST_BIN_DIR}/*.o
