@@ -45,20 +45,13 @@ std::string blimp::PhongMaterial::PhongMaterialFragmentShader::generateGlobals()
 }
 
 std::string blimp::PhongMaterial::PhongMaterialFragmentShader::generateMain() {
-    return this -> generateMain(this -> shininess, this -> specular);
-}
-
-std::string blimp::PhongMaterial::PhongMaterialFragmentShader::generateMain(float shininess, float specular) {
-    std::string shininessString = std::to_string(shininess);
-    std::string specularString = std::to_string(specular);
-
     return
         "void main() {\n"
         "    vec4 diffuseColor = vColor;\n"
         "    vec4 normal = vec4(normalize(vNormal));\n"
         "    vec4 eyeDir = vec4(normalize(uCameraPos - vPos), 0.0);\n"
-        "    float shininess = " + shininessString + ";\n"
-        "    float specularFactor = " + specularString + ";\n"
+        "    float shininess = uMatShininess;\n"
+        "    float specularFactor = uMatSpecular;\n"
             // calculate color for every light
         "    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);\n"
             // ambient lights
@@ -142,10 +135,7 @@ blimp::PhongMaterial::PhongMaterialFragmentShader blimp::PhongMaterial::defaultF
     }
 );
 
-blimp::PhongMaterial::PhongMaterial() {
-    this -> shininess = 32.0f;
-    this -> specular = 0.75f;
-
+blimp::PhongMaterial::PhongMaterial() : Material() {
     this -> vertexShader = &blimp::PhongMaterial::defaultVertexShader;
     this -> fragmentShader = &blimp::PhongMaterial::defaultFragmentShader;
 
@@ -154,21 +144,5 @@ blimp::PhongMaterial::PhongMaterial() {
 
 blimp::PhongMaterial::PhongMaterial(float shininess, float specular) : PhongMaterial() {
     this -> shininess = shininess;
-    this -> specular = specular;
-}
-
-float blimp::PhongMaterial::getShininess() {
-    return this -> shininess;
-}
-
-void blimp::PhongMaterial::setShininess(float shininess) {
-    this -> shininess = shininess;
-}
-
-float blimp::PhongMaterial::getSpecular() {
-    return this -> specular;
-}
-
-void blimp::PhongMaterial::setSpecular(float specular) {
     this -> specular = specular;
 }

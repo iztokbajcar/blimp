@@ -25,11 +25,17 @@ blimp::FragmentShader blimp::Material::defaultFragmentShader = FragmentShader(
 blimp::Material::Material() {
     this -> vertexShader = &blimp::Material::defaultVertexShader;
     this -> fragmentShader = &blimp::Material::defaultFragmentShader;
+    
+    this -> shininess = 32.0f;
+    this -> specular = 0.75f;
 }
 
 blimp::Material::Material(VertexShader* vertexShader, FragmentShader* fragmentShader) {
     this -> vertexShader = vertexShader;
     this -> fragmentShader = fragmentShader;
+
+    this -> shininess = 32.0f;
+    this -> specular = 0.75f;
 }
 
 
@@ -47,4 +53,21 @@ bool blimp::Material::usesLights() {
 
 void blimp::Material::setUsesLights(bool usesLights) {
     this -> lights = usesLights;
+}
+
+
+float blimp::Material::getShininess() {
+    return this -> shininess;
+}
+
+void blimp::Material::setShininess(float shininess) {
+    this -> shininess = shininess;
+}
+
+float blimp::Material::getSpecular() {
+    return this -> specular;
+}
+
+void blimp::Material::setSpecular(float specular) {
+    this -> specular = specular;
 }

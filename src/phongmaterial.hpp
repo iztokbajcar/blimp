@@ -23,30 +23,6 @@ namespace blimp {
              * @param specular The specular factor of the material. It determines how much impact the specular component of the calculated light color will have on the final color.
              */
             PhongMaterial(float shininess, float specular);
-
-            /** Returns the material's shininess. 
-             * @return The material's shininess
-            */
-            float getShininess();
-
-            /** Sets the material's shininess.
-             * @param shininess The new shininess of the material.
-            */
-            void setShininess(float shininess);
-
-            /** Returns the specular factor. 
-             * @return The specular factor
-            */
-            float getSpecular();
-
-            /** Sets the specular factor.
-             * @param specular The new specular factor.
-            */
-            void setSpecular(float specular);
-
-        protected:
-            float shininess;  /**< The material's shininess. */
-            float specular;  /**< The specular factor. */
         
         private:
             class PhongMaterialVertexShader : public VertexShader {
@@ -68,10 +44,6 @@ namespace blimp {
                     std::string generateGlobals();
                     std::string generateMain();
 
-                private:
-                    float shininess;
-                    float specular;
-                    std::string generateMain(float shininess, float specular);
             };
 
             static PhongMaterialVertexShader defaultVertexShader;

@@ -469,6 +469,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
             }
 
             // other lighting-related uniforms
+            // camera position
             GLint uCameraPos = glGetUniformLocation(program, "uCameraPos");
             if (uCameraPos != -1) {
                 glUniform3f(
@@ -476,6 +477,24 @@ void blimp::Window::render(Node* scene, Camera* camera) {
                     camera -> getTranslation().x,
                     camera -> getTranslation().y,
                     camera -> getTranslation().z
+                );
+            }
+
+            // material shininess
+            GLint uMatShininess = glGetUniformLocation(program, "uMatShininess");
+            if (uMatShininess != -1) {
+                glUniform1f(
+                    uMatShininess,
+                    material -> getShininess()
+                );
+            }
+
+            // material specular
+            GLint uMatSpecular = glGetUniformLocation(program, "uMatSpecular");
+            if (uMatSpecular != -1) {
+                glUniform1f(
+                    uMatSpecular,
+                    material -> getSpecular()
                 );
             }
         }

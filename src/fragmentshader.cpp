@@ -76,7 +76,9 @@ std::string blimp::FragmentShader::generateUniforms() {
             "uniform ALight uALights[MAX_LIGHTS];\n"
             "uniform DLight uDLights[MAX_LIGHTS];\n"
             "uniform PLight uPLights[MAX_LIGHTS];\n"
-            "uniform SLight uSLights[MAX_LIGHTS];\n";
+            "uniform SLight uSLights[MAX_LIGHTS];\n"
+            "uniform float uMatShininess;\n"
+            "uniform float uMatSpecular;\n";
     }
     if (this -> usesTextures) {
         uniformsChunk += 

@@ -51,6 +51,26 @@ namespace blimp {
             */
             void setUsesLights(bool usesLights);
 
+            /** Returns the material's shininess. 
+             * @return The material's shininess
+            */
+            float getShininess();
+
+            /** Sets the material's shininess.
+             * @param shininess The new shininess of the material.
+            */
+            void setShininess(float shininess);
+
+            /** Returns the specular factor. 
+             * @return The specular factor
+            */
+            float getSpecular();
+
+            /** Sets the specular factor.
+             * @param specular The new specular factor.
+            */
+            void setSpecular(float specular);
+
             //! @todo allow custom ambient, diffuse and specular colors
 
         protected:
@@ -58,6 +78,9 @@ namespace blimp {
             FragmentShader* fragmentShader;  /**< The material's fragment shader source. */
             GLuint program;  /**< The ID of the material's shader program. Should not be set manually as it will be determined automatically by Window when compiling the material's shaders. */
             bool lights = false;  /**< `true` if the material uses lights, `false` otherwise. */
+
+            float shininess;  /**< The material's shininess. */
+            float specular;  /**< The specular factor. */
 
         private:
             static VertexShader defaultVertexShader;
