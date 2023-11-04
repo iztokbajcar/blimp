@@ -17,8 +17,8 @@ namespace blimp {
              * @param height The height of the prism.
              * @param colors The colors of the prism's vertices.
             */
-            RegularPrism(int sides = 3, float radius = 0.5, float height = 1.0f, ColorVector* colors = nullptr);
             //! @todo set texture coordinates
+            RegularPrism(int sides = 3, float radius = 0.5, float height = 1.0f, ColorVector* colors = nullptr);
     };
 
 }

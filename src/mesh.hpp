@@ -73,11 +73,13 @@ namespace blimp {
             */
             void setTextureOptions(TextureOptions* options);
 
+        protected:
+            Geometry* geometry = nullptr;  /**< The mesh's geometry. **/
+            Material* material = nullptr;  /**< The mesh's material. **/
+            Texture* texture = nullptr;  /**< The mesh's texture. **/
+            TextureOptions* texOptions = nullptr;  /**< The mesh's texture options. **/
+
         private:
-            Geometry* geometry = nullptr;
-            Material* material = nullptr;
-            Texture* texture = nullptr;
-            TextureOptions* texOptions = nullptr;
             bool usingDefaultTexOptions;
     };
 

@@ -13,6 +13,7 @@ blimp::Shader::Shader() {
 }
 
 blimp::Shader::Shader(std::vector<ShaderFeature> shaderFeatures) : Shader() {
+    //! @todo Make better use of the shaderFeatures vector, especially for custom shaders.
     for (ShaderFeature feature : shaderFeatures) {
         if (feature == ShaderFeature::USES_POSITION) {
             this -> usesPosition = true;

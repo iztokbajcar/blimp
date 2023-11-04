@@ -606,7 +606,7 @@ void blimp::Window::render(Node* scene, Camera* camera) {
 
             // render
             glBindVertexArray(VAO);
-            glDrawArrays(GL_TRIANGLES, 0, vertexCount);  //! @todo Support for wireframe mode and other draw modes
+            glDrawArrays(GL_TRIANGLES, 0, vertexCount);
             glBindVertexArray(0);
 
             // delete buffers

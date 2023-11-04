@@ -13,6 +13,8 @@
 #include "../../src/regularprism.hpp"
 #include "../../src/regularpyramid.hpp"
 #include "../../src/shader.hpp"
+#include "../../src/sprite.hpp"
+#include "../../src/spritematerial.hpp"
 #include "../../src/texture.hpp"
 #include "../../src/vertexshader.hpp"
 #include "../../src/window.hpp"
@@ -50,11 +52,13 @@ class DemoWindow : public Window {
             Texture* blimp = new Texture("demo/assets/textures/blimp.png");
             Texture* bricks = new Texture("demo/assets/textures/bricks.jpg");
             Texture* grass = new Texture("demo/assets/textures/grass.jpg");
+            Texture* star = new Texture("demo/assets/textures/star.png");
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();
             PhongMaterial* mat3 = new PhongMaterial(10.0f, 1.0f);
             LambertMaterial* mat4 = new LambertMaterial();
+            SpriteMaterial* mat5 = new SpriteMaterial();
 
             //! @todo free allocated stuff when closing
 
@@ -64,6 +68,8 @@ class DemoWindow : public Window {
             floor = new Mesh(new Cuboid(50, 0.1, 50, &white), mat4);
             wall = new Mesh(new Cuboid(5, 2, 0.1, &white), mat4);
             wall2 = new Mesh(new Cuboid(5, 5, 0.1, &white), mat4);
+            sprite1 = new Sprite(new Rectangle(1.0f, 1.0f), mat5);
+            sprite2 = new Sprite(new Rectangle(0.75f, 0.75f), mat5);
             regPoly3 = new Mesh(new RegularPolygon(3, 0.9), mat2);
             regPoly4 = new Mesh(new RegularPolygon(4, 0.9), mat2);
             regPoly5 = new Mesh(new RegularPolygon(5, 0.9), mat2);
@@ -90,12 +96,16 @@ class DemoWindow : public Window {
             wall -> getTextureOptions() -> setScale(0.5f, 1.0f);
             wall2 -> setTexture(bricks, new TextureOptions(TextureOptions::REPEAT, TextureOptions::LINEAR));
             wall2 -> getTextureOptions() -> setScale(0.5f);
+            sprite1 -> setTexture(star, new TextureOptions(TextureOptions::NEAREST));
+            sprite2 -> setTexture(star, new TextureOptions(TextureOptions::NEAREST)); 
 
             cube1 -> setTranslation(-2,  2, -7);
             cube2 -> setTranslation( 2,  2, -7);
             cube3 -> setTranslation(-2, -2, -7);
             floor -> setTranslation(0, -3, -9);
             wall -> setTranslation(3, -1.95, -10);
+            sprite1 -> setTranslation(-9, 3, -16);
+            sprite2 -> setTranslation(-9, 3, -15);
 
             // wall2 -> setTranslation(0, 0, 0);
             scene -> addChild(cube1);
@@ -103,6 +113,8 @@ class DemoWindow : public Window {
             scene -> addChild(cube3);
             scene -> addChild(floor);
             scene -> addChild(wall);
+            scene -> addChild(sprite1);
+            scene -> addChild(sprite2);
 
             // lights
             AmbientLight* ambientLight = new AmbientLight(Color(Color::WHITE), 0.2f);
@@ -229,6 +241,8 @@ class DemoWindow : public Window {
         Mesh* floor;
         Mesh* wall;
         Mesh* wall2;
+        Sprite* sprite1;
+        Sprite* sprite2;
         Mesh* regPoly3;
         Mesh* regPoly4;
         Mesh* regPoly5;
