@@ -174,7 +174,16 @@ std::string blimp::FragmentShader::generateMain() {
             "    color.w = 1.0;\n"
             "    oColor = color;\n";
     } else {
-        mainChunk += "oColor = vColor;\n";
+        if (this -> usesTextures) {
+            mainChunk += 
+                "    if (uUseTexture) {\n"
+                "        oColor = texture(uTexture, vec2(vTexCoord.x / uTextureScaleS, vTexCoord.y / uTextureScaleT));\n"
+                "    } else {\n"
+                "        oColor = vColor;\n"
+                "    }\n";
+        } else {
+            mainChunk += "    oColor = vColor;\n";
+        }
     }
     
     mainChunk += "}\n";
