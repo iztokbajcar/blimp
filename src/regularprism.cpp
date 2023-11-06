@@ -14,6 +14,8 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
     GLfloat* base2Vertices = base2 -> getVertices();
     GLfloat* base1Normals = base1 -> getNormals();
     GLfloat* base2Normals = base2 -> getNormals();
+    GLfloat* base1TexCoords = base1 -> getTexCoords();
+    GLfloat* base2TexCoords = base2 -> getTexCoords();
 
     // add `height` to the z coordinates of the vertices of base2
     for (int i = 0; i < baseVertexCount; i++) {
@@ -29,6 +31,7 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
 
     this -> vertices = new GLfloat[vertexCount*3];
     this -> normals = new GLfloat[vertexCount*3];
+    this -> texCoords = new GLfloat[vertexCount*2];
 
     // construct the vertices
     // base 1
@@ -40,6 +43,9 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         this -> normals[i*3] = base1Normals[i*3];
         this -> normals[i*3+1] = base1Normals[i*3+1];
         this -> normals[i*3+2] = base1Normals[i*3+2];
+
+        this -> texCoords[i*2] = base1TexCoords[i*2];
+        this -> texCoords[i*2+1] = base1TexCoords[i*2+1];
     }
 
     // base 2
@@ -51,6 +57,9 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         this -> normals[(baseVertexCount+i)*3] = base2Normals[i*3];
         this -> normals[(baseVertexCount+i)*3+1] = base2Normals[i*3+1];
         this -> normals[(baseVertexCount+i)*3+2] = base2Normals[i*3+2];
+
+        this -> texCoords[(baseVertexCount+i)*2] = base2TexCoords[i*2];
+        this -> texCoords[(baseVertexCount+i)*2+1] = base2TexCoords[i*2+1];
     }
 
     glm::vec3 base1Center = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -111,6 +120,7 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
         glm::vec3 normal = glm::normalize((v0 + v0ToV1) - base1Center);
 
         int i = (firstSideVertexOffset + side*6)*3;
+        int ti = (firstSideVertexOffset + side*6)*2;  // index in texCoords
 
         // the first triangle of the side face
         // base 1 vertex 0, base 2 vertex 1, base 2 vertex 0
@@ -130,7 +140,16 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
             this -> normals[i+j] = normal.x;
             this -> normals[i+j+1] = normal.y;
             this -> normals[i+j+2] = normal.z;
-        }      
+        }
+
+        this -> texCoords[ti] = 0;  // 1V0 x
+        this -> texCoords[ti+1] = 0;  // 1V0 y
+
+        this -> texCoords[ti+2] = 1;  // 2V1 x
+        this -> texCoords[ti+3] = 1;  // 2V1 y
+
+        this -> texCoords[ti+4] = 0;  // 2V0 x
+        this -> texCoords[ti+5] = 1;  // 2V0 y
 
         // the second triangle of the side face
         // base 1 vertex 0, base 1 vertex 1, base 2 vertex 1
@@ -151,6 +170,15 @@ blimp::RegularPrism::RegularPrism(int sides, float radius, float height, ColorVe
             this -> normals[i+9+j+1] = normal.y;
             this -> normals[i+9+j+2] = normal.z;
         }
+
+        this -> texCoords[ti+6] = 0;  // 1V0 x
+        this -> texCoords[ti+7] = 0;  // 1V0 y
+
+        this -> texCoords[ti+8] = 1;  // 1V1 x
+        this -> texCoords[ti+9] = 0;  // 1V1 y
+
+        this -> texCoords[ti+10] = 1;  // 2V1 x
+        this -> texCoords[ti+11] = 1;  // 2V1 y
     }
 
     this -> setColors(colors);

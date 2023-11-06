@@ -9,6 +9,7 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
     int baseVertexCount = base -> getVertexCount();
     GLfloat* baseVertices = base -> getVertices();
     GLfloat* baseNormals = base -> getNormals();
+    GLfloat* baseTexCoords = base -> getTexCoords();
 
     // invert the base normals
     for (int i = 0; i < baseVertexCount; i++) {
@@ -23,6 +24,7 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
 
     this -> vertices = new GLfloat[vertexCount*3];
     this -> normals = new GLfloat[vertexCount*3];
+    this -> texCoords = new GLfloat[vertexCount*2];
 
     // construct the vertices
     // base
@@ -34,6 +36,9 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
         this -> normals[i*3] = baseNormals[i*3];
         this -> normals[i*3+1] = baseNormals[i*3+1];
         this -> normals[i*3+2] = baseNormals[i*3+2];
+
+        this -> texCoords[i*2] = baseTexCoords[i*2];
+        this -> texCoords[i*2+1] = baseTexCoords[i*2+1];
     }
 
     glm::vec3 baseCenter = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -76,6 +81,7 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
         glm::vec3 normal = glm::normalize(cross);
 
         int i = (firstSideVertexOffset + side * 3) * 3;
+        int ti = (firstSideVertexOffset + side * 3) * 2;  // index in texCoords
 
         this -> vertices[i] = v0X;
         this -> vertices[i+1] = v0Y;
@@ -94,6 +100,15 @@ blimp::RegularPyramid::RegularPyramid(int sides, float radius, float height, Col
             this -> normals[i+j+1] = normal.y;
             this -> normals[i+j+2] = normal.z;
         }
+
+        this -> texCoords[ti] = 0;  // edge vertex 1 x
+        this -> texCoords[ti+1] = 0;  // edge vertex 1 y
+
+        this -> texCoords[ti+2] = 1;  // edge vertex 2 x
+        this -> texCoords[ti+3] = 0;  // edge vertex 2 y
+
+        this -> texCoords[ti+4] = 0.5;  // top vertex x
+        this -> texCoords[ti+5] = 1;  // top vertex y
     }
 
     this -> setColors(colors);

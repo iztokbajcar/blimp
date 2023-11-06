@@ -27,6 +27,7 @@ GLfloat* blimp::Geometry::getColors() {
 void blimp::Geometry::setColors(ColorVector* colors) {
     // if colors are defined (not a null pointer), use the specified colors
     // otherwise use the default color
+    //! @todo The color is sometimes wrong (maybe something is uninitialized?), fix this
     if (colors == nullptr) {
         ColorVector cv = ColorVector {Color()};  // default color
         colors = &cv;

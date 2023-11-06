@@ -30,6 +30,7 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
     this -> vertices = new GLfloat[vertexCount*3];
     this -> colors = new GLfloat[vertexCount];
     this -> normals = new GLfloat[vertexCount*3];
+    this -> texCoords = new GLfloat[vertexCount*2];
 
     // construct the triangles
     // (0, 1, 2,    0, 2, 3,    0, 3, 4,    ...)
@@ -43,6 +44,8 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
                 this -> normals[i*3] = polygonNormals[0];
                 this -> normals[i*3+1] = polygonNormals[0+1];
                 this -> normals[i*3+2] = polygonNormals[0+2];
+                this -> texCoords[i*2] = (polygonVertices[0]/ radius + 1) / 2;
+                this -> texCoords[i*2+1] = (polygonVertices[0+1]/ radius + 1) / 2;
                 break;
             case 1:
                 this -> vertices[i*3] = polygonVertices[lastVertex*3];
@@ -51,6 +54,8 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
                 this -> normals[i*3] = polygonNormals[lastVertex*3];
                 this -> normals[i*3+1] = polygonNormals[lastVertex*3+1];
                 this -> normals[i*3+2] = polygonNormals[lastVertex*3+2];
+                this -> texCoords[i*2] = (polygonVertices[lastVertex*3] / radius + 1) / 2;
+                this -> texCoords[i*2+1] = (polygonVertices[lastVertex*3+1] / radius + 1) / 2;
                 break;
             case 2:
                 lastVertex++;
@@ -60,6 +65,8 @@ blimp::RegularPolygon::RegularPolygon(int sides, float radius, ColorVector* colo
                 this -> normals[i*3] = polygonNormals[lastVertex*3];
                 this -> normals[i*3+1] = polygonNormals[lastVertex*3+1];
                 this -> normals[i*3+2] = polygonNormals[lastVertex*3+2];
+                this -> texCoords[i*2] = (polygonVertices[lastVertex*3] / radius + 1) / 2;
+                this -> texCoords[i*2+1] = (polygonVertices[lastVertex*3+1] / radius + 1) / 2;
                 break;
         }
     }
