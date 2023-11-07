@@ -40,7 +40,7 @@ std::string blimp::PhongMaterial::PhongMaterialFragmentShader::generateGlobals()
         "    } else {\n"
         "        c = diffuseColor;\n"
         "    }\n"
-        "    return (lightColor * lightIntensity) * c * dot(lightDir, normal) + specularFactor * lightColor * specular;\n"
+        "    return (lightColor * lightIntensity) * (c * max(dot(lightDir, normal), 0.0) + specularFactor * lightColor * specular);\n"
         "}\n";
 }
 
@@ -48,6 +48,9 @@ std::string blimp::PhongMaterial::PhongMaterialFragmentShader::generateMain() {
     return
         "void main() {\n"
         "    vec4 diffuseColor = vColor;\n"
+        "    if (uUseTexture) {\n"
+        "        diffuseColor = texture(uTexture, vec2(vTexCoord.x / uTextureScaleS, vTexCoord.y / uTextureScaleT));\n"
+        "    }\n"
         "    vec4 normal = vec4(normalize(vNormal));\n"
         "    vec4 eyeDir = vec4(normalize(uCameraPos - vPos), 0.0);\n"
         "    float shininess = uMatShininess;\n"
