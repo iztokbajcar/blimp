@@ -185,6 +185,7 @@ namespace blimp {
 
             ProgramMap programs;  /**< The compiled programs for each material. */
             TextureMap textures;  /**< The texture unit index for each texture. */
+            GLuint sceneProgram;  /**< The compiled program for the scene background. */
             Color* backgroundColor = nullptr;  /**< The background color of the window. */
             Scene* scene = nullptr;  /**< The scene that will be rendered. */
             Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
@@ -201,6 +202,8 @@ namespace blimp {
             static void fbSizeCallbackWrapper(GLFWwindow* window, int width, int height);
             static void mouseMoveCallbackWrapper(GLFWwindow* window, double xpos, double ypos); 
             static void GLAPIENTRY openGLMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+            GLuint compileSceneBackgroundProgram();
+            void drawSceneBackground();
             void setKeyCallback(blimp::Window *t, GLFWkeyfun callback);
             void setFbSizeCallback(blimp::Window *t, GLFWwindowsizefun callback);
             void setMouseMoveCallback(blimp::Window *t, GLFWcursorposfun callback);
