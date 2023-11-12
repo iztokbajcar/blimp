@@ -35,31 +35,3 @@ void blimp::Mesh::setGeometry(blimp::Geometry* geometry) {
 void blimp::Mesh::setMaterial(blimp::Material* material) {
     this -> material = material;
 }
-
-blimp::Texture* blimp::Mesh::getTexture() {
-    return this -> texture;
-}
-
-void blimp::Mesh::setTexture(blimp::Texture* texture) {
-    this -> texture = texture;
-}
-
-void blimp::Mesh::setTexture(blimp::Texture* texture, blimp::TextureOptions* options) {
-    this -> texture = texture;
-    this -> texOptions = options;
-    this -> usingDefaultTexOptions = false;
-}
-
-blimp::TextureOptions* blimp::Mesh::getTextureOptions() {
-    return this -> texOptions;
-}   
-
-void blimp::Mesh::setTextureOptions(blimp::TextureOptions* options) {
-    // if the default texture options are being used, delete the object,
-    // because it was created in the constructor
-    if (this -> usingDefaultTexOptions) {
-        delete this -> texOptions;
-    }
-
-    this -> texOptions = options;
-}

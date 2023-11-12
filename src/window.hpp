@@ -12,6 +12,7 @@
 #include "camera.hpp"
 #include "lightsdata.hpp"
 #include "mesh.hpp"
+#include "scene.hpp"
 
 /** @file window.hpp */
 
@@ -37,6 +38,8 @@ namespace blimp {
              * @param width The width of the window
              * @param height The height of the window
              */
+
+            /** @todo Separate window and renderer */
             Window(std::string title = std::string("Blimp"), int width = 800, int height = 600);
 
             /** A function that is called immediately after the window is run. 
@@ -58,7 +61,7 @@ namespace blimp {
             /** Sets the scene that will be rendered in the window.
              * @param scene The scene
             */
-            void setScene(Node* scene);
+            void setScene(Scene* scene);
 
             /** Sets the camera that will be used to render the scene.
              * @param camera The camera
@@ -183,7 +186,7 @@ namespace blimp {
             ProgramMap programs;  /**< The compiled programs for each material. */
             TextureMap textures;  /**< The texture unit index for each texture. */
             Color* backgroundColor = nullptr;  /**< The background color of the window. */
-            Node* scene = nullptr;  /**< The scene that will be rendered. */
+            Scene* scene = nullptr;  /**< The scene that will be rendered. */
             Camera* camera = nullptr;  /**< The camera that will be used to render the scene. */
             GLFWwindow* window = nullptr;  /**< The GLFW window inside which the graphics will be rendered. */
             void* winUserPointer = nullptr;  /**< The user pointer of the GLFW window. */
@@ -193,7 +196,7 @@ namespace blimp {
             float currentFramesPerSecond = 0;  /**< The current FPS value. */
 
         private:
-            void render(Node* scene, Camera* camera);
+            void render(Scene* scene, Camera* camera);
             static void keyCallbackWrapper(GLFWwindow* window, int key, int scancode, int action, int mode);
             static void fbSizeCallbackWrapper(GLFWwindow* window, int width, int height);
             static void mouseMoveCallbackWrapper(GLFWwindow* window, double xpos, double ypos); 

@@ -4,13 +4,14 @@
 #include "geometry.hpp"
 #include "material.hpp"
 #include "node.hpp"
+#include "texturable.hpp"
 
 /** @file mesh.hpp */
 
 namespace blimp {
 
     //! Represents a visible 3D object (has a geometry and a material)
-    class Mesh : public blimp::Node {
+    class Mesh : public blimp::Node, public blimp::Texturable {
         public:
             /** The default constructor. 
              * Creates a mesh with no geometry and no material. The user is encouraged to set these
@@ -46,32 +47,6 @@ namespace blimp {
              * @param material The new material
              */
             void setMaterial(Material* material);
-
-            /** Gets the mesh's texture.
-             * @return The mesh's texture
-             */
-            Texture* getTexture();
-
-            /** Sets the mesh's texture.
-             * @param texture The mesh's texture
-             */
-            void setTexture(Texture* texture);
-
-            /** Sets the mesh's texture, using the provided options.
-             * @param texture The mesh's texture
-             * @param options The texture options
-             */
-            void setTexture(Texture* texture, TextureOptions* options);
-
-            /** Returns a pointer to the texture options object.
-             * @return The pointer to the texture options object
-            */
-            TextureOptions* getTextureOptions();
-
-            /** Sets the texture options object.
-             * @param options A pointer to the new texture options object
-            */
-            void setTextureOptions(TextureOptions* options);
 
         protected:
             Geometry* geometry = nullptr;  /**< The mesh's geometry. **/

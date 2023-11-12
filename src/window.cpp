@@ -1,6 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include "material.hpp"
 #include "window.hpp"
 
 blimp::Window::Window(std::string title, int width, int height) {
@@ -71,18 +72,19 @@ void blimp::Window::run() {
 
         // clear the screen
         // (if the color was not specified, default to black)
-        float r, g, b;
-        Color* c = this -> getBackgroundColor();
-        if (c == nullptr) {
-            r = 0;
-            g = 0;
-            b = 0;
-        } else {
-            r = c -> getR();
-            g = c -> getG();
-            b = c -> getB();
-        }
-        glClearColor(r, g, b, 1.0f); 
+        /** @todo This is obsolete, because the background is specified by the scene. Remove this when safe. */
+        // float r, g, b;
+        // Color* c = this -> getBackgroundColor();
+        // if (c == nullptr) {
+        //     r = 0;
+        //     g = 0;
+        //     b = 0;
+        // } else {
+        //     r = c -> getR();
+        //     g = c -> getG();
+        //     b = c -> getB();
+        // }
+        // glClearColor(r, g, b, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> update();
         this -> render(this -> scene, this -> camera);
@@ -131,7 +133,7 @@ void blimp::Window::setTitle(std::string title) {
     glfwSetWindowTitle(this -> window, this -> title.c_str());
 }
 
-void blimp::Window::setScene(Node* scene) {
+void blimp::Window::setScene(Scene* scene) {
     this -> scene = scene;
 }
 
@@ -275,7 +277,149 @@ blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
     return LightsData(aLights, dLights, pLights, sLights);
 }
 
-void blimp::Window::render(Node* scene, Camera* camera) {
+void blimp::Window::render(Scene* scene, Camera* camera) {
+    // draw background if defined by the scene
+    // (default to black)
+    //! @todo allow color backgrounds and cubemaps
+    //! @todo only do this once per scene background change, not on every render
+    if (scene -> getTexture() == nullptr) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    } else {
+        // load and activate the texture
+        GLuint texture = loadTexture(scene -> getTexture());
+        glActiveTexture(GL_TEXTURE0 + texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        /** @todo write a function for creating shaders, sending data to the GPU 
+            and drawing, then use it also for the mesh drawing process */
+        const GLchar* vertexShaderSource = 
+            "#version 330 core\n"
+            "layout (location = 0) in vec3 aPosition;\n"
+            "layout (location = 3) in vec2 aTexCoord;\n"
+            "out vec2 vTexCoord;\n"
+            "void main() {\n"
+            "   gl_Position = vec4(aPosition, 1.0);\n"
+            "   vTexCoord = aTexCoord;\n"
+            "}\n";
+
+        const GLchar* fragmentShaderSource =
+            "#version 330 core\n"
+            "in vec2 vTexCoord;\n"
+            "out vec4 oColor;\n"
+            "uniform sampler2D uTexture;\n"
+            "void main() {\n"
+            "   oColor = texture(uTexture, vec2(vTexCoord.x, 1.0f - vTexCoord.y));\n"
+            // "   oColor = vec4(1.0f);\n"
+            "}\n";
+
+        // compile shaders
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glCompileShader(vertexShader);
+
+        // check for errors
+        GLint success;
+        GLchar infoLog[512];
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+            std::cout << "Error compiling vertex shader:" << std::endl << infoLog << std::endl;
+        }
+
+        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(fragmentShader);
+
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+            std::cout << "Error compiling fragment shader:" << std::endl << infoLog << "hh" << std::endl;
+        }
+
+        // link shaders
+        GLuint sceneProgram = glCreateProgram();
+        glAttachShader(sceneProgram, vertexShader);
+        glAttachShader(sceneProgram, fragmentShader);
+        glLinkProgram(sceneProgram);
+
+        // check for errors
+        glGetProgramiv(sceneProgram, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetProgramInfoLog(sceneProgram, 512, NULL, infoLog);
+            std::cout << "Error linking shader program:" << std::endl << infoLog << std::endl;
+        }
+
+        // delete shaders
+        glUseProgram(sceneProgram);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+
+
+        GLfloat vertices[] {
+                -1.0f, -1.0f, 0.0f,
+                 1.0f, -1.0f, 0.0f,
+                 1.0f,  1.0f, 0.0f,
+
+                -1.0f, -1.0f, 0.0f,
+                 1.0f,  1.0f, 0.0f,
+                -1.0f,  1.0f, 0.0f
+            };
+        
+        GLfloat texCoords[] {
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f,
+
+                0.0f, 0.0f,
+                1.0f, 1.0f,
+                0.0f, 1.0f
+            };
+
+        // create a VAO
+        GLuint VAO;
+        glGenVertexArrays(1, &VAO);
+        glBindVertexArray(VAO);
+
+        GLuint VBOPos, VBOTex;
+
+        // position
+        glGenBuffers(1, &VBOPos);
+        glBindBuffer(GL_ARRAY_BUFFER, VBOPos);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+        glEnableVertexAttribArray(0);
+
+        // // texture coordinates
+        glGenBuffers(1, &VBOTex);
+        glEnableVertexAttribArray(3);
+        glBindBuffer(GL_ARRAY_BUFFER, VBOTex);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+
+        // unbind buffers
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        // set texture
+        glUniform1i(glGetUniformLocation(sceneProgram, "uTexture"), texture);
+
+        // render
+        glDisable(GL_DEPTH_TEST);  // even though the background will be drawn on Z = 0, it won't occlude distant objects
+        glUseProgram(sceneProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+        glEnable(GL_DEPTH_TEST);
+        
+        // free
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBOPos);
+        glDeleteBuffers(1, &VBOTex);
+
+        glUseProgram(0);
+        glDeleteProgram(sceneProgram);
+    }
+
     // retrieve all nodes in the scene
     std::vector<Node*> nodes = scene -> traverseChildren();
 

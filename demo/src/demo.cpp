@@ -12,6 +12,7 @@
 #include "../../src/regularpolygon.hpp"
 #include "../../src/regularprism.hpp"
 #include "../../src/regularpyramid.hpp"
+#include "../../src/scene.hpp"
 #include "../../src/shader.hpp"
 #include "../../src/sprite.hpp"
 #include "../../src/spritematerial.hpp"
@@ -30,7 +31,7 @@ class DemoWindow : public Window {
         DemoWindow(const char *title, int width, int height) : Window(title, width, height) {}
 
         void init() {
-            scene = new Node();
+            scene = new Scene();
 
             cameraGroup = new Node();
             orthographicCamera = new OrthographicCamera(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 1000.0f);
@@ -53,6 +54,9 @@ class DemoWindow : public Window {
             Texture* bricks = new Texture("demo/assets/textures/bricks.jpg");
             Texture* grass = new Texture("demo/assets/textures/grass.jpg");
             Texture* star = new Texture("demo/assets/textures/star.png");
+            Texture* clouds = new Texture("demo/assets/textures/clouds.png");
+
+            scene -> setTexture(clouds);
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();
@@ -307,7 +311,7 @@ class DemoWindow : public Window {
             move();
         }
 
-        Node* scene;
+        Scene* scene;
         Mesh* cube1;
         Mesh* cube2;
         Mesh* cube3;
