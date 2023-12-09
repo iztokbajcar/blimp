@@ -1,24 +1,12 @@
 #include "texture.hpp"
-#include <iostream>
 
-blimp::Texture::Texture(std::string filename) {
-    // load the image
-    this -> data = SOIL_load_image(filename.c_str(), &this -> width, &this -> height, 0, SOIL_LOAD_RGBA);
-    
-    if (this -> data == nullptr) {
-        std::cout << "Error loading texture: " << filename << std::endl;
-        exit(1);
-    }
+const int blimp::Texture::TEXTURE_TYPE_2D      = 0;
+const int blimp::Texture::TEXTURE_TYPE_CUBEMAP = 1;
+
+blimp::Texture::Texture() {
+    this -> textureType = blimp::Texture::TEXTURE_TYPE_2D;
 }
 
-int blimp::Texture::getWidth() {
-    return this -> width;
-}
-
-int blimp::Texture::getHeight() {
-    return this -> height;
-}
-
-unsigned char* blimp::Texture::getData() {
-    return this -> data;
+int blimp::Texture::getTextureType() {
+    return this -> textureType;
 }

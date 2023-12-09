@@ -7,7 +7,7 @@
 
 namespace blimp {
 
-    //! Represents anrything that a texture may be applied to.
+    //! Represents anything that a texture may be applied to.
     class Texturable {
         public:
             /** The default constructor.

@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../../src/cubemap.hpp"
 #include "../../src/cuboid.hpp"
 #include "../../src/fragmentshader.hpp"
 #include "../../src/lambertmaterial.hpp"
@@ -16,7 +17,7 @@
 #include "../../src/shader.hpp"
 #include "../../src/sprite.hpp"
 #include "../../src/spritematerial.hpp"
-#include "../../src/texture.hpp"
+#include "../../src/texture2d.hpp"
 #include "../../src/vertexshader.hpp"
 #include "../../src/window.hpp"
 
@@ -50,13 +51,21 @@ class DemoWindow : public Window {
             bgColor = new Color(Color::TEAL);
             this -> setBackgroundColor(bgColor);
 
-            Texture* blimp = new Texture("demo/assets/textures/blimp.png");
-            Texture* bricks = new Texture("demo/assets/textures/bricks.jpg");
-            Texture* grass = new Texture("demo/assets/textures/grass.jpg");
-            Texture* star = new Texture("demo/assets/textures/star.png");
-            Texture* clouds = new Texture("demo/assets/textures/clouds.png");
+            Texture2D* blimp = new Texture2D("demo/assets/textures/blimp.png");
+            Texture2D* bricks = new Texture2D("demo/assets/textures/bricks.jpg");
+            Texture2D* grass = new Texture2D("demo/assets/textures/grass.jpg");
+            Texture2D* star = new Texture2D("demo/assets/textures/star.png");
 
-            scene -> setTexture(clouds);
+            Texture2D* px = new Texture2D("demo/assets/textures/skybox/px.png");
+            Texture2D* nx = new Texture2D("demo/assets/textures/skybox/nx.png");
+            Texture2D* py = new Texture2D("demo/assets/textures/skybox/py.png");
+            Texture2D* ny = new Texture2D("demo/assets/textures/skybox/ny.png");
+            Texture2D* pz = new Texture2D("demo/assets/textures/skybox/pz.png");
+            Texture2D* nz = new Texture2D("demo/assets/textures/skybox/nz.png");
+
+            Cubemap* cubemap = new Cubemap(px, nx, py, ny, pz, nz);
+
+            scene -> setTexture(cubemap);
 
             Material* mat1 = new Material();
             NormalMaterial* mat2 = new NormalMaterial();

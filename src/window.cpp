@@ -1,7 +1,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include "cubemap.hpp"
 #include "material.hpp"
+#include "texture2d.hpp"
 #include "window.hpp"
 
 blimp::Window::Window(std::string title, int width, int height) {
@@ -77,20 +79,6 @@ void blimp::Window::run() {
         glfwPollEvents();
 
         // clear the screen
-        // (if the color was not specified, default to black)
-        /** @todo This is obsolete, because the background is specified by the scene. Remove this when safe. */
-        // float r, g, b;
-        // Color* c = this -> getBackgroundColor();
-        // if (c == nullptr) {
-        //     r = 0;
-        //     g = 0;
-        //     b = 0;
-        // } else {
-        //     r = c -> getR();
-        //     g = c -> getG();
-        //     b = c -> getB();
-        // }
-        // glClearColor(r, g, b, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this -> update();
         this -> render(this -> scene, this -> camera);
@@ -155,25 +143,51 @@ blimp::Color* blimp::Window::getBackgroundColor() {
     return this -> backgroundColor;
 }
 
+//! @todo maybe introduce a new class for scene shader programs
 GLuint blimp::Window::compileSceneBackgroundProgram() {
-    const GLchar* vertexShaderSource = 
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPosition;\n"
-        "layout (location = 3) in vec2 aTexCoord;\n"
-        "out vec2 vTexCoord;\n"
-        "void main() {\n"
-        "   gl_Position = vec4(aPosition, 1.0);\n"
-        "   vTexCoord = aTexCoord;\n"
-        "}\n";
+    const GLchar* vertexShaderSource;
+    const GLchar* fragmentShaderSource;
 
-    const GLchar* fragmentShaderSource =
-        "#version 330 core\n"
-        "in vec2 vTexCoord;\n"
-        "out vec4 oColor;\n"
-        "uniform sampler2D uTexture;\n"
-        "void main() {\n"
-        "   oColor = texture(uTexture, vec2(vTexCoord.x, 1.0f - vTexCoord.y));\n"
-        "}\n";
+    if (scene -> getTexture() -> getTextureType() == Texture::TEXTURE_TYPE_2D) {
+        vertexShaderSource = 
+            "#version 330 core\n"
+            "layout (location = 0) in vec3 aPosition;\n"
+            "layout (location = 3) in vec2 aTexCoord;\n"
+            "out vec2 vTexCoord;\n"
+            "void main() {\n"
+            "   gl_Position = vec4(aPosition, 1.0);\n"
+            "   vTexCoord = aTexCoord;\n"
+            "}\n";
+
+        fragmentShaderSource =
+            "#version 330 core\n"
+            "in vec2 vTexCoord;\n"
+            "out vec4 oColor;\n"
+            "uniform sampler2D uTexture;\n"
+            "void main() {\n"
+            "   oColor = texture(uTexture, vec2(vTexCoord.x, 1.0f - vTexCoord.y));\n"
+            "}\n";
+    } else if (scene -> getTexture() -> getTextureType() == Texture::TEXTURE_TYPE_CUBEMAP) {
+        vertexShaderSource = 
+            "#version 330 core\n"
+            "layout (location = 0) in vec3 aPosition;\n"
+            "out vec3 vTexCoord;\n"
+            "uniform mat4 uProjectionMatrix;\n"
+            "uniform mat4 uViewMatrix;\n"
+            "void main() {\n"
+            "   gl_Position = uProjectionMatrix * uViewMatrix * vec4(aPosition, 1.0);\n"
+            "   vTexCoord = aPosition;\n"
+            "}\n";
+
+        fragmentShaderSource =
+            "#version 330 core\n"
+            "in vec3 vTexCoord;\n"
+            "out vec4 oColor;\n"
+            "uniform samplerCube uTexture;\n"
+            "void main() {\n"
+            "   oColor = texture(uTexture, vTexCoord);\n"
+            "}\n";
+    }
 
     // compile shaders
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -224,30 +238,85 @@ void blimp::Window::drawSceneBackground() {
     // load and activate the texture
     GLuint texture = loadTexture(scene -> getTexture());
     glActiveTexture(GL_TEXTURE0 + texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+
+    int textureType = scene -> getTexture() -> getTextureType();
 
     // load the program
     glUseProgram(this -> sceneProgram);
 
-    GLfloat vertices[] {
-            -1.0f, -1.0f, 0.0f,
-                1.0f, -1.0f, 0.0f,
-                1.0f,  1.0f, 0.0f,
-
-            -1.0f, -1.0f, 0.0f,
-                1.0f,  1.0f, 0.0f,
-            -1.0f,  1.0f, 0.0f
-        };
+    // bind the texture depending on the type
+    if (textureType == Texture::TEXTURE_TYPE_2D)
+        glBindTexture(GL_TEXTURE_2D, texture);
+    else if (textureType == Texture::TEXTURE_TYPE_CUBEMAP) {
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+    }
     
-    GLfloat texCoords[] {
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
+    // vertices for a fullscreen quad
+    GLfloat vertices[] {
+        -1.0f, -1.0f, 0.0f,
+         1.0f, -1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f,
 
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f
-        };
+        -1.0f, -1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f
+    };
+    
+    // texture coordinates for a fullscreen quad
+    GLfloat texCoords[] {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        0.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f
+    };
+
+    // vertices for a cube
+    GLfloat cubeVertices[] {
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+  
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+  
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+   
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+  
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+  
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+    };
 
     // create a VAO
     GLuint VAO;
@@ -259,16 +328,22 @@ void blimp::Window::drawSceneBackground() {
     // position
     glGenBuffers(1, &VBOPos);
     glBindBuffer(GL_ARRAY_BUFFER, VBOPos);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    if (textureType == Texture::TEXTURE_TYPE_2D) {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    } else if (textureType == Texture::TEXTURE_TYPE_CUBEMAP) {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    }
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-    // // texture coordinates
+    // texture coordinates
     glGenBuffers(1, &VBOTex);
     glEnableVertexAttribArray(3);
     glBindBuffer(GL_ARRAY_BUFFER, VBOTex);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+    if (textureType == Texture::TEXTURE_TYPE_2D) {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+    }
 
     // unbind buffers
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -277,11 +352,29 @@ void blimp::Window::drawSceneBackground() {
     // set texture
     glUniform1i(glGetUniformLocation(this -> sceneProgram, "uTexture"), texture);
 
+    // if we are drawing a skybox, also
+    // set the view and projection matrices
+    if (textureType == Texture::TEXTURE_TYPE_CUBEMAP) {
+        GLint uViewMatrix = glGetUniformLocation(this -> sceneProgram, "uViewMatrix");
+        GLint uProjectionMatrix = glGetUniformLocation(this -> sceneProgram, "uProjectionMatrix");
+
+        // remove the translatoin components from the view matrix
+        // so that the skybox doesn't move when the camera does.
+        glm::mat4 viewMatrix = glm::mat4(glm::mat3(this -> camera -> getViewMatrix()));
+
+        glUniformMatrix4fv(uViewMatrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+        glUniformMatrix4fv(uProjectionMatrix, 1, GL_FALSE, glm::value_ptr(this -> camera -> getProjectionMatrix()));
+    }
+
     // render
     glDisable(GL_DEPTH_TEST);  // even though the background will be drawn on Z = 0, it won't occlude distant objects
     glUseProgram(this -> sceneProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    if (textureType == Texture::TEXTURE_TYPE_2D) {
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    } else if (textureType == Texture::TEXTURE_TYPE_CUBEMAP) {
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
     
@@ -367,30 +460,72 @@ GLuint blimp::Window::loadTexture(blimp::Texture* texture) {
     }
 
     GLuint texUnit;
-    glGenTextures(1, &texUnit);
-    glBindTexture(GL_TEXTURE_2D, texUnit);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    if (texture -> getTextureType() == Texture::TEXTURE_TYPE_2D) {
+        Texture2D* texture2D = (Texture2D*) texture;
 
-    unsigned char* image = texture -> getData();
+        glGenTextures(1, &texUnit);
+        glBindTexture(GL_TEXTURE_2D, texUnit);
 
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        texture -> getWidth(),
-        texture -> getHeight(),
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        texture -> getData()    
-    );
+        //! @todo make these configurable via TextureOptions
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA,
+            texture2D -> getWidth(),
+            texture2D -> getHeight(),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            texture2D -> getData()    
+        );
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    } else if (texture -> getTextureType() == Texture::TEXTURE_TYPE_CUBEMAP) {
+        Cubemap* cubemap = (Cubemap*) texture;
+
+        glGenTextures(1, &texUnit);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texUnit);
+
+        // retrieve the faces
+        Texture2D* faces[6] = {
+            cubemap -> getPX(),
+            cubemap -> getNX(),
+            cubemap -> getPY(),
+            cubemap -> getNY(),
+            cubemap -> getPZ(),
+            cubemap -> getNZ()
+        };
+
+        for (GLuint i = 0; i < 6; i++) {
+            glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                0,
+                GL_RGBA,
+                faces[i] -> getWidth(),
+                faces[i] -> getHeight(),
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                faces[i] -> getData()
+            );
+        }
+
+        //! @todo make these configurable via TextureOptions
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
 
     this -> textures[texture] = texUnit;
     return texUnit;
@@ -422,10 +557,12 @@ blimp::LightsData blimp::Window::getLights(std::vector<Node*>* nodes) {
 void blimp::Window::render(Scene* scene, Camera* camera) {
     // draw background if defined by the scene
     // (default to black)
-    //! @todo allow color backgrounds and cubemaps
+    //! @todo allow color backgrounds
     //! @todo only do this once per scene background change, not on every render
     if (scene -> getTexture() == nullptr) {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        // get the background color
+        Color* c = this -> getBackgroundColor();
+        glClearColor(c -> getR(), c -> getG(), c -> getB(), 1.0f);
     } else {
         this -> drawSceneBackground();
     }
@@ -720,7 +857,7 @@ void blimp::Window::render(Scene* scene, Camera* camera) {
             if (mesh -> getTexture() != nullptr) {
                 //! @todo use multiple texture units for different textures (to speed up rendering etc.)
                 GLuint texture = loadTexture(mesh -> getTexture());
-                
+
                 glUniform1i(glGetUniformLocation(program, "uTexture"), texture);
                 glUniform1i(glGetUniformLocation(program, "uUseTexture"), 1);
                 glUniform1f(glGetUniformLocation(program, "uTextureScaleS"), mesh -> getTextureOptions() -> getScaleS());

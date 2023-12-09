@@ -1,47 +1,26 @@
 #ifndef _blimp_TEXTURE
 #define _blimp_TEXTURE
 
-#include <SOIL/SOIL.h>
-#include <string>
-
 #include "textureoptions.hpp"
 
 /** @file texture.hpp */
 
 namespace blimp {
 
-    //! A texture that can be applied to a mesh.
-    //! @todo Add support for 3D textures and rename this to Texture2D
+    //! Represents a texture that can be applied to a Texturable.
     class Texture {
         public:
+            static const int TEXTURE_TYPE_2D;  /**< Indicates that the texture is a 2D texture. */
+            static const int TEXTURE_TYPE_CUBEMAP;  /**< Indicates that the texture is a cubemap. */
+
             /** The default constructor.
-             * Creates a texture from an image file with the given filename.
-             * @param filename The filename of the image file
+             * Creates a texture with the default options.
             */
-            Texture(std::string filename);
+            Texture();
 
-            //! @todo Add support for creating textures from raw data
-
-            /** Returns the width of the texture.
-             * @return The width of the texture
-            */
-            int getWidth();
-
-            /** Returns the height of the texture.
-             * @return The height of the texture
-            */
-            int getHeight();
-
-            /** Returns the data of the texture as a char array.
-             * @return The data of the texture
-            */
-            unsigned char* getData();
-
-        private:
-            int width;
-            int height;
-            TextureOptions* options;
-            unsigned char* data;
+            int getTextureType();  /**< Returns the type of the texture. */
+        protected:
+            int textureType;  /**< The type of the texture, as defined by the TEXTURE_TYPE_* constants. */
     };
 
 }
