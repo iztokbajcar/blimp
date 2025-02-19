@@ -1,10 +1,6 @@
 #include "normalmaterial.hpp"
 #include <iostream>
 
-blimp::NormalMaterial::NormalMaterialVertexShader::NormalMaterialVertexShader() : blimp::VertexShader() {
-
-}
-
 blimp::NormalMaterial::NormalMaterialVertexShader::NormalMaterialVertexShader(std::vector<ShaderFeature> shaderFeatures) : blimp::VertexShader(shaderFeatures) {
 
 }
@@ -23,10 +19,6 @@ std::string blimp::NormalMaterial::NormalMaterialVertexShader::generateMain() {
         "   vColor = normal * 0.5f + 0.5f;\n"
         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);\n"
         "}";
-}
-
-blimp::NormalMaterial::NormalMaterialFragmentShader::NormalMaterialFragmentShader() : blimp::FragmentShader() {
-
 }
 
 blimp::NormalMaterial::NormalMaterialFragmentShader::NormalMaterialFragmentShader(std::vector<ShaderFeature> shaderFeatures) : blimp::FragmentShader(shaderFeatures) {

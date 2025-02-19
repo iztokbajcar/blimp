@@ -1,6 +1,7 @@
 #ifndef _blimp_NODE
 #define _blimp_NODE
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
