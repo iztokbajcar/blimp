@@ -1,6 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include "color.hpp"
 #include "cubemap.hpp"
 #include "material.hpp"
 #include "texture2d.hpp"
@@ -10,6 +11,7 @@ blimp::Window::Window(std::string title, int width, int height) {
     this -> width = width;
     this -> height = height;
     this -> title = title;
+    this -> setBackgroundColor(new blimp::Color(blimp::Color::TEAL));
 }
 
 void blimp::Window::run() {
