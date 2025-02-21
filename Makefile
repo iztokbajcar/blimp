@@ -37,7 +37,7 @@ $(TEST_BIN_DIR)/test: $(TEST_OBJ_FILES) $(TEST_SRC_DIR)/test.cpp
 	g++ $(CFLAGS_TEST) $(TEST_SRC_DIR)/test.cpp -o $@ $(TEST_OBJ_FILES)
 	mkdir -p $(TEST_COVERAGE_DIR)
 	$(TEST_BIN_DIR)/test
-	lcov -d . --no-external --capture --output-file $(TEST_COVERAGE_DIR)/$(TEST_COVERAGE_REPORT_FILE) -rc lcov_branch_coverage=1
+	lcov -d . --no-external --capture --output-file $(TEST_COVERAGE_DIR)/$(TEST_COVERAGE_REPORT_FILE) -rc branch_coverage=1 --ignore-errors inconsistent
 	genhtml $(TEST_COVERAGE_DIR)/$(TEST_COVERAGE_REPORT_FILE) --legend --output-directory=$(TEST_COVERAGE_DIR)
 
 $(TEST_BIN_DIR)/%.o: $(SRC_DIR)/%.cpp

@@ -45,9 +45,6 @@ namespace blimp {
             Texture* texture = nullptr;  /**< The texture. **/
             TextureOptions* texOptions = nullptr;  /**< The texture options. **/
             static TextureOptions defaultTexOptions;  /**< The default texture options. **/
-
-        private:
-            bool usingDefaultTexOptions;
     };
 
 }

@@ -83,3 +83,80 @@ TEST_F(TextureOptionsTest, OptionsCorrect) {
     ASSERT_EQ(options6 -> getMinFilterMode(), blimp::TextureOptions::FilterMode::LINEAR);
     ASSERT_EQ(options6 -> getMagFilterMode(), blimp::TextureOptions::FilterMode::LINEAR);
 }
+
+TEST_F(TextureOptionsTest, SetScale1) {
+    options -> setScale(0.4f);
+    ASSERT_EQ(options -> getScaleS(), 0.4f);
+    ASSERT_EQ(options -> getScaleT(), 0.4f);
+}
+
+TEST_F(TextureOptionsTest, SetScale2) {
+    options -> setScale(2.0f, 3.0f);
+    ASSERT_EQ(options -> getScaleS(), 2.0f);
+    ASSERT_EQ(options -> getScaleT(), 3.0f);
+}
+
+TEST_F(TextureOptionsTest, SetScaleS) {
+    options -> setScale(1.0f);
+    options -> setScaleS(10.0f);
+    ASSERT_EQ(options -> getScaleS(), 10.0f);
+    ASSERT_EQ(options -> getScaleT(), 1.0f);
+}
+
+TEST_F(TextureOptionsTest, SetScaleT) {
+    options -> setScale(1.0f);
+    options -> setScaleT(10.0f);
+    ASSERT_EQ(options -> getScaleS(), 1.0f);
+    ASSERT_EQ(options -> getScaleT(), 10.0f);
+}
+
+TEST_F(TextureOptionsTest, SetWrapMode1) {
+    options -> setWrapMode(blimp::TextureOptions::WrapMode::REPEAT);
+    ASSERT_EQ(options -> getWrapModeS(), blimp::TextureOptions::WrapMode::REPEAT);
+}
+
+TEST_F(TextureOptionsTest, SetWrapMode2) {
+    options -> setWrapMode(blimp::TextureOptions::WrapMode::REPEAT, blimp::TextureOptions::WrapMode::MIRROR);
+    ASSERT_EQ(options -> getWrapModeS(), blimp::TextureOptions::WrapMode::REPEAT);
+    ASSERT_EQ(options -> getWrapModeT(), blimp::TextureOptions::WrapMode::MIRROR);
+}
+
+TEST_F(TextureOptionsTest, SetWrapModeS) {
+    options -> setWrapMode(blimp::TextureOptions::WrapMode::REPEAT);
+    options -> setWrapModeS(blimp::TextureOptions::WrapMode::MIRROR);
+    ASSERT_EQ(options -> getWrapModeS(), blimp::TextureOptions::WrapMode::MIRROR);
+    ASSERT_EQ(options -> getWrapModeT(), blimp::TextureOptions::WrapMode::REPEAT);
+}
+
+TEST_F(TextureOptionsTest, SetWrapModeT) {
+    options -> setWrapMode(blimp::TextureOptions::WrapMode::REPEAT);
+    options -> setWrapModeT(blimp::TextureOptions::WrapMode::MIRROR);
+    ASSERT_EQ(options -> getWrapModeS(), blimp::TextureOptions::WrapMode::REPEAT);
+    ASSERT_EQ(options -> getWrapModeT(), blimp::TextureOptions::WrapMode::MIRROR);
+}
+
+TEST_F(TextureOptionsTest, SetFilterMode1) {
+    options -> setFilterMode(blimp::TextureOptions::FilterMode::NEAREST);
+    ASSERT_EQ(options -> getMinFilterMode(), blimp::TextureOptions::FilterMode::NEAREST);
+    ASSERT_EQ(options -> getMagFilterMode(), blimp::TextureOptions::FilterMode::NEAREST);
+}
+
+TEST_F(TextureOptionsTest, SetFilterMode2) {
+    options -> setFilterMode(blimp::TextureOptions::FilterMode::LINEAR, blimp::TextureOptions::FilterMode::LINEAR_MIPMAP_NEAREST);
+    ASSERT_EQ(options -> getMinFilterMode(), blimp::TextureOptions::FilterMode::LINEAR);
+    ASSERT_EQ(options -> getMagFilterMode(), blimp::TextureOptions::FilterMode::LINEAR_MIPMAP_NEAREST);
+}
+
+TEST_F(TextureOptionsTest, SetMinFilterMode) {
+    options -> setFilterMode(blimp::TextureOptions::FilterMode::NEAREST);
+    options -> setMinFilterMode(blimp::TextureOptions::FilterMode::LINEAR);
+    ASSERT_EQ(options -> getMinFilterMode(), blimp::TextureOptions::FilterMode::LINEAR);
+    ASSERT_EQ(options -> getMagFilterMode(), blimp::TextureOptions::FilterMode::NEAREST);
+}
+
+TEST_F(TextureOptionsTest, SetMagFilterMode) {
+    options -> setFilterMode(blimp::TextureOptions::FilterMode::NEAREST);
+    options -> setMagFilterMode(blimp::TextureOptions::FilterMode::LINEAR);
+    ASSERT_EQ(options -> getMinFilterMode(), blimp::TextureOptions::FilterMode::NEAREST);
+    ASSERT_EQ(options -> getMagFilterMode(), blimp::TextureOptions::FilterMode::LINEAR);
+}

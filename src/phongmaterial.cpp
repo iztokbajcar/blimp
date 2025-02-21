@@ -1,9 +1,5 @@
 #include "phongmaterial.hpp"
 
-blimp::PhongMaterial::PhongMaterialVertexShader::PhongMaterialVertexShader() : blimp::VertexShader() {
-
-}
-
 blimp::PhongMaterial::PhongMaterialVertexShader::PhongMaterialVertexShader(std::vector<ShaderFeature> shaderFeatures) : blimp::VertexShader(shaderFeatures) {
 
 }
@@ -15,9 +11,9 @@ std::string blimp::PhongMaterial::PhongMaterialVertexShader::generateAbout() {
         "// *************************************\n";
 }
 
-blimp::PhongMaterial::PhongMaterialFragmentShader::PhongMaterialFragmentShader() : blimp::FragmentShader() {
+// blimp::PhongMaterial::PhongMaterialFragmentShader::PhongMaterialFragmentShader() : blimp::FragmentShader() {
 
-}
+// }
 
 blimp::PhongMaterial::PhongMaterialFragmentShader::PhongMaterialFragmentShader(std::vector<ShaderFeature> shaderFeatures) : blimp::FragmentShader(shaderFeatures){
  

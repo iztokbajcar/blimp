@@ -22,6 +22,16 @@ TEST_F(PhongMaterialTest, IsNotNull) {
     ASSERT_NE(phongMaterial2, nullptr);
 }
 
+TEST_F(PhongMaterialTest, PhongMaterialVertexShaderNotEmpty) {
+    ASSERT_TRUE(phongMaterial -> getVertexShader() != NULL);
+    ASSERT_NE(phongMaterial -> getVertexShader() -> generateSource() -> length(), 0);
+}
+
+TEST_F(PhongMaterialTest, PhongMaterialFragmentShaderNotEmpty) {
+    ASSERT_TRUE(phongMaterial -> getFragmentShader() != NULL);
+    ASSERT_NE(phongMaterial -> getFragmentShader() -> generateSource() -> length(), 0);
+}
+
 TEST_F(PhongMaterialTest, ParametersCorrect) {
     ASSERT_EQ(
         phongMaterial -> getShininess(),

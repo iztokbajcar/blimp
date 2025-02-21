@@ -1,9 +1,5 @@
 #include "spritematerial.hpp"
 
-blimp::SpriteMaterial::SpriteMaterialVertexShader::SpriteMaterialVertexShader() : blimp::VertexShader() {
-
-}
-
 blimp::SpriteMaterial::SpriteMaterialVertexShader::SpriteMaterialVertexShader(std::vector<ShaderFeature> shaderFeatures) : blimp::VertexShader(shaderFeatures) {
 
 }
@@ -30,10 +26,6 @@ std::string blimp::SpriteMaterial::SpriteMaterialVertexShader::generateMain() {
         "    vTexCoord = vec2(aTexCoord.x, 1.0f - aTexCoord.y);\n"
         "    gl_Position = uProjectionMatrix * modelView * vec4(aPosition, 1.0);\n"
         "};\n";
-}
-
-blimp::SpriteMaterial::SpriteMaterialFragmentShader::SpriteMaterialFragmentShader() : blimp::FragmentShader() {
-
 }
 
 blimp::SpriteMaterial::SpriteMaterialFragmentShader::SpriteMaterialFragmentShader(std::vector<ShaderFeature> shaderFeatures) : blimp::FragmentShader(shaderFeatures) {

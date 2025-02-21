@@ -1,0 +1,43 @@
+#include <gtest/gtest.h>
+#include "../../src/regularprism.hpp"
+
+class RegularPrismTest : public ::testing::Test {
+    protected:
+        virtual void SetUp() {
+            rp3 = new blimp::RegularPrism(3, 1.0f);
+            rp4 = new blimp::RegularPrism(4, 0.5f);
+            rp5 = new blimp::RegularPrism(5, 1.0f, 3.0f);
+            rp6 = new blimp::RegularPrism(6, 1.0f);
+            rp10 = new blimp::RegularPrism(10, 1.0f);
+            rp37 = new blimp::RegularPrism(37, 1.0f);
+            rp100 = new blimp::RegularPrism(100, 1.0f);
+        }
+
+        virtual void TearDown() {
+            delete rp3;
+            delete rp4;
+            delete rp5;
+            delete rp6;
+            delete rp10;
+            delete rp37;
+            delete rp100;
+        }
+
+        blimp::RegularPrism *rp3;
+        blimp::RegularPrism *rp4;
+        blimp::RegularPrism *rp5;
+        blimp::RegularPrism *rp6;
+        blimp::RegularPrism *rp10;
+        blimp::RegularPrism *rp37;
+        blimp::RegularPrism *rp100;
+};
+
+TEST_F(RegularPrismTest, IsNotNull) {
+    ASSERT_NE(rp3, nullptr);
+    ASSERT_NE(rp4, nullptr);
+    ASSERT_NE(rp5, nullptr);
+    ASSERT_NE(rp6, nullptr);
+    ASSERT_NE(rp10, nullptr);
+    ASSERT_NE(rp37, nullptr);
+    ASSERT_NE(rp100, nullptr);
+}

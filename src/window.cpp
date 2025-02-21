@@ -591,7 +591,7 @@ void blimp::Window::render(Scene* scene, Camera* camera) {
 
         // if compilation/linking failed, exit
         if (program == 0) {
-            exit(0);
+            exit(1);
         }
 
         programs[material] = program;

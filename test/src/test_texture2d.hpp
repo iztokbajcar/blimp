@@ -18,6 +18,10 @@ TEST_F(Texture2DTest, IsNotNull) {
     ASSERT_NE(texture, nullptr);
 }
 
+TEST_F(Texture2DTest, ExitsOnLoadFail) {
+    ASSERT_EXIT(blimp::Texture2D("nonexistent.png"), ::testing::ExitedWithCode(1), "");
+}
+
 TEST_F(Texture2DTest, WidthCorrect) {
     ASSERT_EQ(texture -> getWidth(), 512);
 }
